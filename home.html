@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seopa Media</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        /* Basic styles for the navbar */
+        nav ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: #333;
+        }
+
+        nav ul li {
+            float: left;
+            position: relative; /* Needed for the dropdown */
+        }
+
+        nav ul li a {
+            display: block;
+            padding: 14px 20px;
+            color: white;
+            text-align: center;
+            text-decoration: none;
+        }
+
+        nav ul li a:hover {
+            background-color: #111;
+        }
+
+        /* Dropdown container hidden by default */
+        nav ul li ul {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background-color: #333;
+            min-width: 180px;
+            z-index: 1;
+        }
+
+        /* Show the dropdown when hovering over the parent list item */
+        nav ul li:hover > ul {
+            display: block;
+        }
+
+        nav ul li ul li a {
+            padding: 12px;
+            text-align: left;
+        }
+
+        nav ul li ul li a:hover {
+            background-color: #444;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="#">Home</a>
+                    <ul>
+                        <li><a href="#updates">Updates</a></li>
+                        <li><a href="#events">Events</a></li>
+                        <li><a href="#sports">Sports</a></li>
+                        <li><a href="#opinion">Opinion</a></li>
+                        <li><a href="#podcast">Podcast</a></li>
+                        <li><a href="#disabilities">My(Dis)Abilities</a></li>
+                        <li><a href="#competitions">Competitions</a></li>
+                        <li><a href="#vacancies">Vacancies</a></li>
+                        <li><a href="#contacts">Contacts</a></li>
+                        <li><a href="#social-media">Social Media</a></li>
+                    </ul>
+                </li>
+                <!-- Other menu items can go here -->
+            </ul>
+        </nav>
+        <h1>Welcome to Seopa Media</h1>
+    </header>
+
+    <main>
+        <!-- Sections remain the same as before -->
+        <section id="updates">
+            <h2>Updates: Breaking News & Top Stories</h2>
+            <p>Latest breaking news from Limpopo and beyond. Live updates on major stories.</p>
+        </section>
+
+        <!-- Remaining sections here... -->
+    </main>
+
+    <footer>
+        <p>&copy; 2025 Seopa Media. All rights reserved.</p>
+    </footer>
+</body>
+</html>
