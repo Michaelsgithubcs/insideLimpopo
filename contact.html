@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us - Website</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h2 class="logo"><img src="path/to/your/logo.png" alt="Website Logo" class="logo"></h2>
+        <nav class="navigation">
+            <a href="index.html" class="tab">Home</a>
+            <a href="about.html" class="tab">About</a>
+            <a href="contact.html" class="tab active">Contact</a> <!-- Contact Tab -->
+            <a href="services.html" class="tab">Services</a>
+            <button class="btnLogin-popup">Login</button>
+        </nav>
+    </header>
+
+    <main>
+        <h1>Contact Us</h1>
+        <p>If you have any questions, feel free to reach out to us!</p>
+        <form action="#">
+            <div class="input-box">
+                <label for="name">Name:</label>
+                <input type="text" id="name" name="name" required>
+            </div>
+            <div class="input-box">
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" required>
+            </div>
+            <div class="input-box">
+                <label for="message">Message:</label>
+                <textarea id="message" name="message" required></textarea>
+            </div>
+            <button type="submit">Submit</button>
+        </form>
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>
