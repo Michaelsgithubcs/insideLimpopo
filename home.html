@@ -1,100 +1,520 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Seopa Media</title>
-    <link rel="stylesheet" href="styles.css">
-    <style>
-        
-        /* Basic styles for the navbar */
-        nav ul {
-            list-style-type: none;
-            margin: 0;
-            padding: 0;
-            overflow: hidden;
-            background-color: #333;
-        }
-
-        nav ul li {
-            float: left;
-            position: relative; /* Needed for the dropdown */
-        }
-
-        nav ul li a {
-            display: block;
-            padding: 14px 20px;
-            color: white;
-            text-align: center;
-            text-decoration: none;
-        }
-
-        nav ul li a:hover {
-            background-color: #111;
-        }
-
-        /* Dropdown container hidden by default */
-        nav ul li ul {
-            display: none;
-            position: absolute;
-            top: 100%;
-            left: 0;
-            background-color: #333;
-            min-width: 180px;
-            z-index: 1;
-        }
-
-        /* Show the dropdown when hovering over the parent list item */
-        nav ul li:hover > ul {
-            display: block;
-        }
-
-        nav ul li ul li a {
-            padding: 12px;
-            text-align: left;
-        }
-
-        nav ul li ul li a:hover {
-            background-color: #444;
-        }
-    </style>
-</head>
-<body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>HOME | Seopa Media</title>
+    <link rel="stylesheet" href="./css/style.css" />
+    <!-- Add Font Awesome for social media icons -->
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <!-- Header Section -->
     <header>
-        <nav>
-            <ul>
-                <li><a href="#">Home</a>
-                    <ul>
-                        <li><a href="#updates">Updates</a></li>
-                        <li><a href="#events">Events</a></li>
-                        <li><a href="#sports">Sports</a></li>
-                        <li><a href="#opinion">Opinion</a></li>
-                        <li><a href="#podcast">Podcast</a></li>
-                        <li><a href="#disabilities">My(Dis)Abilities</a></li>
-                        <li><a href="#competitions">Competitions</a></li>
-                        <li><a href="#vacancies">Vacancies</a></li>
-                        <li><a href="#contacts">Contacts</a></li>
-                        <li><a href="#social-media">Social Media</a></li>
-                    </ul>
-                </li>
-                <!-- Other menu items can go here -->
-            </ul>
-        </nav>
-        <h1>Welcome to Seopa Media</h1>
+      <h1>Inside Limpopo</h1>
+      <p>Latest news and more!</p>
     </header>
 
-    <main>
-        <!-- Sections remain the same as before -->
-        <section id="updates">
-            <h2>Updates: Breaking News & Top Stories</h2>
-            <p>Latest breaking news from Limpopo and beyond. Live updates on major stories.</p>
-        </section>
+    <nav>
+      <ul>
+        <li><a href="home.html" class="nav-items">Home</a></li>
+        <li><a href="events.html" class="nav-items">Events</a></li>
+        <li><a href="sports.html" class="nav-items">Sports</a></li>
+        <li><a href="opinion.html" class="nav-items">Opinion</a></li>
+        <li><a href="podcast.html" class="nav-items">Podcast</a></li>
+        <li><a href="vacancies.html" class="nav-items">Vacancies</a></li>
+        <li><a href="contact.html" class="nav-items">Contacts</a></li>
+        <li><a href="about.html" class="nav-items">About</a></li>
+        <input
+          type="search"
+          class="search"
+          placeholder="Search News"
+          label="search"
+          onchange="seachNews()"
+        />
+      </ul>
+    </nav>
 
-        <!-- Remaining sections here... -->
+    <div class="breaking-news-ticker">
+      <div class="ticker-content">
+        <span>
+          <img src="./assets/home/ramapho.jpeg" alt="News Image 1" />
+          <a
+            href="https://www.enca.com/top-stories/we-are-working-mending-relationship-us-ramaphosa"
+          >
+            We are working on mending relationship with US - Ramaphosa </a
+          >>
+        </span>
+        <span>
+          <img src="./assets/home/outa.jpeg" alt="News Image 2" />
+          <a
+            href="https://www.enca.com/news-top-stories/outa-uncovers-systemic-fraud-testing-stations"
+          >
+            Outa uncovers systemic fraud at testing stations</a
+          >
+        </span>
+        <span>
+          <img src="./assets/home/investigat.jpeg" alt="News Image 3" />
+          <a
+            href="https://www.enca.com/news-top-stories/investigation-finds-counterfeit-electrical-goods-appliances-widely-available"
+          >
+            Investigations finds counterfeit electrical goods, appliances widely
+            available</a
+          >
+        </span>
+        <span>
+          <img src="./assets/home/kzn.jpeg" alt="News Image 4" />
+          <a
+            href="https://www.enca.com/news-top-stories/kzn-anc-task-team-focuses-tripartite-alliance"
+          >
+            KZN task team focuses on Tripartite Alliance</a
+          >
+        </span>
+        <span>
+          <img src="./assets/home/us.jpeg" alt="News Image 5" />
+          <a
+            href="https://www.enca.com/opinion/us-democrats-fume-some-party-cave-trump-spending-bill"
+          >
+            US Democrats fume as some in party cave Trump on spending bill</a
+          >
+        </span>
+        <span>
+          <img src="./assets/home/rain.jpeg" alt="News Image 6" />
+          <a
+            href="https://www.enca.com/sport/norris-holds-verstappen-win-rain-hit-australian-grand-prix"
+          >
+            Norris holds off Verstappen to win rain-hit Australian Grand Prix FM
+          </a>
+        </span>
+        <span>
+          <img src="./assets/home/ramapho.jpeg" alt="News Image 1" />
+          <a
+            href="https://www.enca.com/top-stories/we-are-working-mending-relationship-us-ramaphosa"
+          >
+            We are working on mending relationship with US - Ramaphosa
+          </a>
+        </span>
+        <span>
+          <img src="./assets/home/outa.jpeg" alt="News Image 2" />
+          <a
+            href="https://www.enca.com/news-top-stories/outa-uncovers-systemic-fraud-testing-stations"
+          >
+            Outa uncovers systemic fraud at testing stations</a
+          >
+        </span>
+        <span>
+          <img src="./assets/home/investigat.jpeg" alt="News Image 3" />
+          <a
+            href="https://www.enca.com/news-top-stories/investigation-finds-counterfeit-electrical-goods-appliances-widely-available"
+          >
+            Investigations finds counterfeit electrical goods, appliances widely
+            available</a
+          >
+        </span>
+        <span>
+          <img src="./assets/home/kzn.jpeg" alt="News Image 4" />
+          <a
+            href="https://www.enca.com/news-top-stories/kzn-anc-task-team-focuses-tripartite-alliance"
+          >
+            KZN task team focuses on Tripartite Alliance</a
+          >
+        </span>
+        <span>
+          <img src="./assets/home/us.jpeg" alt="News Image 5" />
+          <a
+            href="https://www.enca.com/opinion/us-democrats-fume-some-party-cave-trump-spending-bill"
+          >
+            US Democrats fume as some in party cave Trump on spending bill</a
+          >
+        </span>
+        <span>
+          <img src="./assets/home/rain.jpeg" alt="News Image 6" />
+          <a
+            href="https://www.enca.com/sport/norris-holds-verstappen-win-rain-hit-australian-grand-prix"
+          >
+            Norris holds off Verstappen to win rain-hit Australian Grand Prix FM
+          </a>
+        </span>
+      </div>
+    </div>
+
+    <!-- Main Content -->
+    <main class="responsive-wrapper">
+      <h2>TOP NEWS</h2>
+      <div class="news-container">
+        <article class="featured-news">
+          <img
+            src="./assets/home/Screenshot 2025-03-16 160211.png"
+            alt="News"
+          />
+          <h2>
+            Draper stuns two-time defending champ Alcaraz to reach Indian Wells
+            final
+          </h2>
+          <p>
+            Jack Draper ended Carlos Alcaraz's bid for a rare Indian Wells ATP
+            Masters three-peat on Saturday, toppling the Spaniard to book a
+            title clash with Holger Rune..
+          </p>
+          <a
+            href="https://www.enca.com/sport/draper-stuns-two-time-defending-champ-alcaraz-reach-indian-wells-final"
+            class="read-more"
+            >Read more</a
+          >
+        </article>
+
+        <section class="news-grid">
+          <article class="news-item">
+            <img
+              src="./assets/home/Screenshot 2025-03-16 160941.png"
+              alt="News"
+            />
+            <h3>
+              Ramos guides France to Six Nations title with Scotland demolition
+            </h3>
+            <p>
+              France full-back Thomas Ramos scored 20 points as France bulldozed
+              Scotland 35-16 on Saturday in Paris to claim the Six Nations
+              title..
+            </p>
+            <a
+              href="https://www.enca.com/sport/ramos-guides-france-six-nations-title-scotland-demolition"
+              class="read-more"
+              >Read more</a
+            >
+          </article>
+          <article class="news-item">
+            <img
+              src="./assets/home/Screenshot 2025-03-16 162156.png"
+              alt="News"
+            />
+            <h3>Road to passing budget may be long, with many turns</h3>
+            <p>
+              Opposition parties are opposing the 1 percentage-point VAT hike
+              over two years, threatening the approval of Finance Minister Enoch
+              Godongwana's budget speech..
+            </p>
+            <a
+              href="https://www.enca.com/opinion/road-passing-budget-may-be-long-many-turns"
+              class="read-more"
+              >Read more</a
+            >
+          </article>
+          <article class="news-item">
+            <img
+              src="./assets/home/Screenshot 2025-03-16 162336.png"
+              alt="News"
+            />
+            <h3>Amid tensions, Canada says reviewing purchase of US jets</h3>
+            <p>
+              Canada is reviewing a major purchase of US-made F-35 combat planes
+              amid serious tensions with the Trump administration, a
+              spokesperson for the Canadian defense ministry told AFP..
+            </p>
+            <a
+              href="https://www.enca.com/business/amid-tensions-canada-says-reviewing-purchase-us-jets"
+              class="read-more"
+              >Read more</a
+            >
+          </article>
+          <article class="news-item">
+            <img
+              src="./assets/home/Screenshot 2025-03-16 162638.png"
+              alt="News"
+            />
+            <h3>Malema warns those supporting MKP leader Jacob Zuma</h3>
+            <p>
+              EFF leader Julius Malema has issued a stern warning to those who
+              are currently supportive of former president Jacob Zuma..
+            </p>
+            <a
+              href="https://www.enca.com/news/malema-warns-those-supporting-mkp-leader-jacob-zuma"
+              class="read-more"
+              >Read more</a
+            >
+          </article>
+        </section>
+      </div>
+
+      <div class="page-title">
+        <h1>FEATURED NEWS</h1>
+      </div>
+      <div class="magazine-layout">
+        <div class="magazine-column">
+          <article class="article">
+            <h2 class="article-title article-title--large">
+              <a
+                href="https://jamesclear.com/why-facts-dont-change-minds"
+                class="article-link"
+                >Why Facts Don’t Change Our Minds</a
+              >
+            </h2>
+            <div class="article-excerpt">
+              <p>
+                The economist J.K. Galbraith once wrote, “Faced with a choice
+                between changing one’s mind and proving there is no need to do
+                so, almost everyone gets busy with the proof.”
+              </p>
+              <p>
+                Leo Tolstoy was even bolder: “The most difficult subjects can be
+                explained to the most slow-witted man if he has not formed any
+                idea of them already..
+              </p>
+              <a
+                href="https://jamesclear.com/why-facts-dont-change-minds"
+                class="read-more"
+                >Read more</a
+              >
+            </div>
+
+            <div class="article-author">
+              <div class="article-author-img">
+                <img src="./assets/home/jc.jpeg" alt="JamesClear" />
+              </div>
+              <div class="article-author-info">
+                <dl>
+                  <dt>James Clear</dt>
+                  <dd>Author</dd>
+                </dl>
+              </div>
+            </div>
+          </article>
+          <article class="article">
+            <h2 class="article-title article-title--medium">
+              <a
+                href="https://benjaminspall.com/consequentialism/"
+                class="article-link"
+                >Consequentialism Ethics: A Brief Introduction</a
+              >
+            </h2>
+            <div class="article-creditation">
+              <p>
+                By Benjamin Spall the co-author of My Morning Routine, now
+                writing Endnotes on Substack. He is a contributor to the New
+                York Times, Entrepreneur, CNBC, Business Insider, and more.
+              </p>
+            </div>
+          </article>
+        </div>
+        <div class="magazine-column">
+          <article class="article">
+            <div class="article-img">
+              <img src="./assets/home/drc.jpg" alt="" />
+            </div>
+            <h2 class="article-title article-title--medium">
+              <a
+                href="https://www.enca.com/top-stories/withdrawal-soldiers-drc-not-sign-defeat-ramaphosa"
+                class="article-link"
+                >Withdrawal of soldiers from DRC is not a sign of defeat -
+                Ramaphosa</a
+              >
+            </h2>
+            <div class="article-excerpt">
+              <p>
+                President Ramaphosa says withdrawing troops from the DRC is not
+                defeat. He says it should be seen as a build-up to the peace
+                process. SADC leaders decided to end its SamiDRC mission in a
+                phased withdrawal. The inter-governmental..
+              </p>
+              <a
+                href="https://www.enca.com/top-stories/withdrawal-soldiers-drc-not-sign-defeat-ramaphosa"
+                class="read-more"
+                >Read more</a
+              >
+            </div>
+            <div class="article-author">
+              <div class="article-author-img">
+                <img src="./assets/home/enca.jpg" alt="" />
+              </div>
+              <div class="article-author-info">
+                <dl>
+                  <dt>ENCA</dt>
+                  <dd>News</dd>
+                </dl>
+              </div>
+            </div>
+          </article>
+
+          <article class="article">
+            <div class="article-img">
+              <img src="./assets/home/sanct.jpeg" alt="" />
+            </div>
+            <h2 class="article-title article-title--medium">
+              <a
+                href="https://www.enca.com/news/eu-sanctions-rwandan-commanders-over-m23-dr-congo"
+                class="article-link"
+                >EU sanctions Rwandan commanders over M23 in DR Congo</a
+              >
+            </h2>
+            <div class="article-excerpt">
+              <a
+                href="https://www.enca.com/news/eu-sanctions-rwandan-commanders-over-m23-dr-congo"
+                class="read-more"
+                >Read more</a
+              >
+            </div>
+            <div class="article-author">
+              <div class="article-author-img">
+                <img src="./assets/home/enca.jpg" alt="" />
+              </div>
+              <div class="article-author-info">
+                <dl>
+                  <dt>ENCA</dt>
+                  <dd>News</dd>
+                </dl>
+              </div>
+            </div>
+          </article>
+
+        </div>
+        <div class="magazine-column">
+          <article class="article">
+            <figure class="article-img">
+              <img src="./assets/home/alcojpeg.jpeg" alt="" />
+            </figure>
+            <h2 class="article-title article-title--small">
+              <a
+                href="https://www.iol.co.za/news/crime-and-courts/kzn-police-dismantle-illegal-alcohol-factory-seize-r1-5-million-counterfeit-liquor-82c1165f-ed91-4903-a9ea-7b65b41a9b3f"
+                class="article-link"
+                >KZN police dismantle illegal alcohol factory, seize R1. 5
+                million counterfeit liquor</a
+              >
+            </h2>
+            <div class="article-excerpt">
+              <p>
+                Police have dismantled an illegal liquor manufacturing business
+                that was reportedly supplying counterfeit alcoholic beverages to
+                multiple outlets in..
+              </p>
+            </div>
+            <div class="article-creditation">
+              <p>
+                By
+                <a
+                  class="read-more"
+                  href="https://www.iol.co.za/authors/sinenhlanhla-masilela"
+                  >Sinenhlanhla Masilela</a
+                >
+              </p>
+            </div>
+          </article>
+          <article class="article">
+            <figure class="article-img">
+              <img
+                src="./assets/home/judge.jpeg"
+                alt=""
+              />
+            </figure>
+            <h2 class="article-title article-title--small">
+              <a href="#" class="article-link"
+                >UN judge convicted after tricking Ugandan woman to come to UK to 
+                use her as a slave</a
+              >
+            </h2>
+            <div class="article-creditation">
+                <p>
+                  By
+                  <a
+                    class="read-more"
+                    href="https://www.iol.co.za/authors/sinenhlanhla-masilela"
+                    >Sinenhlanhla Masilela</a
+                  >
+                </p>
+              </div>
+          </article>
+        </div>
+        <div class="magazine-column">
+          <article class="article">
+            <h2 class="article-title article-title--medium">
+              <a href="https://www.iol.co.za/news/crime-and-courts/more-charges-added-as-sassa-officials-face-over-1300-counts-in-r260-million-fraud-scheme-1250e435-570b-4a46-877b-107de1828ab9" class="article-link"
+                >More charges added as Sassa officials face over 1,300 counts 
+                in R260 million fraud scheme</a
+              >
+            </h2>
+            <div class="article-excerpt">
+              <p>
+                The accused are Phumelele Myeza, 37, Paul Bones, 49, Keamogetswe 
+                Irene Ledwaba, 49, Siphesihle Phumzile Dlamini, 30, and Phiwe Mkhuzangwe, 37...
+              </p>
+            </div>
+            <div class="article-author">
+              <div class="article-author-img">
+                <img
+                  src="./assets/home/sinenhl"
+                  alt=""
+                />
+              </div>
+              <div class="article-author-info">
+                <dl>
+                  <dt>James Robert</dt>
+                  <dd>Editor</dd>
+                </dl>
+              </div>
+            </div>
+          </article>
+          <article class="article">
+            <small class="article-category">
+              <span>Post Reports / Podcast</span>
+            </small>
+            <h2 class="article-title article-title--medium">
+              <a href="https://youtu.be/TwR3h5bCp7U?si=z_YT5MmraEak_1t3" class="article-link"
+                >Dated a ghost for 2 months</a
+              >
+            </h2>
+            
+            <div class="article-podcast-info">
+              Apple Podcasts, Google Podcasts, Stitcher
+            </div>
+            <div class="article-excerpt">
+                <p>
+                    Welcome to Soweto Podcast the voice of Soweto with your host Sipho Hadebe! 
+                    Join us for real conversations, and inspiring stories from the heart of South Africa
+                </p>
+            </div>
+            <div class="article-author">
+              <div class="article-author-img">
+                <img
+                  src="./assets/home/podcas.png"
+                  alt=""
+                />
+              </div>
+              <div class="article-author-info">
+                <dl>
+                  <dt>Soweto Magz</dt>
+                  <dd>Podcast</dd>
+                </dl>
+              </div>
+            </div>
+          </article>
+        </div>
+      </div>
     </main>
 
+    <!-- Footer Section -->
     <footer>
-        <p>&copy; 2025 Seopa Media. All rights reserved.</p>
+      <div class="social-media-icons">
+        <a href="https://facebook.com" target="_blank" rel="noopener"
+          ><i class="fab fa-facebook-f"></i
+        ></a>
+        <a href="https://twitter.com" target="_blank" rel="noopener"
+          ><i class="fab fa-twitter"></i
+        ></a>
+        <a href="https://instagram.com" target="_blank" rel="noopener"
+          ><i class="fab fa-instagram"></i
+        ></a>
+        <a href="https://linkedin.com" target="_blank" rel="noopener"
+          ><i class="fab fa-linkedin-in"></i
+        ></a>
+        <a href="https://youtube.com" target="_blank" rel="noopener"
+          ><i class="fab fa-youtube"></i
+        ></a>
+      </div>
+      <p>&copy; 2025 InsideLimpopo.com | All Rights Reserved</p>
     </footer>
-</body>
+
+    <script src="./js/scipt.js"></script>
+  </body>
 </html>

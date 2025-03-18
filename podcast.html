@@ -16,496 +16,166 @@
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
       rel="stylesheet"
     />
-    <title>Podcast | Seopa Media</title>
+    <link href="./css/style.css" rel="Stylesheet" />
+    <title>PODCAST | Seopa Media</title>
   </head>
-
-  <style>
-    @import url("https://fonts.googleapis.com/css2?family=PT+Sans:ital,wght@0,400;0,700;1,400&display=swap");
-    /* General Styles */
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
-    body {
-      font-family: Arial, sans-serif;
-    }
-
-    /* Styles for navigation */
-    nav {
-      background: #333;
-      padding: 1rem;
-      font-size: 16px;
-      font-family: Arial, Helvetica, sans-serif;
-      font-weight: 550;
-    }
-
-    nav ul {
-      list-style-type: none;
-      margin: 0;
-      padding: 0;
-      display: flex;
-      justify-content: space-around;
-    }
-
-    nav ul li {
-      display: inline;
-    }
-
-    nav ul li a {
-      display: block;
-      padding: 0.5rem 1rem;
-      color: white;
-      text-decoration: none;
-    }
-
-    /* Navigation hover effects */
-    .nav-items::after {
-      height: 3px;
-      display: block;
-      content: "";
-      background-color: whitesmoke;
-      margin-top: 3px;
-      box-shadow: 0 0 10px white;
-      transform: scaleX(0);
-      transition: transform 0.4s;
-    }
-
-    .nav-items:hover::after {
-      transform: scaleX(1);
-    }
-
-    /* Swiper Styles */
-    .swiper {
-      width: 100%;
-      height: 100%;
-      overflow: hidden;
-    }
-
-    .swiper-slide {
-      text-align: center;
-      font-size: 18px;
-      background-size: cover;
-      background-repeat: no-repeat;
-      background-position: center;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-
-    [class|="swiper-button"] {
-      color: white;
-      padding: 15px;
-    }
-
-    .swiper-button-next{
-      right: 65px;
-    }
-
-    .swiper-button-prev{
-      left: 65px;
-    }
-
-    main {
-      margin: 10px 3px;
-    }
-
-    .carousel_slider {
-      min-height: 450px;
-      width: 100%;
-      max-width: 1200px;
-      margin: auto;
-      background-image: url("./assets/podcast.png");
-      text-align: center;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      color: white;
-      background-repeat: no-repeat;
-      background-size: cover;
-      padding: 20px;
-    }
-
-    .readmore-btn {
-      padding: 10px 40px;
-      background-color: #fff;
-      border: 1px solid #ccc;
-      border-radius: 10px;
-      margin: 20px 0;
-      cursor: pointer;
-      transition: background 0.3s;
-    }
-
-    .readmore-btn:hover {
-      background-color: #333;
-      color: white;
-    }
-
-    /* Post Layout */
-    .content-container,
-    .posts {
-      margin: 30px auto;
-      padding: 0 20px;
-      max-width: 1200px;
-    }
-
-    .post-card {
-      margin-bottom: 50px;
-    }
-
-    .posts_container-title {
-      margin: 20px 0;
-      text-decoration: underline;
-      width: 100%;
-    }
-
-    .post-thumbnail {
-      width: 100%;
-      max-width: 200px;
-      height: auto;
-      object-fit: cover;
-      border-radius: 4%;
-    }
-
-    .post-thumbnail img {
-    -webkit-filter: blur(3px);
-    filter: blur(3px);
-    -webkit-transition: .3s ease-in-out;
-    transition: .3s ease-in-out;
-    width: 100%;
-    height: auto;
-    object-fit: cover;
-    border-radius: 4%;
-}
-
-.post-thumbnail:hover img {
-    -webkit-filter: blur(0);
-    filter: blur(0);
-}
-
-
-    .post-title {
-      font-weight: 400;
-      font-size: clamp(16px, 2vw, 20px);
-      margin-left: 15px;
-      text-decoration: none;
-    }
-
-    .short {
-      margin: 10px 0;
-      margin-left: 15px;
-      margin-top: 30px;
-      overflow: hidden;
-      max-height: 4.5rem;
-      position: relative;
-      text-overflow: ellipsis;
-      display: -webkit-box;
-      /* display: block; */
-      -webkit-line-clamp: 4; 
-      line-clamp: 4;
-      -webkit-box-orient: vertical;
-    }
-
-    .recent-short {
-      margin: 10px 0;
-      margin-left: 1px;
-      margin-top: 3px;
-      overflow: hidden;
-      font-size: smaller;
-      max-height: 4.5rem;
-      position: relative;
-      text-overflow: ellipsis;
-      display: -webkit-box;
-      /* display: block; */
-      -webkit-line-clamp: 2; 
-      line-clamp: 2;
-      -webkit-box-orient: vertical;
-    }
-
-    .read-more{
-      display: inline-block;
-      color: blue;
-      cursor: pointer;
-      margin-top: 1px;
-      text-decoration: none;
-      margin-left: 15px;
-    }
-
-    .recent-read-more{
-      display: inline-block;
-      color: blue;
-      cursor: pointer;
-      margin-top: 0px;
-      text-decoration: none;
-      font-size: smaller;
-      margin-left: 1px;
-    }
-
-    .details {
-      font-size: clamp(12px, 1.5vw, 14px);
-      font-style: italic;
-      margin-top: 5px;
-      margin-left: 15px;
-    }
-
-    .details > span {
-      padding: 2px 4px;
-      margin-right: 10px;
-      font-weight: 600;
-      border: 1px solid #ccc;
-    }
-
-    /* Recent Posts */
-    .recent-posts {
-      padding: 10px 20px;
-    }
-
-    .rc_post-card {
-      display: flex;
-      margin: 20px 0;
-    }
-
-    .rc_post-title {
-      text-transform: lowercase;
-    }
-
-    .rc_post-thumbnail {
-      height: 100px;
-      width: 100px;
-      margin-right: 20px;
-      object-fit: cover;
-    }
-
-    .rc_post-thumbnail {
-    height: 100px;
-    width: 100px;
-    margin-right: 20px;
-    object-fit: cover;
-    -webkit-filter: blur(3px);
-    filter: blur(3px);
-    -webkit-transition: .3s ease-in-out;
-    transition: .3s ease-in-out;
-}
-
-.rc_post-thumbnail:hover {
-    -webkit-filter: blur(0);
-    filter: blur(0);
-}
-
-
-    .rc_details > span {
-      font-size: 12px;
-      font-weight: 700;
-    }
-
-    /* Tags Section */
-    .posts_tags {
-      padding: 20px;
-    }
-
-    .tags-container {
-      margin: 20px 0;
-    }
-
-    .tags {
-      display: grid;
-      gap: 1em;
-      grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
-    }
-
-    .tag {
-      text-align: center;
-      padding: 5px;
-      border: 1px solid #ccc;
-      border-radius: 5px;
-      color: white;
-      background-color: #333;
-    }
-
-    .tag:hover{
-      text-align: center;
-      color: #333;
-      background-color: whitesmoke;
-    }
-
-
-
-    @media  screen and (min-width:768px) {
-      .content-container{
-        display: grid;
-        grid-template-columns: 60% 35%;
-      }
-    }
-
-    @media screen and (min-width: 768px) {
-      .post-card{
-        display: flex;
-      }
-    }
-
-    @media screen and (max-width: 768px) {
-      .swiper-slide {
-        font-size: 16px;
-      }
-
-      .carousel_slider {
-        min-height: 300px;
-        padding: 15px;
-      }
-
-      .post-thumbnail {
-        max-width: 100%;
-      }
-
-      .rc_post-card {
-        flex-direction: column;
-        align-items: center;
-      }
-
-      .post-short-content{
-        margin-left: 20px;
-      }
-    }
-
-    /* Styes for footer */
-    .footer {
-      background-color: #333; 
-      color: white;
-      text-align: center;
-      padding: 10px 0;
-      /* position: absolute;  Changed from 'absolute' to 'relative' */
-      bottom: 0;
-      width: 100%;
-    }
-    .footer .social-media-icons {
-      margin-bottom: 10px;
-    }
-    .footer .social-media-icons a {
-      color: white;
-      font-size: 24px;
-      margin: 0 10px;
-      text-decoration: none;
-      transition: color 0.3s ease;
-    }
-    .footer .social-media-icons a:hover {
-      color: #ffcc00; /* Hover color for icons */
-    }
-  </style>
-
   <body>
     <!-- Header Section -->
     <header>
-      <nav>
-        <ul>
-          <li><a href="home.html" class="nav-items">Home</a></li>
-          <li><a href="#updates" class="nav-items">Updates</a></li>
-          <li><a href="#events" class="nav-items">Events</a></li>
-          <li><a href="sports.html" class="nav-items">Sports</a></li>
-          <li><a href="#opinion" class="nav-items">Opinion</a></li>
-          <li><a href="podcast.html" class="nav-items">Podcast</a></li>
-          <li><a href="#disabilities" class="nav-items">My(Dis)Abilities</a></li>
-          <li><a href="new.html" class="nav-items">Competitions</a></li>
-          <li><a href="vacancies.html" class="nav-items">Vacancies</a></li>
-          <li><a href="contact.html" class="nav-items">Contacts</a></li>
-          <li><a href="about.html" class="nav-items">About</a></li>
-        </ul>
-      </nav>
+      <h1>Inside Limpopo</h1>
+      <p>Latest news and more!</p>
     </header>
+
+    <nav>
+      <ul>
+        <li><a href="home.html" class="nav-items">Home</a></li>
+        <li><a href="events.html" class="nav-items">Events</a></li>
+        <li><a href="sports.html" class="nav-items">Sports</a></li>
+        <li><a href="opinion.html" class="nav-items">Opinion</a></li>
+        <li><a href="podcast.html" class="nav-items">Podcast</a></li>
+        <li><a href="vacancies.html" class="nav-items">Vacancies</a></li>
+        <li><a href="contact.html" class="nav-items">Contacts</a></li>
+        <li><a href="about.html" class="nav-items">About</a></li>
+        <input type="search" class="search"  placeholder="Search News" label="search" />
+      </ul>
+    </nav>
 
     <!-- Main Section -->
     <main>
-      <div class="sub-header">
-        <div class="swiper mySwiper">
-          <div class="swiper-wrapper">
-            <div class="swiper-slide">
-              <div class="carousel_slider">
-                <h3 style="color: rgb(36, 38, 39); margin-bottom: 295px;">PODCAST STATION</h3>
-                <!-- <button class="readmore-btn">Read More</button> -->
-              </div>
-            </div>
-          </div>
-          <div class="swiper-button-next"></div>
-          <div class="swiper-button-prev"></div>
-          <div class="swiper-pagination"></div>
+      <div class="slideshow-container">
+
+        <div class="mySlides fade">
+          <div class="numbertext">1 / 3</div>
+          <a href="https://youtu.be/POnQrArfy4g?si=zGec_AIZ5ncj84aw"  class="podcast-img">
+            <img src="./assets/podcast/hop.jpg" style="width:100%" alt="">
+          </a>
+          <div class="podcast-title">HOPE REVOLUTION EPISODE 9 : A Mother's Story: Surviving The Unthinkable</div>
         </div>
+        
+        <div class="mySlides fade">
+          <div class="numbertext">2 / 3</div>
+          <a href="https://youtu.be/rH7NOuOGJzA?si=9KNVJtnDKNyPuGpf" class="podcast-img">
+            <img src="./assets/podcast/sddefault.jpg" style="width:100%" alt="">
+          </a>
+          <div class="podcast-title">MBUYISENI NDLOZI on EFF, FLOYD SHIVAMBU, JULIUS MALEMA, DONALD TRUMP, GNU, VBS BANK I EPISODE 636</div>
+        </div>
+        
+        <div class="mySlides fade">
+          <div class="numbertext">3 / 3</div>
+          <a href="https://youtu.be/0_VigIWitfs?si=52S83ZIvFzZCcAoT" class="podcast-img">
+            <img src="./assets/podcast/konvo.jpg" style="width:100%" alt="">
+          </a>
+          <div class="podcast-title">The Konvo Show: Penuel In Conversation With Warras Stock, Ricky Rick, Unreal Engine, Loadshedding...</div>
+        </div>
+        
+        <a class="prev" onclick="plusSlides(-1)">❮</a>
+        <a class="next" onclick="plusSlides(1)">❯</a>
+        
+      </div>
+      <br>
+        
+      <div style="text-align:center">
+        <span class="dot" onclick="currentSlide(1)"></span> 
+        <span class="dot" onclick="currentSlide(2)"></span> 
+        <span class="dot" onclick="currentSlide(3)"></span> 
       </div>
 
       <div class="content-container">
-        <div class="posts">
-          <h2 class="posts_container-title">Podcast</h2> 
+        <div class="posts" id="posts">
+          <h2 class="posts_container-title">Podcast</h2>
           <div class="post-card">
-            
-              <img
+            <img
               class="post-thumbnail"
-              src="./podcast/Afro.jpeg"  
-              alt="post-thumbnail"/>
-            
+              src="./assets/podcast/Afro.jpeg"
+              alt="post-thumbnail"
+            />
+
             <div class="post-short-content">
-              <a href="https://stitcher2.acast.com/livestitches/a95c0c8889022d3717f5a919101963db.mp3?ci=RQJvnJhx5q9uctfRnamV5Wtar56-II9zem8I6GgKn-JALLtQKW_IFQ%3D%3D&pf=rss&sv=sphinx%401.231.1&uid=a3f0c0cea77bc34b602d9496c4e5d81d&Expires=1741919737962&Key-Pair-Id=K38CTQXUSD0VVB&Signature=grT1pH-wk15PWj3l6IBH9nsuUlR51TjamvBwZdPIUte1~iwPJbdiRY5jmaNxhBZjyYbfntcqRit18krrtVJyV9Q-sIEhZlbSZ8mBkUBpWJfrbhskh4Mn~dHegC23oNY8yyqiqpqRIvCotNgoUtaXcc8FAi616hP5sje~N-p873qGUYKBOV1SPLJfaZEVSqFwH5TpFIH2KI5KRvkTI7cd6kkFm0fZnUJmYsbQ0Of8G4zp3W3h6ogcXQuoi0OqosH3XfZmvaT-~woSEZWP0g74Ye9-~2MuOg4DtQM3cB0orVx2kaYhy-5PKZpPV5EtSah3ef7l7ycD5i8TRhzud1eVcg__" 
-                class="post-title">Joshua Baraka East Africans..
+              <a
+                href="https://stitcher2.acast.com/livestitches/a95c0c8889022d3717f5a919101963db.mp3?ci=RQJvnJhx5q9uctfRnamV5Wtar56-II9zem8I6GgKn-JALLtQKW_IFQ%3D%3D&pf=rss&sv=sphinx%401.231.1&uid=a3f0c0cea77bc34b602d9496c4e5d81d&Expires=1741919737962&Key-Pair-Id=K38CTQXUSD0VVB&Signature=grT1pH-wk15PWj3l6IBH9nsuUlR51TjamvBwZdPIUte1~iwPJbdiRY5jmaNxhBZjyYbfntcqRit18krrtVJyV9Q-sIEhZlbSZ8mBkUBpWJfrbhskh4Mn~dHegC23oNY8yyqiqpqRIvCotNgoUtaXcc8FAi616hP5sje~N-p873qGUYKBOV1SPLJfaZEVSqFwH5TpFIH2KI5KRvkTI7cd6kkFm0fZnUJmYsbQ0Of8G4zp3W3h6ogcXQuoi0OqosH3XfZmvaT-~woSEZWP0g74Ye9-~2MuOg4DtQM3cB0orVx2kaYhy-5PKZpPV5EtSah3ef7l7ycD5i8TRhzud1eVcg__"
+                class="post-title"
+                >Joshua Baraka East Africans..
               </a>
               <div class="details">
                 <span class="post-date">August 03, 2024</span>
                 <span class="post-type">Society & Culture</span>
               </div>
               <p class="short">
-                Joshua Baraka 6:40 I was born in the ghetto but I didn’t 
-                participate in ghetto activities!12:27 I was paid 800k for 
-                my first ever performance; I performed for just 10 minutes!15:20 
-                I’m three years in, and carrying my nation on my back.19:48 There’s 
-                a lot of illiteracy in Uganda…21:00 When my song blew up, people thought 
-                I was a Nigerian!23:30 It’s important for artists to know how to perform 
-                live.26:55 East Africans are such lazy studio artists, but…
+                Joshua Baraka 6:40 I was born in the ghetto but I didn’t
+                participate in ghetto activities!12:27 I was paid 800k for my
+                first ever performance; I performed for just 10 minutes!15:20
+                I’m three years in, and carrying my nation on my back.19:48
+                There’s a lot of illiteracy in Uganda…21:00 When my song blew
+                up, people thought I was a Nigerian!23:30 It’s important for
+                artists to know how to perform live.26:55 East Africans are such
+                lazy studio artists, but…
               </p>
-              <a href="https://www.podbean.com/site/EpisodeDownload/DIR1F7B2D63DIUSR" class="read-more">..read more</a>
+              <a
+                href="https://www.podbean.com/site/EpisodeDownload/DIR1F7B2D63DIUSR"
+                class="read-more"
+                >Read more</a
+              >
             </div>
-            <hr/>
           </div>
           <div class="post-card">
-            
-              <img
+            <img
               class="post-thumbnail"
-              src="./podcast/Majozi_copy.jpg"
-              alt="post-thumbnail"/>
-            
+              src="./assets/podcast/Majozi_copy.jpg"
+              alt="post-thumbnail"
+            />
+
             <div class="post-short-content">
-              <a href="https://content.libsyn.com/p/d/1/2/d1275c389620bfef/TATC_-_Majolzi_and_American_Authors___V.1.mp3?c_id=169547348&cs_id=169547348&response-content-type=audio%2Fmpeg&Expires=1741913801&Signature=Umv~vYw1lCqFOQ0lYz~qss8VEwdjdubjW1xnwPSnEGVd38irKgmjA4iP5fHlNTmpYjD2LJIL68uUseFhG4P4bOnEhhNUwJjbF~uXUKHSBCkquv39-5-XMEMUa8v5N~ksGijrET4luc3Vv1a~L~grVX3DZYCqADsTbf62R3Fjb6XLSc63h5PqX8noIiIKXPpCc4~dwaprHq~tdM0SXImCiv-kjWSByQRYLyiyKQuOeIw1ZED8Rxj~s1WsfKDO5Xu03FwmvmKA-oEpFrHe7R13xiRrH5yxdQJUZp3zSqNsA83gi5I4OiWEQpS58EvuVLA~de54EryEb2QRdd8oZ5ZdXg__&Key-Pair-Id=K1YS7LZGUP96OI" class="post-title">Majozi</a>
+              <a
+                href="https://content.libsyn.com/p/d/1/2/d1275c389620bfef/TATC_-_Majolzi_and_American_Authors___V.1.mp3?c_id=169547348&cs_id=169547348&response-content-type=audio%2Fmpeg&Expires=1741913801&Signature=Umv~vYw1lCqFOQ0lYz~qss8VEwdjdubjW1xnwPSnEGVd38irKgmjA4iP5fHlNTmpYjD2LJIL68uUseFhG4P4bOnEhhNUwJjbF~uXUKHSBCkquv39-5-XMEMUa8v5N~ksGijrET4luc3Vv1a~L~grVX3DZYCqADsTbf62R3Fjb6XLSc63h5PqX8noIiIKXPpCc4~dwaprHq~tdM0SXImCiv-kjWSByQRYLyiyKQuOeIw1ZED8Rxj~s1WsfKDO5Xu03FwmvmKA-oEpFrHe7R13xiRrH5yxdQJUZp3zSqNsA83gi5I4OiWEQpS58EvuVLA~de54EryEb2QRdd8oZ5ZdXg__&Key-Pair-Id=K1YS7LZGUP96OI"
+                class="post-title"
+                >Majozi</a
+              >
               <div class="details">
                 <span class="post-date">March 22, 2024</span>
                 <span class="post-type">Music:Music Interviews</span>
               </div>
               <p class="short">
-                Majozi chats to Texx about the songs that for him embody the spirit of 
-                South Africa, the exciting technical developments with his set, and how 
-                stoked he is to be a part of Halfway Group’s new campaign “On Track To Better”.
+                Majozi chats to Texx about the songs that for him embody the
+                spirit of South Africa, the exciting technical developments with
+                his set, and how stoked he is to be a part of Halfway Group’s
+                new campaign “On Track To Better”.
               </p>
-              <a href="https://www.podbean.com/site/EpisodeDownload/DIR1DD82588FFHX6" class="read-more">..read more</a>
+              <a
+                href="https://www.podbean.com/site/EpisodeDownload/DIR1DD82588FFHX6"
+                class="read-more"
+                >Read more</a
+              >
             </div>
-            <hr/>
           </div>
 
           <div class="post-card">
-            
-                <img
+            <img
               class="post-thumbnail"
-              src="./podcast/DailySh.jpg"
-              alt="post-thumbnail"/>
-             
+              src="./assets/podcast/DailySh.jpg"
+              alt="post-thumbnail"
+            />
+
             <div class="post-short-content">
-              <a href="https://dl.iono.fm/epi/prov_179/epi_501808_high.mp3?p=rss" class="post-title">Countdown to ANC Election </a>
+              <a
+                href="https://dl.iono.fm/epi/prov_179/epi_501808_high.mp3?p=rss"
+                class="post-title"
+                >Countdown to ANC Election
+              </a>
               <div class="details">
                 <span class="post-date">November 14, 2017</span>
                 <span class="post-type">News</span>
               </div>
               <p class="short">
-                CliffCentral.com — Scholar and anti-apartheid activist Raymond Suttner and Daily Maverick journalist 
-                Richard Poplak talk about the ANC, a month before the party's elective conference.
+                CliffCentral.com — Scholar and anti-apartheid activist Raymond
+                Suttner and Daily Maverick journalist Richard Poplak talk about
+                the ANC, a month before the party's elective conference.
               </p>
-              <a href="https://www.podbean.com/site/EpisodeDownload/DIR31CFE90RIYTJ" class="read-more">..read more</a>
+              <a
+                href="https://www.podbean.com/site/EpisodeDownload/DIR31CFE90RIYTJ"
+                class="read-more"
+                >Read more</a
+              >
             </div>
-            <hr/>
           </div>
         </div>
 
@@ -514,53 +184,84 @@
             <h3 class="rc_posts_container-title">Recent Podcast</h3>
             <hr />
             <div class="rc_post-card">
-                <img
-                  class="rc_post-thumbnail"
-                  src="./podcast/recen.jpg"
-                  alt="rc_post-thumbnail"/>
-              
+              <img
+                class="rc_post-thumbnail"
+                src="./assets/podcast/recen.jpg"
+                alt="rc_post-thumbnail"
+              />
+
               <div class="post-short-content">
-                <a href="https://dl.iono.fm/epi/prov_577/epi_1532870_medium.m4a?p=rss" class="rc_post-title">How to Deal with the Loss of a Family Member</a>
+                <a
+                  href="https://dl.iono.fm/epi/prov_577/epi_1532870_medium.m4a?p=rss"
+                  class="rc_post-title"
+                  >How to Deal with the Loss of a Family Member</a
+                >
                 <div class="rc_details">
                   <span class="post-date">March 04, 2025</span>
                   <span class="rc_post-type">Kids & Family</span>
                 </div>
                 <p class="recent-short">
-                  When we face the loss of a loved one, especially a child, or a parent, it might be the most confusing process in our 
-                  lives - and chances are, most of us are just not prepared for such events to ever happen. Sometimes, all we need is a 
-                  little guidance to work through difficult times, together. Join us for this special Bereavement Series where we speak 
-                  to professional counsellors & experts, to be better equipped - mentally, emotionally, and for the actual practical implications 
-                  - when a loved one passes. Our guest this week, Carin Marcus, shares her knowledge as a Clinical social worker (with over 25 years 
-                  of experience) on bereavement. Over the next few months, we'll be presenting our support series for handling grief in various circumstances.
-                  Brought to you by Epi-Max Baby & Junior - Our Family, for Your Family. Sponsored by Curaprox and supported by Jacaranda FM.
-                  The following episode contains sensitive subject matter for someone that has lost a loved one. We have interviewed professional experts on 
-                  each topic, and taken extra care to cover the subjects with sensitivity.
+                  When we face the loss of a loved one, especially a child, or a
+                  parent, it might be the most confusing process in our lives -
+                  and chances are, most of us are just not prepared for such
+                  events to ever happen. Sometimes, all we need is a little
+                  guidance to work through difficult times, together. Join us
+                  for this special Bereavement Series where we speak to
+                  professional counsellors & experts, to be better equipped -
+                  mentally, emotionally, and for the actual practical
+                  implications - when a loved one passes. Our guest this week,
+                  Carin Marcus, shares her knowledge as a Clinical social worker
+                  (with over 25 years of experience) on bereavement. Over the
+                  next few months, we'll be presenting our support series for
+                  handling grief in various circumstances. Brought to you by
+                  Epi-Max Baby & Junior - Our Family, for Your Family. Sponsored
+                  by Curaprox and supported by Jacaranda FM. The following
+                  episode contains sensitive subject matter for someone that has
+                  lost a loved one. We have interviewed professional experts on
+                  each topic, and taken extra care to cover the subjects with
+                  sensitivity.
                 </p>
-                <a href="https://www.podbean.com/site/EpisodeDownload/DIR241A0CDBRMZH9" class="recent-read-more">..read more</a>
+                <a
+                  href="https://www.podbean.com/site/EpisodeDownload/DIR241A0CDBRMZH9"
+                  class="recent-read-more"
+                  >Read more</a
+                >
               </div>
             </div>
             <div class="rc_post-card">
               <img
                 class="rc_post-thumbnail"
-                src="./podcast/recen.jpg"
-                alt="rc_post-thumbnail"/>
+                src="./assets/podcast/recen.jpg"
+                alt="rc_post-thumbnail"
+              />
               <div class="post-short-content">
-                <a href="https://dl.iono.fm/epi/prov_577/epi_1528310_medium.m4a?p=rss" class="rc_post-title">From Bump to First Tooth: Caring for Baby’s Oral Health</a>
+                <a
+                  href="https://dl.iono.fm/epi/prov_577/epi_1528310_medium.m4a?p=rss"
+                  class="rc_post-title"
+                  >From Bump to First Tooth: Caring for Baby’s Oral Health</a
+                >
                 <div class="rc_details">
                   <span class="post-date">February 18, 2025</span>
                   <span class="rc_post-type">Kids & Family</span>
                 </div>
                 <p class="recent-short">
-                  It's a tiny smile that could be worth a lifetime of joy! Discover the 
-                  fascinating journey of healthy teeth & gums - and Why it's so important to 
-                  ensure we have good oral health, even before we are pregnant. Thanks to CuraProx, 
-                  this week's Guest helps us to really understand the role that our Dental health plays 
-                  in long-term health & vitality. Paediatric Dentist, Dr Coené Bezuidenhout, explains why 
-                  the first 1000 days matter - but even more important: the fact that baby's oral health is 
-                  entirely affected by How healthy Mom's teeth & gums are. Brought to you by Epi-Max Baby & Junior - 
-                  Our Family, for Your Family. Sponsored by Curaprox and supported by Jacaranda FM.
+                  It's a tiny smile that could be worth a lifetime of joy!
+                  Discover the fascinating journey of healthy teeth & gums - and
+                  Why it's so important to ensure we have good oral health, even
+                  before we are pregnant. Thanks to CuraProx, this week's Guest
+                  helps us to really understand the role that our Dental health
+                  plays in long-term health & vitality. Paediatric Dentist, Dr
+                  Coené Bezuidenhout, explains why the first 1000 days matter -
+                  but even more important: the fact that baby's oral health is
+                  entirely affected by How healthy Mom's teeth & gums are.
+                  Brought to you by Epi-Max Baby & Junior - Our Family, for Your
+                  Family. Sponsored by Curaprox and supported by Jacaranda.
                 </p>
-                <a href="https://www.podbean.com/site/EpisodeDownload/DIR23DB1C4ANAT7H" class="recent-read-more">..read more</a>
+                <a
+                  href="https://www.podbean.com/site/EpisodeDownload/DIR23DB1C4ANAT7H"
+                  class="recent-read-more"
+                  >Read more</a
+                >
               </div>
             </div>
           </div>
@@ -578,7 +279,8 @@
                   {tag:'Vacancies', path:'http://127.0.0.1:5500/vacancies.html'},
                   {tag:'Sport', path:'http://127.0.0.1:5500/sports.html'}
                   ]}"
-                class="tags">
+                class="tags"
+              >
                 <template x-for="tag in tags" :key="tag.tag">
                   <a class="tag" x-text="tag.tag" :href="tag.path"></a>
                 </template>
@@ -590,7 +292,7 @@
     </main>
 
     <!-- Footer Section -->
-    <footer class="footer">
+    <footer>
       <div class="social-media-icons">
         <a href="https://facebook.com" target="_blank" rel="noopener"
           ><i class="fab fa-facebook-f"></i
@@ -610,5 +312,6 @@
       </div>
       <p>&copy; 2025 InsideLimpopo.com | All Rights Reserved</p>
     </footer>
+    <script src="./js/scipt.js"></script>
   </body>
 </html>

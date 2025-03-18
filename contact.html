@@ -1,44 +1,112 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Contact Us - Website</title>
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CONTACT US</title>
+    <link rel="stylesheet" href="./css/style.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Poppins:wght@300;400;600&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <!-- Header Section -->
     <header>
-        <h2 class="logo"><img src="path/to/your/logo.png" alt="Website Logo" class="logo"></h2>
-        <nav class="navigation">
-            <a href="index.html" class="tab">Home</a>
-            <a href="about.html" class="tab">About</a>
-            <a href="contact.html" class="tab active">Contact</a> <!-- Contact Tab -->
-            <a href="services.html" class="tab">Services</a>
-            <button class="btnLogin-popup">Login</button>
-        </nav>
+      <h1>Inside Limpopo</h1>
+      <p>Latest news and more!</p>
     </header>
+    <nav>
+      <ul>
+        <li><a href="home.html" class="nav-items">Home</a></li>
+        <li><a href="events.html" class="nav-items">Events</a></li>
+        <li><a href="sports.html" class="nav-items">Sports</a></li>
+        <li><a href="opinion.html" class="nav-items">Opinion</a></li>
+        <li><a href="podcast.html" class="nav-items">Podcast</a></li>
+        <li><a href="vacancies.html" class="nav-items">Vacancies</a></li>
+        <li><a href="contact.html" class="nav-items">Contacts</a></li>
+        <li><a href="about.html" class="nav-items">About</a></li>
+      </ul>
+    </nav>
 
     <main>
-        <h1>Contact Us</h1>
-        <p>If you have any questions, feel free to reach out to us!</p>
-        <form action="#">
-            <div class="input-box">
-                <label for="name">Name:</label>
-                <input type="text" id="name" name="name" required>
+      <div class="contacts-container-logo">
+        <img src="./assets/logo.jpg" alt="InsideLimpopo" />
+      </div> 
+      <div class="contacts-container" id="contactsContainer">
+        <div class="form-contacts-container subscribe">
+            <form>
+                <h1>Subscribe</h1>
+                <div class="social-icons">
+                    <a href="#" class="icon"><i class="fa-brands fa-google-plus-g"></i></a>
+                    <a href="#" class="icon"><i class="fa-brands fa-facebook-f"></i></a>
+                    <a href="#" class="icon"><i class="fa-brands fa-github"></i></a>
+                    <a href="#" class="icon"><i class="fa-brands fa-linkedin-in"></i></a>
+                </div>
+                <span>Join Our NewsLetter Today</span>
+                <input type="email" placeholder="Email Address">
+                <button type="submit">Subscribe</button>
+            </form>
+        </div>
+        <div class="form-contacts-container contact-us">
+            <form>
+                <h1>Contact Us</h1>
+                <div class="social-icons">
+                    <a href="#" class="icon"><i class="fa-brands fa-google-plus-g"></i></a>
+                    <a href="#" class="icon"><i class="fa-brands fa-facebook-f"></i></a>
+                    <a href="#" class="icon"><i class="fa-brands fa-github"></i></a>
+                    <a href="#" class="icon"><i class="fa-brands fa-linkedin-in"></i></a>
+                </div>
+                <span>or use your email password</span>
+                <input type="text" placeholder="Name" required>
+                <input type="email" placeholder="Email Address" required>
+                <textarea id="message" placeholder="Your Message" required></textarea>
+                <a href="#">Follow Us!</a>
+                <button type="submit">Submit</button>
+            </form>
+        </div>
+        <div class="toggle-container">
+            <div class="toggle">
+                <div class="toggle-panel toggle-left">
+                    <h1>Hello Reader!</h1>
+                    <p>Subscrice to our daily new through your email</p>
+                    <button class="hidden" id="subscriber">Subscribe</button>
+                </div>
+                <div class="toggle-panel toggle-right">
+                    <h1>Connect With Us</h1>
+                    <p>Send your email today and we'll revert back to you</p>
+                    <button class="hidden" id="senda">Contact Us</button>
+                </div>
             </div>
-            <div class="input-box">
-                <label for="email">Email:</label>
-                <input type="email" id="email" name="email" required>
-            </div>
-            <div class="input-box">
-                <label for="message">Message:</label>
-                <textarea id="message" name="message" required></textarea>
-            </div>
-            <button type="submit">Submit</button>
-        </form>
+        </div>
+    </div>
     </main>
 
-    <script src="script.js"></script>
-</body>
+    <!-- Footer Section -->
+    <footer>
+      <div class="social-media-icons">
+        <a href="https://facebook.com" target="_blank" rel="noopener"
+          ><i class="fab fa-facebook-f"></i
+        ></a>
+        <a href="https://twitter.com" target="_blank" rel="noopener"
+          ><i class="fab fa-twitter"></i
+        ></a>
+        <a href="https://instagram.com" target="_blank" rel="noopener"
+          ><i class="fab fa-instagram"></i
+        ></a>
+        <a href="https://linkedin.com" target="_blank" rel="noopener"
+          ><i class="fab fa-linkedin-in"></i
+        ></a>
+        <a href="https://youtube.com" target="_blank" rel="noopener"
+          ><i class="fab fa-youtube"></i
+        ></a>
+      </div>
+      <p>&copy; 2025 InsideLimpopo.com | All Rights Reserved</p>
+    </footer>
+    <script src="./js/scipt.js"></script>
+  </body>
 </html>

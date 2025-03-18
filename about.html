@@ -1,29 +1,101 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>About Us - Website</title>
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ABOUT US - Inside Limpopo</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+    />
+    <link rel="stylesheet" href="./css/style.css" />
+
+  </head>
+  <body>
+    <!-- Header Section -->
     <header>
-        <h2 class="logo"><img src="path/to/your/logo.png" alt="Website Logo" class="logo"></h2>
-        <nav class="navigation">
-            <a href="index.html" class="tab">Home</a>
-            <a href="about.html" class="tab active">About</a> <!-- About Tab -->
-            <a href="contact.html" class="tab">Contact</a>
-            <a href="services.html" class="tab">Services</a>
-            <button class="btnLogin-popup">Login</button>
-        </nav>
+      <h1>Inside Limpopo</h1>
+      <p>Latest news and more!</p>
     </header>
+    <nav>
+      <ul>
+        <li><a href="home.html" class="nav-items">Home</a></li>
+        <li><a href="events.html" class="nav-items">Events</a></li>
+        <li><a href="sports.html" class="nav-items">Sports</a></li>
+        <li><a href="opinion.html" class="nav-items">Opinion</a></li>
+        <li><a href="podcast.html" class="nav-items">Podcast</a></li>
+        <li><a href="vacancies.html" class="nav-items">Vacancies</a></li>
+        <li><a href="contact.html" class="nav-items">Contacts</a></li>
+        <li><a href="about.html" class="nav-items">About</a></li>
+        <input type="search" class="search"  placeholder="Search News" label="search" />
+      </ul>
+    </nav>
 
-    <main>
-        <h1>About Us</h1>
-        <p>Learn more about our organization, vision, and mission. We are dedicated to delivering quality services to our clients.</p>
-    </main>
 
-    <script src="script.js"></script>
-</body>
+    <!-- Mission Section -->
+    <section id="mission">
+      <h2>Our Mission</h2>
+      <p>
+        At <strong class="strong">Inside Limpopo</strong>, our mission is to provide accurate,
+        timely, and engaging news and content to the people of Limpopo. We aim
+        to be the trusted source of information, empowering our community with
+        knowledge and fostering meaningful conversations.
+      </p>
+    </section>
+
+    <!-- Vision Section -->
+    <section id="vision">
+      <h2>Our Vision</h2>
+      <p>
+        Our vision is to create a platform that not only informs but also
+        inspires and connects the people of Limpopo. We strive to be a catalyst
+        for positive change, promoting transparency, inclusivity, and progress
+        in our region.
+      </p>
+    </section>
+
+    <!-- Team Section -->
+    <section class="team-section" id="team">
+      <h2>Meet Our Team</h2>
+      <div class="team-member">
+        <img src="https://via.placeholder.com/150" alt="Team Member 1" />
+        <h4>Yancy Rikhotso</h4>
+        <p>Editor-in-Chief</p>
+      </div>
+      <div class="team-member">
+        <img src="https://via.placeholder.com/150" alt="Team Member 2" />
+        <h4>Jane Rachidi</h4>
+        <p>Senior Reporter</p>
+      </div>
+      <div class="team-member">
+        <img src="https://via.placeholder.com/150" alt="Team Member 3" />
+        <h4>Sylvia Mojapelo</h4>
+        <p>Sports Analyst</p>
+      </div>
+    </section>
+
+    <!-- Footer Section -->
+    <footer>
+      <div class="social-media-icons">
+        <a href="https://facebook.com" target="_blank" rel="noopener"
+          ><i class="fab fa-facebook-f"></i
+        ></a>
+        <a href="https://twitter.com" target="_blank" rel="noopener"
+          ><i class="fab fa-twitter"></i
+        ></a>
+        <a href="https://instagram.com" target="_blank" rel="noopener"
+          ><i class="fab fa-instagram"></i
+        ></a>
+        <a href="https://linkedin.com" target="_blank" rel="noopener"
+          ><i class="fab fa-linkedin-in"></i
+        ></a>
+        <a href="https://youtube.com" target="_blank" rel="noopener"
+          ><i class="fab fa-youtube"></i
+        ></a>
+      </div>
+      <p>&copy; 2025 InsideLimpopo.com | All Rights Reserved</p>
+    </footer>
+
+    <script src="./js/scipt.js"></script>
+  </body>
 </html>

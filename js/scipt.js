@@ -1,30 +1,59 @@
-const wrappper=document.querySelector('.wrapper');
-const loginLink = document.querySelector('.login-link');
-const registerLink= document.querySelector('.register-link');
-const btnPopup = document.querySelector('.btnLogin-popup');
-const iconClose = document.querySelector('.icon-close');
+const container = document.getElementById('contactsContainer');
+const sendaBtn = document.getElementById('senda');
+const subscriberBtn = document.getElementById('subscriber');
 
+var dublicate = document.querySelector('ticker-content').cloneNode(true);
+document.querySelector('breaking-news-ticker').appendChild(dublicate);
 
-registerLink.addEventListener('click', ()=> {
-    wrappper.classList.add('active')
+sendaBtn.addEventListener('click', () => {
+    container.classList.add("active");
 });
 
-registerLink.addEventListener('click', () => {
-    wrappper.classList.add('active')
+subscriberBtn.addEventListener('click', () => {
+    container.classList.remove("active");
 });
 
-loginLink.addEventListener('click', () => {
-    wrappper.classList.remove('active')
-});
+let slideIndex = 1;
+showSlides(slideIndex);
 
-btnPopup.addEventListener('click', () => {
-    wrappper.classList.add('active-popup')
-});
+function plusSlides(n) {
+  showSlides(slideIndex += n);
+}
 
-iconClose.addEventListener('click', () => {
-    wrappper.classList.remove('active-popup')
-});
+function currentSlide(n) {
+  showSlides(slideIndex = n);
+}
 
-iconClose.addEventListener('click', () => {
-    wrappper.classList.remove('active-popup')
-});
+function showSlides(n) {
+  let i;
+  let slides = document.getElementsByClassName("mySlides");
+  let dots = document.getElementsByClassName("dot");
+  if (n > slides.length) {slideIndex = 1}    
+  if (n < 1) {slideIndex = slides.length}
+  for (i = 0; i < slides.length; i++) {
+    slides[i].style.display = "none";  
+  }
+  for (i = 0; i < dots.length; i++) {
+    dots[i].className = dots[i].className.replace(" active", "");
+  }
+  slides[slideIndex-1].style.display = "block";  
+  dots[slideIndex-1].className += " active";
+}
+
+function openPage(){
+    var search = document.getElementById('searchNews').value;
+
+    if(search == 'sports' || search == 'sport'){
+        window.open('/sports.html');
+    }else if(search == 'vacancy' || search == 'vacancies'){
+        window.open('/vacancies.html');
+    }else if(search == 'podcast' || search == "podcasts"){
+        window.open('/podcast.html');
+    }else if(search == 'opinion' || search == 'opinions'){
+        window.open('/opinion.html');
+    }else if(search == 'event' || search == 'events'){
+        window.open('/events.html');
+    }else{
+        console.log('Search not found!');
+    }
+}
