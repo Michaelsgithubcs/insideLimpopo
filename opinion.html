@@ -27,12 +27,25 @@
         <li><a href="vacancies.html" class="nav-items">Vacancies</a></li>
         <li><a href="contact.html" class="nav-items">Contacts</a></li>
         <li><a href="about.html" class="nav-items">About</a></li>
-        <input type="search" class="search"  placeholder="Search News" label="search" />
+        <input
+          type="search"
+          class="search"
+          placeholder="Search News"
+          label="search"
+        />
       </ul>
     </nav>
 
     <main>
-      <section class="opinion-articles">
+      <section class="opinion-articles" id="opinionArticles">
+        <article>
+          <img alt="" />
+          <h2></h2>
+          <p></p>
+          <a class="read-more"></a>
+        </article>
+      </section>
+      <!-- <section class="opinion-articles">
         <img
           src="./assets/opinionimages/govern.jpg"
           alt="Person in wheelchair"
@@ -50,9 +63,9 @@
           class="read-more"
           >Read More</a
         >
-      </section>
+      </section> -->
 
-      <section class="opinion-articles">
+      <!-- <section class="opinion-articles">
         <img
           src="./assets/opinionimages/trump.jpg"
           alt="Person using adaptive technology"
@@ -70,9 +83,9 @@
           class="read-more"
           >Read More</a
         >
-      </section>
+      </section> -->
 
-      <section class="opinion-articles">
+      <!-- <section class="opinion-articles">
         <img src="./assets/opinionimages/chealse.jpg" alt="Womens football" />
         <h2>
           Chelsea win Women’s League Cup final after own goal denies Manchester
@@ -88,9 +101,9 @@
           class="read-more"
           >Read More</a
         >
-      </section>
+      </section> -->
 
-      <section class="opinion-articles">
+      <!-- <section class="opinion-articles">
         <img src="./assets/opinionimages/womanPhone.jpg" alt="Womens phone" />
         <h2>
           What are smartphones stealing from us? When mine was taken away, I
@@ -107,9 +120,9 @@
           class="read-more"
           >Read More</a
         >
-      </section>
+      </section> -->
 
-      <section class="opinion-articles">
+      <!-- <section class="opinion-articles">
         <img src="./assets/opinionimages/insert.jpg" alt="bug" />
         <h2>
           Enough with unicorns and dinosaurs – show children the magic of real,
@@ -126,9 +139,9 @@
           class="read-more"
           >Read More</a
         >
-      </section>
+      </section> -->
 
-      <section class="opinion-articles">
+      <!-- <section class="opinion-articles">
         <img src="./assets/opinionimages/putin.jpg" alt="Putin" />
         <h2>
           We can’t know if Vladimir Putin will accept a ceasefire in Ukraine.
@@ -145,9 +158,9 @@
           class="read-more"
           >Read More</a
         >
-      </section>
+      </section> -->
 
-      <section class="opinion-articles">
+      <!-- <section class="opinion-articles">
         <img src="./assets/opinionimages/drunkWoman.jpg" alt="Tousist" />
         <h2>
           Attacking a young tourist over her treatment of a wombat is
@@ -165,7 +178,7 @@
           class="read-more"
           >Read More</a
         >
-      </section>
+      </section> -->
     </main>
 
     <!-- Footer Section -->
@@ -190,6 +203,49 @@
       <p>&copy; 2025 InsideLimpopo.com | All Rights Reserved</p>
     </footer>
 
+    <script>
+      apiUrl = `https://newsapi.org/v2/top-headlines?country=us&apiKey=94710bfc54a44f1a9796e81a0bd2e446`;
+
+      async function fetchNews(apiUrl) {
+        try {
+          const res = await fetch(apiUrl);
+          if (!res.ok) {
+            throw new Error(`HTTP error! Status: ${res.status}`);
+          }
+          const data = await res.json();
+          if (data.articles && data.articles.length > 0) {
+            displayNews(data.articles);
+          } else {
+            console.log("No article found");
+          }
+        } catch (err) {
+          console.log("error fetching news: ", err);
+        }
+      }
+
+      function displayNews(articles) {
+        const opinionArticle = document.getElementById("opinionArticles");
+
+        opinionArticle.innerHTML = "";
+
+        articles.forEach((articles) => {
+          const opinionCard = document.createElement("article");
+
+          opinionCard.className = "opinion-articles";
+
+          opinionCard.innerHTML = `
+    <img src="${
+      articles.urlToImage || "https://via.placeholder.com/400"
+    }">    <h2>${articles.title}</h2>
+    <p>${articles.description || "No decription available"}</p>
+    <a href="${articles.url}" target="_blank" class="read-more">Read more</a>`;
+
+          opinionArticle.appendChild(opinionCard);
+        });
+      }
+
+      fetchNews(apiUrl);
+    </script>
     <script src="/js/scipt.js"></script>
   </body>
 </html>

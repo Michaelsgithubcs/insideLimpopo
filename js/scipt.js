@@ -1,59 +1,57 @@
-const container = document.getElementById('contactsContainer');
-const sendaBtn = document.getElementById('senda');
-const subscriberBtn = document.getElementById('subscriber');
+const apiUrl = `https://newsapi.org/v2/top-headlines?country=us&apiKey=94710bfc54a44f1a9796e81a0bd2e446`;
 
-var dublicate = document.querySelector('ticker-content').cloneNode(true);
-document.querySelector('breaking-news-ticker').appendChild(dublicate);
 
-sendaBtn.addEventListener('click', () => {
-    container.classList.add("active");
-});
-
-subscriberBtn.addEventListener('click', () => {
-    container.classList.remove("active");
-});
-
-let slideIndex = 1;
-showSlides(slideIndex);
-
-function plusSlides(n) {
-  showSlides(slideIndex += n);
-}
-
-function currentSlide(n) {
-  showSlides(slideIndex = n);
-}
-
-function showSlides(n) {
-  let i;
-  let slides = document.getElementsByClassName("mySlides");
-  let dots = document.getElementsByClassName("dot");
-  if (n > slides.length) {slideIndex = 1}    
-  if (n < 1) {slideIndex = slides.length}
-  for (i = 0; i < slides.length; i++) {
-    slides[i].style.display = "none";  
-  }
-  for (i = 0; i < dots.length; i++) {
-    dots[i].className = dots[i].className.replace(" active", "");
-  }
-  slides[slideIndex-1].style.display = "block";  
-  dots[slideIndex-1].className += " active";
-}
-
-function openPage(){
-    var search = document.getElementById('searchNews').value;
-
-    if(search == 'sports' || search == 'sport'){
-        window.open('/sports.html');
-    }else if(search == 'vacancy' || search == 'vacancies'){
-        window.open('/vacancies.html');
-    }else if(search == 'podcast' || search == "podcasts"){
-        window.open('/podcast.html');
-    }else if(search == 'opinion' || search == 'opinions'){
-        window.open('/opinion.html');
-    }else if(search == 'event' || search == 'events'){
-        window.open('/events.html');
-    }else{
-        console.log('Search not found!');
+async function fetchNews(apiUrl) {
+  try{
+    const res = await fetch(apiUrl)
+    if(!res.ok){
+      throw new Error(`HTTP error! Status: ${res.status}`)
     }
+    const data = await res.json();
+    if(data.articles && data.articles.length > 0){
+      displayNews(data.articles);
+    }else{
+      console.log("No article found")
+    }
+  }catch(err){
+    console.log("error fetching news: ", err);
+  }
 }
+
+function displayNews(articles){
+  const post = document.getElementById("posts");
+
+  post.innerHTML = '';
+
+  articles.forEach(articles => {
+    const postCard = document.createElement("div");
+
+    postCard.className = "post-card";
+
+
+    postCard.innerHTML = `
+    <img src="${articles.urlToImage || 'https://via.placeholder.com/400'}" class="post-thumbnail">    
+    <h2 class="posts_container-title">${articles.title}</h2>
+    <p class="short">${articles.description || "No description available"}</p>
+    <a href="${articles.url}" target="_blank" class="post-title">Read more</a>`;
+
+    post.appendChild(newsCard)
+  });
+}
+
+function searchNews(query) {
+  query.preventDefault(); 
+  const search = document.getElementById("search").value;
+  const searchUrl = `https://newsapi.org/v2/everything?q=${search}&apiKey=94710bfc54a44f1a9796e81a0bd2e446`; 
+
+  fetchNews(searchUrl); 
+}
+const searchInput = document.getElementById("search"); 
+
+searchInput.addEventListener("keydown", (e) => {
+  if (e.key === "Enter") { 
+    searchNews(e); 
+  }
+});
+
+fetchNews(apiUrl)

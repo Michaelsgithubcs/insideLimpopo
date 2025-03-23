@@ -36,52 +36,89 @@
         <li><a href="vacancies.html" class="nav-items">Vacancies</a></li>
         <li><a href="contact.html" class="nav-items">Contacts</a></li>
         <li><a href="about.html" class="nav-items">About</a></li>
-        <input type="search" class="search"  placeholder="Search News" label="search" />
+        <input
+          type="search"
+          class="search"
+          placeholder="Search News"
+          label="search"
+        />
       </ul>
     </nav>
 
     <!-- Main Section -->
     <main>
       <div class="slideshow-container">
-
         <div class="mySlides fade">
           <div class="numbertext">1 / 3</div>
-          <a href="https://youtu.be/POnQrArfy4g?si=zGec_AIZ5ncj84aw"  class="podcast-img">
-            <img src="./assets/podcast/hop.jpg" style="width:100%" alt="">
+          <a
+            href="https://youtu.be/POnQrArfy4g?si=zGec_AIZ5ncj84aw"
+            class="podcast-img"
+          >
+            <img src="./assets/podcast/hop.jpg" style="width: 100%" alt="" />
           </a>
-          <div class="podcast-title">HOPE REVOLUTION EPISODE 9 : A Mother's Story: Surviving The Unthinkable</div>
+          <div class="podcast-title">
+            HOPE REVOLUTION EPISODE 9 : A Mother's Story: Surviving The
+            Unthinkable
+          </div>
         </div>
-        
+
         <div class="mySlides fade">
           <div class="numbertext">2 / 3</div>
-          <a href="https://youtu.be/rH7NOuOGJzA?si=9KNVJtnDKNyPuGpf" class="podcast-img">
-            <img src="./assets/podcast/sddefault.jpg" style="width:100%" alt="">
+          <a
+            href="https://youtu.be/rH7NOuOGJzA?si=9KNVJtnDKNyPuGpf"
+            class="podcast-img"
+          >
+            <img
+              src="./assets/podcast/sddefault.jpg"
+              style="width: 100%"
+              alt=""
+            />
           </a>
-          <div class="podcast-title">MBUYISENI NDLOZI on EFF, FLOYD SHIVAMBU, JULIUS MALEMA, DONALD TRUMP, GNU, VBS BANK I EPISODE 636</div>
+          <div class="podcast-title">
+            MBUYISENI NDLOZI on EFF, FLOYD SHIVAMBU, JULIUS MALEMA, DONALD
+            TRUMP, GNU, VBS BANK I EPISODE 636
+          </div>
         </div>
-        
+
         <div class="mySlides fade">
           <div class="numbertext">3 / 3</div>
-          <a href="https://youtu.be/0_VigIWitfs?si=52S83ZIvFzZCcAoT" class="podcast-img">
-            <img src="./assets/podcast/konvo.jpg" style="width:100%" alt="">
+          <a
+            href="https://youtu.be/0_VigIWitfs?si=52S83ZIvFzZCcAoT"
+            class="podcast-img"
+          >
+            <img src="./assets/podcast/konvo.jpg" style="width: 100%" alt="" />
           </a>
-          <div class="podcast-title">The Konvo Show: Penuel In Conversation With Warras Stock, Ricky Rick, Unreal Engine, Loadshedding...</div>
+          <div class="podcast-title">
+            The Konvo Show: Penuel In Conversation With Warras Stock, Ricky
+            Rick, Unreal Engine, Loadshedding...
+          </div>
         </div>
-        
+
         <a class="prev" onclick="plusSlides(-1)">❮</a>
         <a class="next" onclick="plusSlides(1)">❯</a>
-        
       </div>
-      <br>
-        
-      <div style="text-align:center">
-        <span class="dot" onclick="currentSlide(1)"></span> 
-        <span class="dot" onclick="currentSlide(2)"></span> 
-        <span class="dot" onclick="currentSlide(3)"></span> 
+      <br />
+
+      <div style="text-align: center">
+        <span class="dot" onclick="currentSlide(1)"></span>
+        <span class="dot" onclick="currentSlide(2)"></span>
+        <span class="dot" onclick="currentSlide(3)"></span>
       </div>
 
       <div class="content-container">
         <div class="posts" id="posts">
+          <h2 class="posts_container-title"></h2>
+          <div class="post-card">
+            <img class="post-thumbnail" alt=""/>
+            <div class="post-short-content">
+              <a class="post-title"></a>
+              <div class="details"></div>
+              <p class="short"></p>
+              <a class="read-more"></a>
+            </div>
+          </div>
+        </div>
+        <!-- <div class="posts" id="posts">
           <h2 class="posts_container-title">Podcast</h2>
           <div class="post-card">
             <img
@@ -177,7 +214,7 @@
               >
             </div>
           </div>
-        </div>
+        </div> -->
 
         <aside>
           <div class="recent-posts">
@@ -312,6 +349,80 @@
       </div>
       <p>&copy; 2025 InsideLimpopo.com | All Rights Reserved</p>
     </footer>
+
+    <script>
+      const apiUrl = `https://newsapi.org/v2/top-headlines?country=us&apiKey=94710bfc54a44f1a9796e81a0bd2e446`;
+
+      async function fetchNews(apiUrl) {
+        try {
+          const res = await fetch(apiUrl);
+          if (!res.ok) {
+            throw new Error(`HTTP error! Status: ${res.status}`);
+          }
+          const data = await res.json();
+          if (data.articles && data.articles.length > 0) {
+            displayNews(data.articles);
+          } else {
+            console.log("No article found");
+          }
+        } catch (err) {
+          console.log("error fetching news: ", err);
+        }
+      }
+
+      function displayNews(articles) {
+        const post = document.getElementById("posts");
+
+        post.innerHTML = "";
+
+        articles.forEach((articles) => {
+          const postCard = document.createElement("div");
+
+          postCard.className = "posts";
+
+          postCard.innerHTML = `
+    <img src="${
+      articles.urlToImage || "https://via.placeholder.com/400"
+    }" class="post-thumbnail">    
+    <h2 class="posts_container-title">${articles.title}</h2>
+    <p class="short">${articles.description || "No description available"}</p>
+    <a href="${articles.url}" target="_blank" class="post-title">Read more</a>`;
+
+          post.appendChild(newsCard);
+        });
+      }
+
+      // let slideIndex = 1;
+      // showSlides(slideIndex);
+
+      // function plusSlides(n) {
+      //   showSlides((slideIndex += n));
+      // }
+
+      // function currentSlide(n) {
+      //   showSlides((slideIndex = n));
+      // }
+
+      // function showSlides(n) {
+      //   let i;
+      //   let slides = document.getElementsByClassName("mySlides");
+      //   let dots = document.getElementsByClassName("dot");
+      //   if (n > slides.length) {
+      //     slideIndex = 1;
+      //   }
+      //   if (n < 1) {
+      //     slideIndex = slides.length;
+      //   }
+      //   for (i = 0; i < slides.length; i++) {
+      //     slides[i].style.display = "none";
+      //   }
+      //   for (i = 0; i < dots.length; i++) {
+      //     dots[i].className = dots[i].className.replace(" active", "");
+      //   }
+      //   slides[slideIndex - 1].style.display = "block";
+      //   dots[slideIndex - 1].className += " active";
+      // }
+    </script>
     <script src="./js/scipt.js"></script>
   </body>
 </html>

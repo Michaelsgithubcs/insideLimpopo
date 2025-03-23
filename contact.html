@@ -35,55 +35,77 @@
 
     <main>
       <div class="contacts-container-logo">
-        <img src="./assets/logo.jpg" alt="InsideLimpopo" />
-      </div> 
+        <img src="./assets/logo/InsideLimpopoLogo.jpg" alt="InsideLimpopo" />
+      </div>
+
       <div class="contacts-container" id="contactsContainer">
         <div class="form-contacts-container subscribe">
-            <form>
-                <h1>Subscribe</h1>
-                <div class="social-icons">
-                    <a href="#" class="icon"><i class="fa-brands fa-google-plus-g"></i></a>
-                    <a href="#" class="icon"><i class="fa-brands fa-facebook-f"></i></a>
-                    <a href="#" class="icon"><i class="fa-brands fa-github"></i></a>
-                    <a href="#" class="icon"><i class="fa-brands fa-linkedin-in"></i></a>
-                </div>
-                <span>Join Our NewsLetter Today</span>
-                <input type="email" placeholder="Email Address">
-                <button type="submit">Subscribe</button>
-            </form>
+          <form name="submit-to-google-sheet">
+            <h1>Subscribe</h1>
+            <div class="social-icons">  
+              <a href="#" class="icon"
+                ><i class="fa-brands fa-google-plus-g"></i
+              ></a>
+              <a href="#" class="icon"
+                ><i class="fa-brands fa-facebook-f"></i
+              ></a>
+              <a href="#" class="icon"><i class="fa-brands fa-github"></i></a>
+              <a href="#" class="icon"
+                ><i class="fa-brands fa-linkedin-in"></i
+              ></a>
+            </div>
+            <span>Join Our NewsLetter Today</span>
+            <input name="email" type="email" placeholder="Email Address" required />
+            <button type="submit">Subscribe</button>
+          </form>
         </div>
+
         <div class="form-contacts-container contact-us">
-            <form>
-                <h1>Contact Us</h1>
-                <div class="social-icons">
-                    <a href="#" class="icon"><i class="fa-brands fa-google-plus-g"></i></a>
-                    <a href="#" class="icon"><i class="fa-brands fa-facebook-f"></i></a>
-                    <a href="#" class="icon"><i class="fa-brands fa-github"></i></a>
-                    <a href="#" class="icon"><i class="fa-brands fa-linkedin-in"></i></a>
-                </div>
-                <span>or use your email password</span>
-                <input type="text" placeholder="Name" required>
-                <input type="email" placeholder="Email Address" required>
-                <textarea id="message" placeholder="Your Message" required></textarea>
-                <a href="#">Follow Us!</a>
-                <button type="submit">Submit</button>
-            </form>
+          <form action="https://api.web3forms.com/submit" method="POST">
+            <h1>Contact Us</h1>
+            <div class="social-icons">
+              <a href="#" class="icon"
+                ><i class="fa-brands fa-google-plus-g"></i
+              ></a>
+              <a href="#" class="icon"
+                ><i class="fa-brands fa-facebook-f"></i
+              ></a>
+              <a href="#" class="icon"><i class="fa-brands fa-github"></i></a>
+              <a href="#" class="icon"
+                ><i class="fa-brands fa-linkedin-in"></i
+              ></a>
+            </div>
+            <span>or use your email password</span>
+            <imput
+              type="hidden"
+              name="access_key"
+              value="02b91bbe-d042-4966-af8d-35e052f35a2f"
+            />
+            <input type="text" placeholder="Name" required />
+            <input type="email" placeholder="Email Address" required />
+            <textarea
+              id="message"
+              placeholder="Your Message"
+              required
+            ></textarea>
+            <button type="submit">Submit</button>
+          </form>
         </div>
         <div class="toggle-container">
-            <div class="toggle">
-                <div class="toggle-panel toggle-left">
-                    <h1>Hello Reader!</h1>
-                    <p>Subscrice to our daily new through your email</p>
-                    <button class="hidden" id="subscriber">Subscribe</button>
-                </div>
-                <div class="toggle-panel toggle-right">
-                    <h1>Connect With Us</h1>
-                    <p>Send your email today and we'll revert back to you</p>
-                    <button class="hidden" id="senda">Contact Us</button>
-                </div>
+          <div class="toggle">
+            <div class="toggle-panel toggle-left">
+              <h1>Hello Reader!</h1>
+              <p>Subscribe to our daily news through your email</p>
+              <button class="hidden" id="subscriber">Subscribe</button>
             </div>
+            <div class="toggle-panel toggle-right">
+              <h1>Connect With Us</h1>
+              <p>Send your email today and we'll revert back to you</p>
+              <button class="hidden" id="senda">Contact Us</button>
+            </div>
+          </div>
         </div>
-    </div>
+      </div>
     </main>
 
     <!-- Footer Section -->
@@ -107,6 +129,28 @@
       </div>
       <p>&copy; 2025 InsideLimpopo.com | All Rights Reserved</p>
     </footer>
-    <script src="./js/scipt.js"></script>
+    <script>
+      const container = document.getElementById("contactsContainer");
+      const sendaBtn = document.getElementById("senda");
+      const subscriberBtn = document.getElementById("subscriber");
+
+      sendaBtn.addEventListener("click", () => {
+        container.classList.add("active");
+      });
+
+      subscriberBtn.addEventListener("click", () => {
+        container.classList.remove("active");
+      });
+
+      const scriptURL = "https://script.google.com/macros/s/AKfycbxg2SfK85jvra1e7McRhvIOs918kjjrTuAjltbq65oHgGKZeYnEWt35IRm3fAgQBZ6C/exec";
+      const form = document.forms["submit-to-google-sheet"];
+
+      form.addEventListener("submit", (e) => {
+        e.preventDefault();
+        fetch(scriptURL, { method: "POST", body: new FormData(form) })
+          .then((response) => console.log("Success!", response))
+          .catch((error) => console.error("Error!", error.message));
+      });
+    </script>
   </body>
 </html>

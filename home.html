@@ -4,12 +4,541 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>HOME | Seopa Media</title>
-    <link rel="stylesheet" href="./css/style.css" />
+    <!-- <link rel="stylesheet" href="./css/style.css" /> -->
     <!-- Add Font Awesome for social media icons -->
     <link
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
       rel="stylesheet"
     />
+
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;500;700&display=swap");
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        scroll-behavior: smooth;
+      }
+      body {
+        background: #011131;
+        font-family: "Arial", sans-serif;
+        width: 100%;
+        min-height: 100vh;
+        color: #fff;
+        overflow-y: overlay;
+      }
+
+      ::-webkit-scrollbar {
+        width: 8px;
+      }
+      ::-webkit-scrollbar-track {
+        background-color: transparent;
+      }
+      ::-webkit-scrollbar-thumb {
+        background-color: #999;
+        border-radius: 100px;
+      }
+      .topHeadlines .right .topNews::-webkit-scrollbar {
+        width: 6px;
+      }
+      .topHeadlines .right .topNews::-webkit-scrollbar-thumb {
+        background-color: #777;
+      }
+
+      header {
+        background-color: #011131;
+        color: whitesmoke;
+        text-align: center;
+        padding: 20px 0;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      }
+
+      header h1 {
+        font-size: 36px;
+        margin: 0;
+        font-weight: bold;
+      }
+
+      header p {
+        font-size: 18px;
+        margin-top: 10px;
+        font-style: italic;
+      }
+
+      /* Navigation Section */
+      nav {
+        background: #011131;
+        padding: 1rem;
+        font-size: 16px;
+        font-family: Arial, Helvetica, sans-serif;
+        font-weight: 550;
+      }
+
+      nav ul {
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: space-around;
+      }
+
+      nav ul li {
+        display: inline;
+      }
+
+      nav ul li a {
+        display: block;
+        padding: 0.5rem 1rem;
+        color: white;
+        text-decoration: none;
+      }
+
+      /* Navigation hover effects */
+      .nav-items::after {
+        height: 3px;
+        display: block;
+        content: "";
+        background-color: whitesmoke;
+        margin-top: 3px;
+        box-shadow: 0 0 10px white;
+        transform: scaleX(0);
+        transition: transform 0.4s;
+      }
+
+      .nav-items:hover::after {
+        transform: scaleX(1);
+      }
+
+      .search {
+        border: none;
+        padding: 10px 12px;
+        border-radius: 6px;
+        width: 12rem;
+        outline: none;
+        font-size: medium;
+      }
+
+      /* Breaking News Section */
+      .breaking-news-ticker {
+        background-color: #011131;
+        color: #000000;
+        padding: 10px;
+        overflow: hidden;
+        white-space: nowrap;
+        box-sizing: border-box;
+        width: 100%;
+        position: relative;
+        margin-top: -20px;
+      }
+
+      /* Ticker Content */
+      .ticker-content {
+        display: inline-block;
+        animation: ticker 100s linear infinite;
+      }
+
+      .ticker-content:hover {
+        animation-play-state: paused;
+        cursor: pointer;
+      }
+
+      /* Individual News Items */
+      .ticker-content span {
+        display: inline-flex;
+        align-items: center;
+        background-color: #011131;
+        padding: 5px 10px;
+        margin-right: 20px;
+        border-radius: 5px;
+      }
+
+      .ticker-content a {
+        color: whitesmoke;
+        text-decoration: none;
+      }
+
+      .ticker-content a:hover {
+        transform: scale(1.05);
+        text-decoration: underline;
+        transition: 0.5s;
+      }
+
+      /* Images in News Items */
+      .ticker-content img {
+        width: 30px;
+        height: 30px;
+        margin-right: 10px;
+        border-radius: 40%;
+      }
+
+      .ticker-content img:hover {
+        transform: scale(1.3);
+        transition: 0.5s;
+        border-radius: 5px;
+      }
+
+      /* Animation for Ticker */
+      @keyframes ticker {
+        from {
+          transform: translateX(0);
+        }
+        to {
+          transform: translateX(-100%);
+        }
+      }
+
+      .topHeadlines {
+        padding: 100px 50px 50px;
+        width: 100%;
+        display: grid;
+        grid-template-columns: 1.5fr 1fr;
+      }
+      .topHeadlines .left {
+        padding: 10px 30px;
+      }
+      .topHeadlines .left > .title {
+        font-size: 20px;
+        padding: 15px;
+        text-align: center;
+      }
+      .topHeadlines .left .img {
+        width: 100%;
+        height: 400px;
+        background-color: #086fb6;
+      }
+      .topHeadlines .left .img img {
+        width: 100%;
+        height: 100%;
+      }
+      .topHeadlines .left .text {
+        padding: 20px 15px 10px;
+      }
+      .topHeadlines .left .text .title a {
+        text-decoration: none;
+      }
+      .topHeadlines .left .text .title a h2 {
+        font-size: 20px;
+        color: #fff;
+        letter-spacing: 1px;
+        display: inline;
+        cursor: pointer;
+      }
+      .topHeadlines .left .text .title a h2:hover {
+        text-decoration: underline;
+      }
+      .topHeadlines .left .text .description {
+        font-size: 15px;
+        margin-top: 10px;
+        color: #aaa;
+        letter-spacing: 1px;
+      }
+      .topHeadlines .right {
+        padding: 10px;
+        width: 1005;
+        height: 500px;
+      }
+      .topHeadlines .right > .title {
+        font-size: 20px;
+        padding: 15px;
+        text-align: center;
+      }
+      .topHeadlines .right .topNews {
+        padding: 7px;
+        height: 85%;
+        border: 1px solid #fff;
+        border-radius: 4px;
+        overflow-y: scroll;
+      }
+      .topHeadlines .right .topNews .news {
+        display: grid;
+        grid-template-columns: auto auto;
+        align-items: center;
+        margin-bottom: 20px;
+      }
+      .topHeadlines .right .topNews .news .img {
+        width: 170px;
+        height: 100%;
+        max-height: 120px;
+        min-height: 90px;
+        background-color: #086fb6;
+      }
+      .topHeadlines .right .topNews .news .img img {
+        width: 100%;
+        height: 100%;
+      }
+      .topHeadlines .right .topNews .news .text {
+        margin-inline: 10px;
+        display: flex;
+        align-items: center;
+      }
+      .topHeadlines .right .topNews .news .text .title a {
+        text-decoration: none;
+      }
+      .topHeadlines .right .topNews .news .text .title a p {
+        color: #fff;
+        display: inline;
+      }
+      .topHeadlines .right .topNews .news .text .title a p:hover {
+        text-decoration: underline;
+      }
+      .page2 {
+        width: 100%;
+        background-color: #070a1f;
+        min-height: 100vh;
+        padding: 50px;
+      }
+      .page2 .news {
+        padding: 30px 0;
+        border-bottom: 1px solid #555;
+      }
+      .page2 .news:last-child {
+        padding: 30px 0;
+        border-bottom: none;
+      }
+      .page2 .news > .title h2 {
+        font-size: 40px;
+        cursor: pointer;
+        display: inline;
+      }
+      .page2 .news > .title h2:hover {
+        text-decoration: underline;
+      }
+      .page2 .news .newsBox {
+        width: 100%;
+        margin-top: 20px;
+        display: flex;
+        flex-wrap: wrap;
+      }
+      .page2 .news .newsBox .newsCard {
+        width: calc(100% / 5 - 20px); /*20px is the margin given to each card*/
+        margin: 10px;
+      }
+      .page2 .news .newsBox .newsCard .img {
+        width: 100%;
+        height: 150px;
+        background-color: #086fb6;
+        border-radius: 5px;
+      }
+      .page2 .news .newsBox .newsCard .img img {
+        width: 100%;
+        height: 100%;
+        border-radius: 5px;
+      }
+      .page2 .news .newsBox .newsCard .text {
+        padding: 10px;
+      }
+      .page2 .news .newsBox .newsCard .text .title a {
+        text-decoration: none;
+      }
+      .page2 .news .newsBox .newsCard .text .title a p {
+        font-size: 15px;
+        color: #fff;
+        display: inline;
+        cursor: pointer;
+      }
+      .page2 .news .newsBox .newsCard .title a p:hover {
+        text-decoration: underline;
+      }
+
+      footer {
+        background-color: #011131;
+        color: white;
+        text-align: center;
+        padding: 20px 0;
+        bottom: 0;
+        width: 100%;
+        box-shadow: 0 -4px 8px rgba(0, 0, 0, 0.1);
+      }
+
+      footer .social-media-icons {
+        margin-bottom: 15px;
+      }
+
+      footer .social-media-icons a {
+        color: white;
+        font-size: 28px;
+        margin: 0 15px;
+        text-decoration: none;
+        transition: color 0.3s ease, transform 0.3s ease;
+      }
+
+      footer .social-media-icons a:hover {
+        color: #333;
+        transform: scale(1.2);
+      }
+
+      footer p {
+        font-size: 14px;
+        margin: 0;
+        font-style: italic;
+        color: #ccc;
+      }
+
+      @media (max-width: 1024px) {
+        .topHeadlines .right .topNews .news .img {
+          width: 150px;
+        }
+        .topHeadlines .right .topNews .news .text .title a p {
+          font-size: 14px;
+        }
+        .page2 .news .newsBox .newsCard .img {
+          height: 120px;
+        }
+        .page2 .news .newsBox .newsCard .text {
+          padding: 5px;
+        }
+        .page2 .news .newsBox .newsCard .text .title a p {
+          font-size: 14px;
+        }
+        .footer .box .left .categories > p {
+          font-size: 25px;
+        }
+        .footer .contact p {
+          font-size: 25px;
+        }
+        .footer .newsletter p {
+          font-size: 25px;
+        }
+        .footer .newsletter .email input {
+          width: 300px;
+        }
+        .footer .newsletter .email button {
+          padding: 10px 20px;
+          font-size: 14px;
+        }
+        .footer .box .left .categories div p {
+          font-size: 18px;
+        }
+        .footer .contact div {
+          font-size: 15px;
+        }
+      }
+      @media (max-width: 768px) {
+        nav div.bar {
+          display: block;
+        }
+        nav ul {
+          opacity: 0;
+          position: absolute;
+          background-color: #0b0b11;
+          flex-direction: column;
+          right: 0px;
+          padding: 30px 30px 10px;
+          text-align: center;
+          pointer-events: none;
+          border-radius: 10px;
+        }
+        nav ul.activeMenu {
+          opacity: 1;
+          pointer-events: all;
+        }
+        nav ul li {
+          margin: 10px 0;
+        }
+        .topHeadlines {
+          display: block;
+        }
+        .topHeadlines .right .topNews .news .img {
+          width: 220px;
+        }
+        .topHeadlines .right .topNews .news .text .title a p {
+          font-size: 18px;
+        }
+        .page2 .news .newsBox .newsCard {
+          width: calc(100% / 3 - 20px);
+        }
+        .footer .box {
+          grid-template-columns: none;
+        }
+        .footer .box .right {
+          grid-row-start: 1;
+          margin-bottom: 40px;
+        }
+        .footer .newsletter .email input {
+          width: 400px;
+        }
+        .footer .box .left {
+          justify-content: space-between;
+        }
+      }
+      @media (max-width: 600px) {
+        .logo {
+          font-size: 35px;
+        }
+        .topHeadlines .left {
+          padding: 10px 0px;
+        }
+        .topHeadlines .right .topNews .news .img {
+          width: 150px;
+        }
+        .topHeadlines .right .topNews .news .text .title a p {
+          font-size: 14px;
+        }
+        .page2 .news .newsBox .newsCard {
+          width: calc(100% / 2 - 20px);
+        }
+        .footer .newsletter .email input {
+          width: 300px;
+          font-size: 14px;
+        }
+        .footer .newsletter .email button {
+          padding: 8px 15px;
+          font-size: 14px;
+        }
+        .footer .newsletter p {
+          font-size: 22px;
+        }
+        .footer .box .left .categories > p {
+          font-size: 22px;
+        }
+        .footer .contact p {
+          font-size: 22px;
+        }
+        .footer .copyrights {
+          font-size: 14px;
+        }
+      }
+      @media (max-width: 425px) {
+        nav div.bar {
+          right: 50px;
+        }
+        nav ul {
+          padding: 30px 10px 10px;
+        }
+        nav ul li {
+          margin: 5px 0px;
+        }
+        nav ul li a {
+          font-size: 14px;
+        }
+        .topHeadlines {
+          padding: 100px 20px 50px;
+        }
+        .page2 {
+          padding: 50px 20px;
+        }
+        .page2 .news .newsBox .newsCard {
+          width: 100%;
+          display: grid;
+        }
+        .page2 .news > .title h2 {
+          font-size: 30px;
+        }
+        .page2 .news .newsBox .newsCard .img {
+          height: 100%;
+          min-height: 150px;
+        }
+        .page2 .news .newsBox .newsCard .text .title a p {
+          font-size: 16px;
+        }
+        .footer .newsletter .email {
+          display: block;
+        }
+        .footer .newsletter .email button {
+          margin-top: 15px;
+        }
+      }
+    </style>
   </head>
   <body>
     <!-- Header Section -->
@@ -31,9 +560,10 @@
         <input
           type="search"
           class="search"
+          id="search"
           placeholder="Search News"
           label="search"
-          onchange="seachNews()"
+          onchange="fetchNews(this.value)"
         />
       </ul>
     </nav>
@@ -45,8 +575,8 @@
           <a
             href="https://www.enca.com/top-stories/we-are-working-mending-relationship-us-ramaphosa"
           >
-            We are working on mending relationship with US - Ramaphosa </a
-          >>
+            We are working on mending relationship with US - Ramaphosa
+          </a>
         </span>
         <span>
           <img src="./assets/home/outa.jpeg" alt="News Image 2" />
@@ -140,9 +670,48 @@
         </span>
       </div>
     </div>
-
+    <hr />
     <!-- Main Content -->
-    <main class="responsive-wrapper">
+    <div class="topHeadlines">
+      <div class="left">
+        <div class="title">
+          <h2>Breaking News</h2>
+        </div>
+        <div class="img" id="breakingImg"></div>
+        <div class="text" id="breakingNews">
+          <div class="title"></div>
+          <div class="description"></div>
+        </div>
+      </div>
+      <div class="right">
+        <div class="title">
+          <h2>Top Headlines</h2>
+        </div>
+        <div class="topNews"></div>
+      </div>
+    </div>
+    <div class="page2">
+      <div class="news" id="sportsNews">
+        <div class="title">
+          <h2>Sports News</h2>
+        </div>
+        <div class="newsBox"></div>
+      </div>
+      <div class="news" id="businessNews">
+        <div class="title">
+          <h2>Business News</h2>
+        </div>
+        <div class="newsBox"></div>
+      </div>
+      <div class="news" id="techNews">
+        <div class="title">
+          <h2>Technology News</h2>
+        </div>
+        <div class="newsBox"></div>
+      </div>
+    </div>
+
+    <!-- <main class="responsive-wrapper">
       <h2>TOP NEWS</h2>
       <div class="news-container">
         <article class="featured-news">
@@ -166,12 +735,18 @@
           >
         </article>
 
-        <section class="news-grid">
+        <section class="news-grid" id="newsGrid">
           <article class="news-item">
+            <img alt=""/>
+            <h3></h3>
+            <p></p>
+            <a class="read-more">Read more</a>
+          </article> -->
+    <!-- <article class="news-item" id="newsItem">
             <img
               src="./assets/home/Screenshot 2025-03-16 160941.png"
               alt="News"
-            />
+            /> 
             <h3>
               Ramos guides France to Six Nations title with Scotland demolition
             </h3>
@@ -235,8 +810,8 @@
               class="read-more"
               >Read more</a
             >
-          </article>
-        </section>
+          </article> -->
+    <!-- </section>
       </div>
 
       <div class="page-title">
@@ -368,7 +943,6 @@
               </div>
             </div>
           </article>
-
         </div>
         <div class="magazine-column">
           <article class="article">
@@ -403,49 +977,46 @@
           </article>
           <article class="article">
             <figure class="article-img">
-              <img
-                src="./assets/home/judge.jpeg"
-                alt=""
-              />
+              <img src="./assets/home/judge.jpeg" alt="" />
             </figure>
             <h2 class="article-title article-title--small">
               <a href="#" class="article-link"
-                >UN judge convicted after tricking Ugandan woman to come to UK to 
-                use her as a slave</a
+                >UN judge convicted after tricking Ugandan woman to come to UK
+                to use her as a slave</a
               >
             </h2>
             <div class="article-creditation">
-                <p>
-                  By
-                  <a
-                    class="read-more"
-                    href="https://www.iol.co.za/authors/sinenhlanhla-masilela"
-                    >Sinenhlanhla Masilela</a
-                  >
-                </p>
-              </div>
+              <p>
+                By
+                <a
+                  class="read-more"
+                  href="https://www.iol.co.za/authors/sinenhlanhla-masilela"
+                  >Sinenhlanhla Masilela</a
+                >
+              </p>
+            </div>
           </article>
         </div>
         <div class="magazine-column">
           <article class="article">
             <h2 class="article-title article-title--medium">
-              <a href="https://www.iol.co.za/news/crime-and-courts/more-charges-added-as-sassa-officials-face-over-1300-counts-in-r260-million-fraud-scheme-1250e435-570b-4a46-877b-107de1828ab9" class="article-link"
-                >More charges added as Sassa officials face over 1,300 counts 
-                in R260 million fraud scheme</a
+              <a
+                href="https://www.iol.co.za/news/crime-and-courts/more-charges-added-as-sassa-officials-face-over-1300-counts-in-r260-million-fraud-scheme-1250e435-570b-4a46-877b-107de1828ab9"
+                class="article-link"
+                >More charges added as Sassa officials face over 1,300 counts in
+                R260 million fraud scheme</a
               >
             </h2>
             <div class="article-excerpt">
               <p>
-                The accused are Phumelele Myeza, 37, Paul Bones, 49, Keamogetswe 
-                Irene Ledwaba, 49, Siphesihle Phumzile Dlamini, 30, and Phiwe Mkhuzangwe, 37...
+                The accused are Phumelele Myeza, 37, Paul Bones, 49, Keamogetswe
+                Irene Ledwaba, 49, Siphesihle Phumzile Dlamini, 30, and Phiwe
+                Mkhuzangwe, 37...
               </p>
             </div>
             <div class="article-author">
               <div class="article-author-img">
-                <img
-                  src="./assets/home/sinenhl"
-                  alt=""
-                />
+                <img src="./assets/home/sinenhl" alt="" />
               </div>
               <div class="article-author-info">
                 <dl>
@@ -460,26 +1031,26 @@
               <span>Post Reports / Podcast</span>
             </small>
             <h2 class="article-title article-title--medium">
-              <a href="https://youtu.be/TwR3h5bCp7U?si=z_YT5MmraEak_1t3" class="article-link"
+              <a
+                href="https://youtu.be/TwR3h5bCp7U?si=z_YT5MmraEak_1t3"
+                class="article-link"
                 >Dated a ghost for 2 months</a
               >
             </h2>
-            
+
             <div class="article-podcast-info">
               Apple Podcasts, Google Podcasts, Stitcher
             </div>
             <div class="article-excerpt">
-                <p>
-                    Welcome to Soweto Podcast the voice of Soweto with your host Sipho Hadebe! 
-                    Join us for real conversations, and inspiring stories from the heart of South Africa
-                </p>
+              <p>
+                Welcome to Soweto Podcast the voice of Soweto with your host
+                Sipho Hadebe! Join us for real conversations, and inspiring
+                stories from the heart of South Africa
+              </p>
             </div>
             <div class="article-author">
               <div class="article-author-img">
-                <img
-                  src="./assets/home/podcas.png"
-                  alt=""
-                />
+                <img src="./assets/home/podcas.png" alt="" />
               </div>
               <div class="article-author-info">
                 <dl>
@@ -491,7 +1062,7 @@
           </article>
         </div>
       </div>
-    </main>
+    </main> -->
 
     <!-- Footer Section -->
     <footer>
@@ -515,6 +1086,210 @@
       <p>&copy; 2025 InsideLimpopo.com | All Rights Reserved</p>
     </footer>
 
-    <script src="./js/scipt.js"></script>
+    <script>
+      let breakingImg = document.querySelector("#breakingImg");
+      let breakingNews_title = document.querySelector("#breakingNews .title");
+      let breakingNews_desc = document.querySelector(
+        "#breakingNews .description"
+      );
+      let topNews = document.querySelector(".topNews");
+      let sportsNews = document.querySelector("#sportsNews .newsBox");
+      let businessNews = document.querySelector("#businessNews .newsBox");
+      let techNews = document.querySelector("#techNews .newsBox");
+
+      const API_KEY = "b58aae20fe8c8763d71035f682ca20ad"; 
+
+      // Fetch data from GNews API
+      const fetchData = async (category, pageSize) => {
+        const url = `https://gnews.io/api/v4/top-headlines?category=${category}&max=${pageSize}&lang=en&country=za&apikey=${API_KEY}`;
+        try {
+          const response = await fetch(url);
+          if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+          }
+          const data = await response.json();
+          return data.articles; // GNews API returns articles in the `articles` property
+        } catch (error) {
+          console.error("Error fetching news:", error);
+          return [];
+        }
+      };
+
+      // Add breaking news
+      const add_breakingNews = (data) => {
+        if (data.length > 0) {
+          breakingImg.innerHTML = `<img src=${
+            data[0].image || "https://via.placeholder.com/400"
+          } alt="image">`;
+          breakingNews_title.innerHTML = `<a href=${data[0].url} target="_blank"><h2>${data[0].title}</h2></a>`;
+          breakingNews_desc.innerHTML = `${data[0].description}`;
+        } else {
+          breakingImg.innerHTML = `<img src="https://via.placeholder.com/400" alt="image">`;
+          breakingNews_title.innerHTML = `<h2>No breaking news available</h2>`;
+          breakingNews_desc.innerHTML = `Check back later for updates.`;
+        }
+      };
+
+      // Add top news
+      const add_topNews = (data) => {
+        let html = "";
+        data.forEach((element) => {
+          const title =
+            element.title.length > 100
+              ? element.title.slice(0, 100) + "..."
+              : element.title;
+          html += `
+      <div class="news">
+        <div class="img">
+          <img src=${
+            element.image || "https://via.placeholder.com/400"
+          } alt="image">
+        </div>
+        <div class="text">
+          <div class="title">
+            <a href=${element.url} target="_blank"><p>${title}</p></a>
+          </div>
+        </div>
+      </div>`;
+        });
+        topNews.innerHTML = html;
+      };
+
+      // Add sports news
+      const add_sportsNews = (data) => {
+        let html = "";
+        data.forEach((element) => {
+          const title =
+            element.title.length > 100
+              ? element.title.slice(0, 100) + "..."
+              : element.title;
+          html += `
+      <div class="newsCard">
+        <div class="img">
+          <img src=${
+            element.image || "https://via.placeholder.com/400"
+          } alt="image">
+        </div>
+        <div class="text">
+          <div class="title">
+            <a href=${element.url} target="_blank"><p>${title}</p></a>
+          </div>
+        </div>
+      </div>`;
+        });
+        sportsNews.innerHTML = html;
+      };
+
+      // Add business news
+      const add_businessNews = (data) => {
+        let html = "";
+        data.forEach((element) => {
+          const title =
+            element.title.length > 100
+              ? element.title.slice(0, 100) + "..."
+              : element.title;
+          html += `
+      <div class="newsCard">
+        <div class="img">
+          <img src=${
+            element.image || "https://via.placeholder.com/400"
+          } alt="image">
+        </div>
+        <div class="text">
+          <div class="title">
+            <a href=${element.url} target="_blank"><p>${title}</p></a>
+          </div>
+        </div>
+      </div>`;
+        });
+        businessNews.innerHTML = html;
+      };
+
+      // Add tech news
+      const add_techNews = (data) => {
+        let html = "";
+        data.forEach((element) => {
+          const title =
+            element.title.length > 100
+              ? element.title.slice(0, 100) + "..."
+              : element.title;
+          html += `
+      <div class="newsCard">
+        <div class="img">
+          <img src=${
+            element.image || "https://via.placeholder.com/400"
+          } alt="image">
+        </div>
+        <div class="text">
+          <div class="title">
+            <a href=${element.url} target="_blank"><p>${title}</p></a>
+          </div>
+        </div>
+      </div>`;
+        });
+        techNews.innerHTML = html;
+      };
+
+      // Fetch and display news on page load
+      window.addEventListener("load", async () => {
+        const breakingNews = await fetchData("general", 1);
+        add_breakingNews(breakingNews);
+
+        const topHeadlines = await fetchData("general", 20);
+        add_topNews(topHeadlines);
+
+        const sportsData = await fetchData("sports", 5);
+        add_sportsNews(sportsData);
+
+        const businessData = await fetchData("business", 5);
+        add_businessNews(businessData);
+
+        const techData = await fetchData("technology", 5);
+        add_techNews(techData);
+      });
+      //   const apiUrl = `https://newsapi.org/v2/top-headlines?country=us&apiKey=94710bfc54a44f1a9796e81a0bd2e446`;
+
+      //   async function fetchNews(apiUrl) {
+      //     try {
+      //       const res = await fetch(apiUrl);
+      //       if (!res.ok) {
+      //         throw new Error(`HTTP error! Status: ${res.status}`);
+      //       }
+      //       const data = await res.json();
+      //       if (data.articles && data.articles.length > 0) {
+      //         displayNews(data.articles);
+      //       } else {
+      //         showError("No article found");
+      //       }
+      //     } catch (err) {
+      //       console.log("error fetching news: ", err);
+      //       showError("Failed to fetch news. Please try again later");
+      //     }
+      //   }
+
+      //   function displayNews(articles) {
+      //     const newsGrid = document.getElementById("newsGrid");
+
+      //     newsGrid.innerHTML = "";
+
+      //     articles.forEach((articles) => {
+      //       const newsCard = document.createElement("article");
+
+      //       newsCard.className = "news-grid";
+
+      //       newsCard.innerHTML = `
+      // <img src="${
+      //   articles.urlToImage || "https://via.placeholder.com/400"
+      // }">    <h3>${articles.title}</h3>
+      // <p>${articles.description || "No decription available"}</p>
+      // <a href="${articles.url}" target="_blank" class="read-more">Read more</a>`;
+
+      //       newsGrid.appendChild(newsCard);
+      //     });
+      //   }
+
+      //   fetchNews(apiUrl);
+    </script>
+    <!-- <script src="/"></script> -->
   </body>
 </html>
