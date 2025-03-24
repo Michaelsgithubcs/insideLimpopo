@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+  <%- include('./partials/head.ejs') %> 
+
+  <body>
+    <!-- Header Section -->
+    <%- include('./partials/header.ejs') %>
+    <%- include('./partials/nav.ejs') %>
+
+    <div class="breaking-news-ticker">
+      <div class="ticker-content">
+        <span>
+          <img src="./assets/home/ramapho.jpeg" alt="News Image 1" />
+          <a
+            href="https://www.enca.com/top-stories/we-are-working-mending-relationship-us-ramaphosa"
+          >
+            We are working on mending relationship with US - Ramaphosa
+          </a>
+        </span>
+        <span>
+          <img src="./assets/home/outa.jpeg" alt="News Image 2" />
+          <a
+            href="https://www.enca.com/news-top-stories/outa-uncovers-systemic-fraud-testing-stations"
+          >
+            Outa uncovers systemic fraud at testing stations</a
+          >
+        </span>
+        <span>
+          <img src="./assets/home/investigat.jpeg" alt="News Image 3" />
+          <a
+            href="https://www.enca.com/news-top-stories/investigation-finds-counterfeit-electrical-goods-appliances-widely-available"
+          >
+            Investigations finds counterfeit electrical goods, appliances widely
+            available</a
+          >
+        </span>
+        <span>
+          <img src="./assets/home/kzn.jpeg" alt="News Image 4" />
+          <a
+            href="https://www.enca.com/news-top-stories/kzn-anc-task-team-focuses-tripartite-alliance"
+          >
+            KZN task team focuses on Tripartite Alliance</a
+          >
+        </span>
+        <span>
+          <img src="./assets/home/us.jpeg" alt="News Image 5" />
+          <a
+            href="https://www.enca.com/opinion/us-democrats-fume-some-party-cave-trump-spending-bill"
+          >
+            US Democrats fume as some in party cave Trump on spending bill</a
+          >
+        </span>
+        <span>
+          <img src="./assets/home/rain.jpeg" alt="News Image 6" />
+          <a
+            href="https://www.enca.com/sport/norris-holds-verstappen-win-rain-hit-australian-grand-prix"
+          >
+            Norris holds off Verstappen to win rain-hit Australian Grand Prix FM
+          </a>
+        </span>
+        <span>
+          <img src="./assets/home/ramapho.jpeg" alt="News Image 1" />
+          <a
+            href="https://www.enca.com/top-stories/we-are-working-mending-relationship-us-ramaphosa"
+          >
+            We are working on mending relationship with US - Ramaphosa
+          </a>
+        </span>
+        <span>
+          <img src="./assets/home/outa.jpeg" alt="News Image 2" />
+          <a
+            href="https://www.enca.com/news-top-stories/outa-uncovers-systemic-fraud-testing-stations"
+          >
+            Outa uncovers systemic fraud at testing stations</a
+          >
+        </span>
+        <span>
+          <img src="./assets/home/investigat.jpeg" alt="News Image 3" />
+          <a
+            href="https://www.enca.com/news-top-stories/investigation-finds-counterfeit-electrical-goods-appliances-widely-available"
+          >
+            Investigations finds counterfeit electrical goods, appliances widely
+            available</a
+          >
+        </span>
+        <span>
+          <img src="./assets/home/kzn.jpeg" alt="News Image 4" />
+          <a
+            href="https://www.enca.com/news-top-stories/kzn-anc-task-team-focuses-tripartite-alliance"
+          >
+            KZN task team focuses on Tripartite Alliance</a
+          >
+        </span>
+        <span>
+          <img src="./assets/home/us.jpeg" alt="News Image 5" />
+          <a
+            href="https://www.enca.com/opinion/us-democrats-fume-some-party-cave-trump-spending-bill"
+          >
+            US Democrats fume as some in party cave Trump on spending bill</a
+          >
+        </span>
+        <span>
+          <img src="./assets/home/rain.jpeg" alt="News Image 6" />
+          <a
+            href="https://www.enca.com/sport/norris-holds-verstappen-win-rain-hit-australian-grand-prix"
+          >
+            Norris holds off Verstappen to win rain-hit Australian Grand Prix FM
+          </a>
+        </span>
+      </div>
+    </div>
+    <hr />
+    <!-- Main Content -->
+    <div class="topHeadlines">
+      <div class="left">
+        <div class="title">
+          <h2>Breaking News</h2>
+        </div>
+        <div class="img" id="breakingImg"></div>
+        <div class="text" id="breakingNews">
+          <div class="title"></div>
+          <div class="description"></div>
+        </div>
+      </div>
+      <div class="right">
+        <div class="title">
+          <h2>Top Headlines</h2>
+        </div>
+        <div class="topNews"></div>
+      </div>
+    </div>
+    <div class="page2">
+      <div class="news" id="sportsNews">
+        <div class="title">
+          <h2>Sports News</h2>
+        </div>
+        <div class="newsBox"></div>
+      </div>
+      <div class="news" id="businessNews">
+        <div class="title">
+          <h2>Business News</h2>
+        </div>
+        <div class="newsBox"></div>
+      </div>
+      <div class="news" id="techNews">
+        <div class="title">
+          <h2>Technology News</h2>
+        </div>
+        <div class="newsBox"></div>
+      </div>
+    </div>
+
+    <!-- Footer Section -->
+    <%- include('./partials/footer.ejs') %>
+
+
+    <script>
+      let breakingImg = document.querySelector("#breakingImg");
+      let breakingNews_title = document.querySelector("#breakingNews .title");
+      let breakingNews_desc = document.querySelector(
+        "#breakingNews .description"
+      );
+      let topNews = document.querySelector(".topNews");
+      let sportsNews = document.querySelector("#sportsNews .newsBox");
+      let businessNews = document.querySelector("#businessNews .newsBox");
+      let techNews = document.querySelector("#techNews .newsBox");
+
+      const API_KEY = "b58aae20fe8c8763d71035f682ca20ad"; 
+
+      // Fetch data from GNews API
+      const fetchData = async (category, pageSize) => {
+        const url = `https://gnews.io/api/v4/top-headlines?category=${category}&max=${pageSize}&lang=en&country=za&apikey=${API_KEY}`;
+        try {
+          const response = await fetch(url);
+          if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+          }
+          const data = await response.json();
+          return data.articles; // GNews API returns articles in the `articles` property
+        } catch (error) {
+          console.error("Error fetching news:", error);
+          return [];
+        }
+      };
+
+      // Add breaking news
+      const add_breakingNews = (data) => {
+        if (data.length > 0) {
+          breakingImg.innerHTML = `<img src=${
+            data[0].image || "https://via.placeholder.com/400"
+          } alt="image">`;
+          breakingNews_title.innerHTML = `<a href=${data[0].url} target="_blank"><h2>${data[0].title}</h2></a>`;
+          breakingNews_desc.innerHTML = `${data[0].description}`;
+        } else {
+          breakingImg.innerHTML = `<img src="https://via.placeholder.com/400" alt="image">`;
+          breakingNews_title.innerHTML = `<h2>No breaking news available</h2>`;
+          breakingNews_desc.innerHTML = `Check back later for updates.`;
+        }
+      };
+
+      // Add top news
+      const add_topNews = (data) => {
+        let html = "";
+        data.forEach((element) => {
+          const title =
+            element.title.length > 100
+              ? element.title.slice(0, 100) + "..."
+              : element.title;
+          html += `
+      <div class="news">
+        <div class="img">
+          <img src=${
+            element.image || "https://via.placeholder.com/400"
+          } alt="image">
+        </div>
+        <div class="text">
+          <div class="title">
+            <a href=${element.url} target="_blank"><p>${title}</p></a>
+          </div>
+        </div>
+      </div>`;
+        });
+        topNews.innerHTML = html;
+      };
+
+      // Add sports news
+      const add_sportsNews = (data) => {
+        let html = "";
+        data.forEach((element) => {
+          const title =
+            element.title.length > 100
+              ? element.title.slice(0, 100) + "..."
+              : element.title;
+          html += `
+      <div class="newsCard">
+        <div class="img">
+          <img src=${
+            element.image || "https://via.placeholder.com/400"
+          } alt="image">
+        </div>
+        <div class="text">
+          <div class="title">
+            <a href=${element.url} target="_blank"><p>${title}</p></a>
+          </div>
+        </div>
+      </div>`;
+        });
+        sportsNews.innerHTML = html;
+      };
+
+      // Add business news
+      const add_businessNews = (data) => {
+        let html = "";
+        data.forEach((element) => {
+          const title =
+            element.title.length > 100
+              ? element.title.slice(0, 100) + "..."
+              : element.title;
+          html += `
+      <div class="newsCard">
+        <div class="img">
+          <img src=${
+            element.image || "https://via.placeholder.com/400"
+          } alt="image">
+        </div>
+        <div class="text">
+          <div class="title">
+            <a href=${element.url} target="_blank"><p>${title}</p></a>
+          </div>
+        </div>
+      </div>`;
+        });
+        businessNews.innerHTML = html;
+      };
+
+      // Add tech news
+      const add_techNews = (data) => {
+        let html = "";
+        data.forEach((element) => {
+          const title =
+            element.title.length > 100
+              ? element.title.slice(0, 100) + "..."
+              : element.title;
+          html += `
+      <div class="newsCard">
+        <div class="img">
+          <img src=${
+            element.image || "https://via.placeholder.com/400"
+          } alt="image">
+        </div>
+        <div class="text">
+          <div class="title">
+            <a href=${element.url} target="_blank"><p>${title}</p></a>
+          </div>
+        </div>
+      </div>`;
+        });
+        techNews.innerHTML = html;
+      };
+
+      // Fetch and display news on page load
+      window.addEventListener("load", async () => {
+        const breakingNews = await fetchData("general", 1);
+        add_breakingNews(breakingNews);
+
+        const topHeadlines = await fetchData("general", 20);
+        add_topNews(topHeadlines);
+
+        const sportsData = await fetchData("sports", 5);
+        add_sportsNews(sportsData);
+
+        const businessData = await fetchData("business", 5);
+        add_businessNews(businessData);
+
+        const techData = await fetchData("technology", 5);
+        add_techNews(techData);
+      });
+      //   const apiUrl = `https://newsapi.org/v2/top-headlines?country=us&apiKey=94710bfc54a44f1a9796e81a0bd2e446`;
+
+      //   async function fetchNews(apiUrl) {
+      //     try {
+      //       const res = await fetch(apiUrl);
+      //       if (!res.ok) {
+      //         throw new Error(`HTTP error! Status: ${res.status}`);
+      //       }
+      //       const data = await res.json();
+      //       if (data.articles && data.articles.length > 0) {
+      //         displayNews(data.articles);
+      //       } else {
+      //         showError("No article found");
+      //       }
+      //     } catch (err) {
+      //       console.log("error fetching news: ", err);
+      //       showError("Failed to fetch news. Please try again later");
+      //     }
+      //   }
+
+      //   function displayNews(articles) {
+      //     const newsGrid = document.getElementById("newsGrid");
+
+      //     newsGrid.innerHTML = "";
+
+      //     articles.forEach((articles) => {
+      //       const newsCard = document.createElement("article");
+
+      //       newsCard.className = "news-grid";
+
+      //       newsCard.innerHTML = `
+      // <img src="${
+      //   articles.urlToImage || "https://via.placeholder.com/400"
+      // }">    <h3>${articles.title}</h3>
+      // <p>${articles.description || "No decription available"}</p>
+      // <a href="${articles.url}" target="_blank" class="read-more">Read more</a>`;
+
+      //       newsGrid.appendChild(newsCard);
+      //     });
+      //   }
+
+      //   fetchNews(apiUrl);
+    </script>
+    <!-- <script src="/"></script> -->
+  </body>
+</html>

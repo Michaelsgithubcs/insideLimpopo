@@ -1,40 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>OPINION - Inside Limpopo</title>
-    <link rel="stylesheet" href="./css/style.css" />
-    <!-- Add Font Awesome for social media icons -->
-    <link
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
-      rel="stylesheet"
-    />
-  </head>
+  <%- include('./partials/head.ejs') %>
   <body>
     <!-- Header Section -->
-    <header>
-      <h1>Inside Limpopo</h1>
-      <p>Latest news and more!</p>
-    </header>
-    <nav>
-      <ul>
-        <li><a href="home.html" class="nav-items">Home</a></li>
-        <li><a href="events.html" class="nav-items">Events</a></li>
-        <li><a href="sports.html" class="nav-items">Sports</a></li>
-        <li><a href="opinion.html" class="nav-items">Opinion</a></li>
-        <li><a href="podcast.html" class="nav-items">Podcast</a></li>
-        <li><a href="vacancies.html" class="nav-items">Vacancies</a></li>
-        <li><a href="contact.html" class="nav-items">Contacts</a></li>
-        <li><a href="about.html" class="nav-items">About</a></li>
-        <input
-          type="search"
-          class="search"
-          placeholder="Search News"
-          label="search"
-        />
-      </ul>
-    </nav>
+    <%- include('./partials/header.ejs') %>
+    <%- include('./partials/nav.ejs') %>
 
     <main>
       <section class="opinion-articles" id="opinionArticles">
@@ -182,26 +152,7 @@
     </main>
 
     <!-- Footer Section -->
-    <footer>
-      <div class="social-media-icons">
-        <a href="https://facebook.com" target="_blank" rel="noopener"
-          ><i class="fab fa-facebook-f"></i
-        ></a>
-        <a href="https://twitter.com" target="_blank" rel="noopener"
-          ><i class="fab fa-twitter"></i
-        ></a>
-        <a href="https://instagram.com" target="_blank" rel="noopener"
-          ><i class="fab fa-instagram"></i
-        ></a>
-        <a href="https://linkedin.com" target="_blank" rel="noopener"
-          ><i class="fab fa-linkedin-in"></i
-        ></a>
-        <a href="https://youtube.com" target="_blank" rel="noopener"
-          ><i class="fab fa-youtube"></i
-        ></a>
-      </div>
-      <p>&copy; 2025 InsideLimpopo.com | All Rights Reserved</p>
-    </footer>
+    <%- include('./partials/footer.ejs') %>
 
     <script>
       apiUrl = `https://newsapi.org/v2/top-headlines?country=us&apiKey=94710bfc54a44f1a9796e81a0bd2e446`;

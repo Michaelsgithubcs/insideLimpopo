@@ -1,37 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Explore upcoming and past events hosted by Seopa Media. Join us for awards, conferences, and workshops in the media industry.">
-    <meta name="keywords" content="Seopa Media, events, media awards, journalism workshop, media conference">
-    <meta name="author" content="Seopa Media">
-    <title>EVENTS | Seopa Media</title>
-    <link rel="stylesheet" href="./css/style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css">
-    <link rel="icon" type="image/png" href="favicon.png">
-    <!-- Add Font Awesome for social media icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <%- include('./partials/head.ejs') %>
 
-</head>
 <body>
      <!-- Header Section -->
-     <header>
-        <h1>Inside Limpopo</h1>
-        <p>Latest news and more!</p>
-      </header>
-      <nav>
-        <ul>
-          <li><a href="home.html" class="nav-items">Home</a></li>
-          <li><a href="events.html" class="nav-items">Events</a></li>
-          <li><a href="sports.html" class="nav-items">Sports</a></li>
-          <li><a href="opinion.html" class="nav-items">Opinion</a></li>
-          <li><a href="podcast.html" class="nav-items">Podcast</a></li>
-          <li><a href="vacancies.html" class="nav-items">Vacancies</a></li>
-          <li><a href="contact.html" class="nav-items">Contacts</a></li>
-          <li><a href="about.html" class="nav-items">About</a></li>
-        </ul>
-      </nav>
+     <%- include('./partials/header.ejs') %>
+      <%- include('./partials/nav.ejs') %>
 
     <main>
         <div class="search-bar">
@@ -142,26 +116,7 @@
     </main>
 
      <!-- Footer Section -->
-     <footer>
-        <div class="social-media-icons">
-          <a href="https://facebook.com" target="_blank" rel="noopener"
-            ><i class="fab fa-facebook-f"></i
-          ></a>
-          <a href="https://twitter.com" target="_blank" rel="noopener"
-            ><i class="fab fa-twitter"></i
-          ></a>
-          <a href="https://instagram.com" target="_blank" rel="noopener"
-            ><i class="fab fa-instagram"></i
-          ></a>
-          <a href="https://linkedin.com" target="_blank" rel="noopener"
-            ><i class="fab fa-linkedin-in"></i
-          ></a>
-          <a href="https://youtube.com" target="_blank" rel="noopener"
-            ><i class="fab fa-youtube"></i
-          ></a>
-        </div>
-        <p>&copy; 2025 InsideLimpopo.com | All Rights Reserved</p>
-      </footer>
+     <%- include('./partials/footer.ejs') %>
 
     <!-- Back to Top Button -->
     <button id="backToTop" title="Go to top">↑</button>

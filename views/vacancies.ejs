@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+  <%- include('./partials/head.ejs') %>
+
+  <body>
+    <!-- Header Section -->
+    <%- include('./partials/header.ejs') %>
+    <%- include('./partials/nav.ejs') %>
+
+    <main>
+      <!-- Vacancies Section -->
+      <section id="vacancies">
+        <h2>Current Job Vacancies</h2>
+        <p>
+          Explore exciting career opportunities at Seopa Media. Join our team
+          and be part of an innovative and growing media company.
+        </p>
+
+        <ul class="vacancy-list">
+          <li class="vacancy-item">
+            <h3>Senior Content Editor</h3>
+            <p><strong>Location:</strong> Johannesburg</p>
+            <p>
+              <strong>Job Description:</strong> We are looking for an
+              experienced content editor to oversee the content strategy for our
+              media channels.
+            </p>
+            <p>
+              <strong>Requirements:</strong> 5+ years of editorial experience,
+              strong leadership skills, and a passion for digital media.
+            </p>
+            <a href="#apply" class="apply-button">Apply Now</a>
+          </li>
+          <li class="vacancy-item">
+            <h3>Graphic Designer</h3>
+            <p><strong>Location:</strong> Cape Town</p>
+            <p>
+              <strong>Job Description:</strong> A creative designer to produce
+              engaging graphics and designs for our publications and digital
+              platforms.
+            </p>
+            <p>
+              <strong>Requirements:</strong> Proficiency in Adobe Creative
+              Suite, creativity, and a portfolio showcasing previous work.
+            </p>
+            <a href="#apply" class="apply-button">Apply Now</a>
+          </li>
+          <li class="vacancy-item">
+            <h3>Social Media Manager</h3>
+            <p><strong>Location:</strong> Remote</p>
+            <p>
+              <strong>Job Description:</strong> Manage and grow our social media
+              presence across various platforms.
+            </p>
+            <p>
+              <strong>Requirements:</strong> Expertise in social media strategy,
+              content creation, and analytics.
+            </p>
+            <a href="#apply" class="apply-button">Apply Now</a>
+          </li>
+        </ul>
+      </section>
+    </main>
+
+    <!-- Footer Section -->
+    <%- include('./partials/footer.ejs') %>
+
+    <script src="./js/scipt.js"></script>
+  </body>
+</html>
