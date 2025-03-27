@@ -1,11 +1,17 @@
 const express = require('express');
 const path = require('path');
+const bodyParser = require('body-parser');
 
 const app = express();
 
 // Template Engine
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
+
+// Body Parser Middleware
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false}));
+
 
 // Static Files
 app.use(express.static(path.join(__dirname, 'public')));
@@ -48,6 +54,11 @@ app.get('/contacts', (req, res) => {
 app.get('/about', (req, res) => {
     res.render('about', { title: 'About' });
 });
+
+app.get('/login', (req, res) => {
+    res.render('loginRegister', { title: 'Login' });
+});
+
 
 app.use((req, res) => {
     res.status(404).render('404', { title: '404' });

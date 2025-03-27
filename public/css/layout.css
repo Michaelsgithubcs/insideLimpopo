@@ -1,0 +1,49 @@
+/* ===== GRIDS & CONTAINERS ====== */
+/* ===== HEADER LAYOUT ===== */
+header {
+    background-color: #011131;
+    color: whitesmoke;
+    text-align: center;
+    padding: 20px 0;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* ===== MAIN CONTENT LAYOUT ===== */
+  .topHeadlines {
+    padding: 100px 50px 50px;
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1.5fr 1fr;
+    gap: 20px;
+  }
+  
+  .topHeadlines .left, 
+  .topHeadlines .right {
+    padding: 10px;
+  }
+  
+  /* ===== GRID SYSTEMS ===== */
+  .newsBox {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+  }
+  .newsCard {
+    width: calc(100% / 5 - 20px);
+  }
+  
+  /* ===== MEDIA QUERIES ===== */
+  @media (max-width: 768px) {
+    .topHeadlines {
+      grid-template-columns: 1fr;
+    }
+    .newsCard {
+      width: calc(100% / 2 - 20px);
+    }
+  }
+  
+  @media (max-width: 425px) {
+    .newsCard {
+      width: 100%;
+    }
+  }

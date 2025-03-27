@@ -2,114 +2,212 @@
 <html lang="en">
   <%- include('./partials/head.ejs') %>
 
-  <body>
+  <body class="sports-page">
     <!-- Header Section -->
     <%- include('./partials/header.ejs') %>
     <%- include('./partials/nav.ejs') %>
 
     <!-- Main Content -->
-    <main>
+    <main class="sports-container">
+      <!-- Hero Section -->
+      <section class="sports-hero">
+        <div class="hero-content">
+          <h1>Limpopo Sports Network</h1>
+          <p class="subtitle">Your premier source for local sports news, events, and team coverage</p>
+          <button class="cta-button">Subscribe for Updates</button>
+        </div>
+      </section>
+
       <!-- Sports News Section -->
-      <section id="sports-news">
-        <h2>Sports News</h2>
-        <p>
-          Stay updated with the latest sports news, scores, and match highlights
-          from around Limpopo.
-        </p>
+      <section id="sports-news" class="section-with-header">
+        <div class="section-header">
+          <h2>Latest Sports News</h2>
+          <p class="section-description">
+            Stay updated with the latest sports news, scores, and match highlights from around Limpopo.
+          </p>
+        </div>
+        <div class="news-ticker">
+          <div class="ticker-item">
+            <span class="ticker-badge football">Football</span>
+            <span>Magezi United advances to regional finals after 3-1 victory</span>
+          </div>
+          <div class="ticker-item">
+            <span class="ticker-badge basketball">Basketball</span>
+            <span>Mojapelo's Riders set new league scoring record</span>
+          </div>
+          <div class="ticker-item">
+            <span class="ticker-badge tennis">Tennis</span>
+            <span>Mogano's Hot-Flurs to represent Limpopo in national tournament</span>
+          </div>
+        </div>
       </section>
 
       <!-- Featured Sports Events Section -->
-      <section id="featured-events">
-        <h2>Featured Sports Events</h2>
-        <p>
-          Discover the top upcoming sports events and matches that you don't
-          want to miss.
-        </p>
+      <section id="featured-events" class="section-with-header">
+        <div class="section-header">
+          <h2>Featured Sports Events</h2>
+          <p class="section-description">
+            Discover the top upcoming sports events and matches that you don't want to miss.
+          </p>
+        </div>
 
         <!-- Sports Event Cards -->
         <div class="sports-section">
-          <div class="sports-card">
-            <img
-              src="./assets/sportsimages/football.jpeg"
-              alt="Football Match"
-            />
-            <h3>Football: Championship Final</h3>
-            <p>
-              Get ready for the grand final of the football championship. Don't
-              miss the action!
-            </p>
+          <div class="sports-card event-card">
+            <div class="card-image-container">
+              <img src="./assets/sportsimages/football.jpeg" alt="Football Match" />
+              <div class="event-date">
+                <span class="day">15</span>
+                <span class="month">JUN</span>
+              </div>
+            </div>
+            <div class="card-content">
+              <span class="sport-tag football">Football</span>
+              <h3>Championship Final</h3>
+              <p class="event-time">Saturday, 3:00 PM | Peter Mokaba Stadium</p>
+              <p>
+                The grand final of the football championship featuring Magezi United vs. Limpopo Lions. Don't miss the action!
+              </p>
+              <button class="card-button">Get Tickets</button>
+            </div>
           </div>
 
-          <div class="sports-card">
-            <img
-              src="./assets/sportsimages/basketball.jpeg"
-              alt="Basketball Game"
-            />
-            <h3>Basketball: League Playoffs</h3>
-            <p>
-              The league playoffs are heating up. Catch the live games and see
-              which team will rise to the top.
-            </p>
+          <div class="sports-card event-card">
+            <div class="card-image-container">
+              <img src="./assets/sportsimages/basketball.jpeg" alt="Basketball Game" />
+              <div class="event-date">
+                <span class="day">22</span>
+                <span class="month">JUN</span>
+              </div>
+            </div>
+            <div class="card-content">
+              <span class="sport-tag basketball">Basketball</span>
+              <h3>League Playoffs</h3>
+              <p class="event-time">Saturday, 7:30 PM | Polokwane Arena</p>
+              <p>
+                The league playoffs are heating up. Catch the live games and see which team will rise to the top.
+              </p>
+              <button class="card-button">Get Tickets</button>
+            </div>
           </div>
 
-          <div class="sports-card">
-            <img
-              src="./assets/sportsimages/tennis.jpeg"
-              alt="Tennis Tournament"
-            />
-            <h3>Tennis: International Tournament</h3>
-            <p>
-              Top tennis players are facing off in this exciting international
-              tournament.
-            </p>
+          <div class="sports-card event-card">
+            <div class="card-image-container">
+              <img src="./assets/sportsimages/tennis.jpeg" alt="Tennis Tournament" />
+              <div class="event-date">
+                <span class="day">30</span>
+                <span class="month">JUN</span>
+              </div>
+            </div>
+            <div class="card-content">
+              <span class="sport-tag tennis">Tennis</span>
+              <h3>International Tournament</h3>
+              <p class="event-time">Sunday, 10:00 AM | Limpopo Tennis Center</p>
+              <p>
+                Top tennis players from across Africa facing off in this exciting international tournament.
+              </p>
+              <button class="card-button">Get Tickets</button>
+            </div>
           </div>
         </div>
       </section>
 
       <!-- Featured Sports Teams Section -->
-      <section id="sports-teams">
-        <h2>Featured Sports Teams</h2>
-        <p>
-          Learn about the most popular and successful sports teams in various
-          disciplines.
-        </p>
+      <section id="sports-teams" class="section-with-header">
+        <div class="section-header">
+          <h2>Featured Sports Teams</h2>
+          <p class="section-description">
+            Learn about the most popular and successful sports teams in Limpopo.
+          </p>
+        </div>
 
-        <div class="sports-section">
-          <div class="sports-card">
-            <img
-              src="./assets/sportsimages/footballteam.jpeg"
-              alt="Football Team"
-            />
-            <h3>Magezi United</h3>
-            <p>
-              One of the most successful football clubs in the world, with a
-              rich history of achievements.
-            </p>
+        <div class="sports-section team-section">
+          <div class="sports-card team-card">
+            <div class="team-logo">
+              <img src="./assets/sportsimages/footballteam.jpeg" alt="Football Team" />
+              <div class="team-stats">
+                <span>15 Wins</span>
+                <span>2 Losses</span>
+              </div>
+            </div>
+            <div class="card-content">
+              <h3>Magezi United</h3>
+              <div class="team-meta">
+                <span>Football</span>
+                <span>Founded: 1985</span>
+              </div>
+              <p>
+                One of the most successful football clubs in Limpopo, with 8 regional championships and 3 national titles.
+              </p>
+              <div class="team-social">
+                <a href="#"><i class="fab fa-facebook"></i></a>
+                <a href="#"><i class="fab fa-twitter"></i></a>
+                <a href="#"><i class="fab fa-instagram"></i></a>
+              </div>
+            </div>
           </div>
 
-          <div class="sports-card">
-            <img
-              src="./assets/sportsimages/basketballteam.jpeg"
-              alt="Basketball Team"
-            />
-            <h3>Mojapelo`s Riders</h3>
-            <p>
-              Known for their iconic players and legendary performances, the
-              Lakers continue to dominate the NBA.
-            </p>
+          <div class="sports-card team-card">
+            <div class="team-logo">
+              <img src="./assets/sportsimages/basketballteam.jpeg" alt="Basketball Team" />
+              <div class="team-stats">
+                <span>12 Wins</span>
+                <span>3 Losses</span>
+              </div>
+            </div>
+            <div class="card-content">
+              <h3>Mojapelo's Riders</h3>
+              <div class="team-meta">
+                <span>Basketball</span>
+                <span>Founded: 1998</span>
+              </div>
+              <p>
+                Known for their fast-paced play and legendary performances, the Riders continue to dominate the league.
+              </p>
+              <div class="team-social">
+                <a href="#"><i class="fab fa-facebook"></i></a>
+                <a href="#"><i class="fab fa-twitter"></i></a>
+                <a href="#"><i class="fab fa-instagram"></i></a>
+              </div>
+            </div>
           </div>
 
-          <div class="sports-card">
-            <img
-              src="./assets/sportsimages/tennisteam.jpeg"
-              alt="Tennis Team"
-            />
-            <h3>Mogano`s Hot-Flurs</h3>
-            <p>
-              Mogano`s Hot-Flurs is a powerhouse in the world of tennis, with
-              numerous Grand Slam titles under her belt.
-            </p>
+          <div class="sports-card team-card">
+            <div class="team-logo">
+              <img src="./assets/sportsimages/tennisteam.jpeg" alt="Tennis Team" />
+              <div class="team-stats">
+                <span>18 Wins</span>
+                <span>1 Loss</span>
+              </div>
+            </div>
+            <div class="card-content">
+              <h3>Mogano's Hot-Flurs</h3>
+              <div class="team-meta">
+                <span>Tennis</span>
+                <span>Founded: 2005</span>
+              </div>
+              <p>
+                A powerhouse in African tennis, with numerous tournament titles and representing Limpopo in international competitions.
+              </p>
+              <div class="team-social">
+                <a href="#"><i class="fab fa-facebook"></i></a>
+                <a href="#"><i class="fab fa-twitter"></i></a>
+                <a href="#"><i class="fab fa-instagram"></i></a>
+              </div>
+            </div>
           </div>
+        </div>
+      </section>
+
+      <!-- Newsletter Section -->
+      <section class="newsletter-section">
+        <div class="newsletter-content">
+          <h3>Never Miss a Game</h3>
+          <p>Subscribe to our newsletter for weekly updates on your favorite teams and events</p>
+          <form class="newsletter-form">
+            <input type="email" placeholder="Your email address" required>
+            <button type="submit">Subscribe</button>
+          </form>
         </div>
       </section>
     </main>
@@ -117,6 +215,7 @@
     <!-- Footer Section -->
     <%- include('./partials/footer.ejs') %>
 
-    <script src="./js/scipt.js"></script>
+    <script src="/public/scrips/scipt.js"></script>
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
   </body>
 </html>

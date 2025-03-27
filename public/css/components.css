@@ -1,0 +1,55 @@
+/* ===== BUTTONS & CARDS ====== */
+/* ===== NAVIGATION ===== */
+nav {
+  background: #011131;
+  padding: 1rem;
+}
+.nav-items:hover::after {
+  transform: scaleX(1);
+}
+
+/* ===== CARDS ===== */
+.article-card, .event, .sports-card {
+  background: #011131;
+  border-radius: 8px;
+  padding: 15px;
+  transition: transform 0.3s;
+}
+.article-card:hover {
+  transform: translateY(-5px);
+}
+
+/* ===== BUTTONS ===== */
+.btn {
+  padding: 10px 15px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.btn-primary {
+  background-color: #3b5484;
+  color: white;
+}
+.btn-primary:hover {
+  background-color: #086fb6;
+}
+
+/* ===== FORM COMPONENTS ===== */
+.form-group {
+  margin-bottom: 15px;
+}
+.form-group input {
+  width: 100%;
+  padding: 10px;
+  border-radius: 4px;
+}
+
+/* ===== SPECIAL COMPONENTS ===== */
+.breaking-news-ticker {
+  background-color: #011131;
+  padding: 10px;
+  overflow: hidden;
+}
+@keyframes ticker {
+  from { transform: translateX(0); }
+  to { transform: translateX(-100%); }
+}

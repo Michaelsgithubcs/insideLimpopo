@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+  <%- include('./partials/head.ejs') %>
+  <body class="auth-page">
+    <!-- Header Section -->
+    <%- include('./partials/header.ejs') %>
+    <%- include('./partials/nav.ejs') %>
+
+    <!-- Main Section -->
+    <main class="auth-main">
+      <section class="auth-container">
+        <!-- Auth Card -->
+        <div class="auth-card">
+          <!-- Form Toggle -->
+          <div class="form-toggle">
+            <button class="toggle-btn active" id="show-login">Sign In</button>
+            <button class="toggle-btn" id="show-register">Create Account</button>
+          </div>
+          
+          <!-- Login Form -->
+          <div class="auth-form" id="login-form">
+            <div class="auth-header">
+              <h2>Welcome Back</h2>
+              <p>Sign in to access your account</p>
+            </div>
+            
+            <form action="/login" method="POST" class="auth-form-content">
+              <div class="form-group">
+                <label for="username">Username or Email</label>
+                <div class="input-with-icon">
+                  <i class="fas fa-user"></i>
+                  <input type="text" id="username" name="username" placeholder="Enter your username or email" required>
+                </div>
+              </div>
+              
+              <div class="form-group">
+                <label for="login-password">Password</label>
+                <div class="input-with-icon">
+                  <i class="fas fa-lock"></i>
+                  <input type="password" id="login-password" name="password" placeholder="Enter your password" required>
+                  <span class="password-toggle" onclick="togglePassword('login-password')">
+                    <i class="fas fa-eye"></i>
+                  </span>
+                </div>
+                <div class="form-options">
+                  <label class="remember-me">
+                    <input type="checkbox" name="remember"> Remember me
+                  </label>
+                  <a href="#forgot-password" class="forgot-password">Forgot password?</a>
+                </div>
+              </div>
+              
+              <button type="submit" class="auth-button">Sign In</button>
+              
+              <div class="social-auth">
+                <p class="divider"><span>or continue with</span></p>
+                <div class="social-buttons">
+                  <button type="button" class="social-button google">
+                    <i class="fab fa-google"></i> Google
+                  </button>
+                  <button type="button" class="social-button facebook">
+                    <i class="fab fa-facebook-f"></i> Facebook
+                  </button>
+                </div>
+              </div>
+              
+              <p class="auth-footer">Don't have an account? <a href="#" id="switch-to-register">Sign up</a></p>
+            </form>
+          </div>
+          
+          <!-- Register Form (Hidden by default) -->
+          <div class="auth-form hidden" id="register-form">
+            <div class="auth-header">
+              <h2>Create Account</h2>
+              <p>Join our community today</p>
+            </div>
+            
+            <form action="/register" method="POST" class="auth-form-content">
+              <div class="form-group">
+                <label for="reg-username">Username</label>
+                <div class="input-with-icon">
+                  <i class="fas fa-user"></i>
+                  <input type="text" id="reg-username" name="username" placeholder="Choose a username" required>
+                </div>
+              </div>
+              
+              <div class="form-group">
+                <label for="email">Email Address</label>
+                <div class="input-with-icon">
+                  <i class="fas fa-envelope"></i>
+                  <input type="email" id="email" name="email" placeholder="Enter your email" required>
+                </div>
+              </div>
+              
+              <div class="form-group">
+                <label for="reg-password">Password</label>
+                <div class="input-with-icon">
+                  <i class="fas fa-lock"></i>
+                  <input type="password" id="reg-password" name="password" placeholder="Create a password" required>
+                  <span class="password-toggle" onclick="togglePassword('reg-password')">
+                    <i class="fas fa-eye"></i>
+                  </span>
+                </div>
+                <div class="password-strength">
+                  <div class="strength-meter">
+                    <span class="strength-bar"></span>
+                    <span class="strength-bar"></span>
+                    <span class="strength-bar"></span>
+                  </div>
+                  <p class="strength-text">Password strength: <span>Weak</span></p>
+                </div>
+              </div>
+              
+              <div class="form-group terms-group">
+                <label class="terms-checkbox">
+                  <input type="checkbox" name="terms" required>
+                  <span>I agree to the <a href="#terms">Terms of Service</a> and <a href="#privacy">Privacy Policy</a></span>
+                </label>
+              </div>
+              
+              <button type="submit" class="auth-button">Create Account</button>
+              
+              <p class="auth-footer">Already have an account? <a href="#" id="switch-to-login">Sign in</a></p>
+            </form>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Footer Section -->
+    <%- include('./partials/footer.ejs') %>
+
+    <!-- Scripts -->
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    <script>
+      // Toggle between forms
+      document.getElementById('show-login').addEventListener('click', function() {
+        this.classList.add('active');
+        document.getElementById('show-register').classList.remove('active');
+        document.getElementById('login-form').classList.remove('hidden');
+        document.getElementById('register-form').classList.add('hidden');
+      });
+
+      document.getElementById('show-register').addEventListener('click', function() {
+        this.classList.add('active');
+        document.getElementById('show-login').classList.remove('active');
+        document.getElementById('register-form').classList.remove('hidden');
+        document.getElementById('login-form').classList.add('hidden');
+      });
+
+      // Switch links inside forms
+      document.getElementById('switch-to-register').addEventListener('click', function(e) {
+        e.preventDefault();
+        document.getElementById('show-register').click();
+      });
+
+      document.getElementById('switch-to-login').addEventListener('click', function(e) {
+        e.preventDefault();
+        document.getElementById('show-login').click();
+      });
+
+      // Password toggle function
+      function togglePassword(inputId) {
+        const input = document.getElementById(inputId);
+        const icon = event.currentTarget.querySelector('i');
+        if (input.type === 'password') {
+          input.type = 'text';
+          icon.classList.replace('fa-eye', 'fa-eye-slash');
+        } else {
+          input.type = 'password';
+          icon.classList.replace('fa-eye-slash', 'fa-eye');
+        }
+      }
+
+      // Password strength indicator
+      const regPassword = document.getElementById('reg-password');
+      if (regPassword) {
+        regPassword.addEventListener('input', function() {
+          const strengthBars = document.querySelectorAll('.strength-bar');
+          const strengthText = document.querySelector('.strength-text span');
+          const password = this.value;
+          let strength = 0;
+          
+          // Length check
+          if (password.length > 7) strength++;
+          // Contains numbers
+          if (/\d/.test(password)) strength++;
+          // Contains special chars
+          if (/[!@#$%^&*(),.?":{}|<>]/.test(password)) strength++;
+          
+          // Reset all bars
+          strengthBars.forEach(bar => bar.style.backgroundColor = '#e0e0e0');
+          
+          // Set active bars
+          for (let i = 0; i < strength; i++) {
+            strengthBars[i].style.backgroundColor = i === 2 ? '#4CAF50' : i === 1 ? '#FFC107' : '#F44336';
+          }
+          
+          // Set text
+          const strengthLabels = ['Weak', 'Medium', 'Strong'];
+          strengthText.textContent = password.length > 0 ? strengthLabels[strength - 1] || 'Weak' : 'Weak';
+        });
+      }
+
+      // Form submission handling
+      document.querySelectorAll('.auth-form form').forEach(form => {
+        form.addEventListener('submit', function(e) {
+          // In a real app, you would handle form submission here
+          // This is just for demonstration
+          console.log(`Form submitted: ${this.getAttribute('action')}`);
+        });
+      });
+    </script>
+  </body>
+</html>
