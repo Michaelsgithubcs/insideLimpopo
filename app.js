@@ -2,6 +2,8 @@ const express = require('express');
 const path = require('path');
 const bodyParser = require('body-parser');
 
+require('dotenv').config();
+
 const app = express();
 
 // Template Engine
@@ -23,52 +25,10 @@ app.use('/podcast', express.static(path.join(__dirname, 'public/assets/podcast')
 app.use('/sportsimages', express.static(path.join(__dirname, 'public/assets/sportsimages')));
 
 // Routes
-app.get('/', (req, res) => {
-    res.render('home', { title: 'Home' });
-});
+app.use('/', require('./routes/index'));
 
-app.get('/events', (req, res) => {
-    res.render('events', { title: 'Events' });
-});
-
-app.get('/sports', (req, res) => {
-    res.render('sports', { title: 'Sports' });
-});
-
-app.get('/opinion', (req, res) => {
-    res.render('opinion', { title: 'Opinion' });
-});
-
-app.get('/podcast', (req, res) => {
-    res.render('podcast', { title: 'Podcast' });
-});
-
-app.get('/vacancies', (req, res) => {
-    res.render('vacancies', { title: 'Vacancies' });
-});
-
-app.get('/contacts', (req, res) => {
-    res.render('contact', { title: 'Contacts' });
-});
-
-app.get('/about', (req, res) => {
-    res.render('about', { title: 'About' });
-});
-
-app.get('/login', (req, res) => {
-    res.render('loginRegister', { title: 'Login' });
-});
-
-
-app.use((req, res) => {
-    res.status(404).render('404', { title: '404' });
-});
-
-app.use((err, req, res, next) => {
-    console.error(err.stack);
-    res.status(500).render('error', { title: 'Error' });
-});
-
-app.listen(3000, () => {
-    console.log('Server running on port 3000');
+// Start the server
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+    console.log(`Server running on http://localhost:${PORT}`);
 });

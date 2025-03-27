@@ -1028,15 +1028,15 @@ nav ul li a {
   margin-bottom: 50px;
 }
 
-.section-title {
+.section-event-title {
   text-align: center;
   margin-bottom: 30px;
-  color: #2c3e50;
+  color: whitesmoke;
   position: relative;
   font-size: 2rem;
 }
 
-.section-title::after {
+.section-event-title::after {
   content: '';
   position: absolute;
   width: 80px;
@@ -1418,20 +1418,20 @@ nav ul li a {
   margin-bottom: 50px;
 }
 
-.section-header {
+.section-sport-header {
   text-align: center;
   margin-bottom: 30px;
 }
 
-.section-header h2 {
+.section-sport-header h2 {
   font-size: 2.2rem;
-  color: #1d3557;
+  color: whitesmoke;
   position: relative;
   display: inline-block;
   margin-bottom: 15px;
 }
 
-.section-header h2::after {
+.section-sport-header h2::after {
   content: '';
   position: absolute;
   width: 50%;
@@ -1441,7 +1441,7 @@ nav ul li a {
   left: 25%;
 }
 
-.section-description {
+.section-sport-description {
   font-size: 1.1rem;
   color: #666;
   max-width: 700px;
@@ -2174,20 +2174,20 @@ nav ul li a {
   margin-bottom: 50px;
 }
 
-.section-header {
+.section-vacancy-header {
   text-align: center;
   margin-bottom: 30px;
 }
 
-.section-header h2 {
+.section-vacancy-header h2 {
   font-size: 2.2rem;
-  color: #2c3e50;
+  color: whitesmoke;
   position: relative;
   display: inline-block;
   margin-bottom: 15px;
 }
 
-.section-header h2::after {
+.section-vacancy-header h2::after {
   content: '';
   position: absolute;
   width: 80px;
@@ -2198,7 +2198,7 @@ nav ul li a {
   transform: translateX(-50%);
 }
 
-.section-description {
+.section-vacancy-description {
   font-size: 1.1rem;
   color: #666;
   max-width: 700px;
@@ -2832,22 +2832,22 @@ nav ul li a {
   gap: 2rem;
 }
 
-.section-header {
+.section-podcast-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 1.5rem;
 }
 
-.section-title {
-  color: #011131;
+.section-podcast-title {
+  color: whitesmoke;
   font-size: 1.8rem;
   margin: 0;
   position: relative;
   padding-bottom: 0.5rem;
 }
 
-.section-title::after {
+.section-podcast-title::after {
   content: '';
   position: absolute;
   bottom: 0;
@@ -3299,12 +3299,12 @@ nav ul li a {
   margin-bottom: 2rem;
 }
 
-.section-header {
+.section-about-header {
   text-align: center;
   margin-bottom: 1.5rem;
 }
 
-.section-header h2 {
+.section-about-header h2 {
   color: #333;
   font-size: 2rem;
   margin-bottom: 0.5rem;
