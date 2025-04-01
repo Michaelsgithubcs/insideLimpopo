@@ -1,6 +1,8 @@
 @import url("https://fonts.googleapis.com/css2?family=PT+Sans:ital,wght@0,400;0,700;1,400&display=swap");
 
-/* ===== BASE STYLES ===== */
+/* =============================================== */
+/*                   BASE STYLE                    */
+/* =============================================== */
 * {
   box-sizing: border-box;
   margin: 0;
@@ -21,7 +23,9 @@ main {
   box-shadow: 0 0 10px rgba(210, 180, 180, 0.1);
 }
 
-/* ===== HEADER SECTION ===== */
+/* =============================================== */
+/*                     HEADER                      */
+/* =============================================== */
 header {
   background-color: #011131;
   color: whitesmoke;
@@ -42,7 +46,9 @@ header p {
   font-style: italic;
 }
 
-/* ===== NAVIGATION SECTION ===== */
+/* =============================================== */
+/*                NAVIGATION STYLE                 */
+/* =============================================== */
 nav {
   background: #011131;
   padding: 1rem;
@@ -94,7 +100,9 @@ nav ul li a {
   font-size: medium;
 }
 
-/* ====== Login & Register Sections ===== */
+/* =============================================== */
+/*         LOGIN_REGISTRATION FORM                 */
+/* =============================================== */
 .auth-page {
   background-color: #f8f9fa;
   color: #333;
@@ -1742,7 +1750,6 @@ nav ul li a {
 }
 
 /* ===== OPINION SECTION ===== */
-/* Opinion Page Styles */
 .opinion-page {
   background-color: #f8f9fa;
   color: #333;
