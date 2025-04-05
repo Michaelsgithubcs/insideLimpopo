@@ -10,6 +10,8 @@ router.use('/', require('./vacancies'));
 router.use('/', require('./contact'));
 router.use('/', require('./about'));
 router.use('/', require('./auth'));
+router.use('/', require('./add-story'));
+router.use('/', require('./add-articles'));
 router.use('/', require('./error'));
 
 module.exports = router;

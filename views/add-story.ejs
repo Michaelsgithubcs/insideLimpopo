@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+  <%- include('./partials/head.ejs') %>
+  <body>
+    <%- include('./partials/header.ejs') %> <%- include('./partials/nav.ejs') %>
+
+    <!-- Main Content -->
+    <main>
+    <!-- Add Story Section -->
+    <section class="content-section">
+        <h1 class="landing-header">Add New Story</h1>
+        <div class="bottom-data">
+            <div class="form-container">
+                <form>
+                    <div class="form-group">
+                        <label>Story Title</label>
+                        <input type="text" required />
+                    </div>
+
+                    <div class="form-group">
+                        <label>Author</label>
+                        <input type="text" required />
+                    </div>
+
+                    <div class="form-group">
+                        <label>Description</label>
+                        <textarea rows="4" required></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Content</label>
+                        <textarea rows="6" required></textarea>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Category</label>
+                            <select required>
+                                <option value="">Select Category</option>
+                                <option value="sports">Sports</option>
+                                <option value="opinion">Opinion</option>
+                                <option value="event">Event</option>
+                                <option value="vacancy">Vacancy</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Image URL</label>
+                            <input type="text" />
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Posted Date</label>
+                            <input type="date" required />
+                        </div>
+
+                        <div class="form-group">
+                            <label>Expiry Date</label>
+                            <input type="date" required />
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary">Add Job</button>
+                        <button type="reset" class="btn btn-secondary">Reset</button>
+                    </div>
+                </form>
+            </div>
+          </div>
+        </section>
+      </main>
+    <!-- Footer Section -->
+    <%- include('./partials/footer.ejs') %>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.1/dist/chart.min.js"></script>
+  </body>
+</html>

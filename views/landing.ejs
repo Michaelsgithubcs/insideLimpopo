@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+  <%- include('./partials/head.ejs') %>
+
+  <body>
+    <!-- Header Section -->
+    <%- include('./partials/header.ejs') %>
+    <%- include('./partials/nav.ejs') %>
+
+    <!-- Main Section -->
+    <main class="dashboard-landing-container">
+      <!-- User Profile Section -->
+      <section class="profile-landing-section">
+        <div class="profile-landing-card">
+          <div class="profile-landing-header">
+            <div class="avatar-landing">
+              <img
+                src="<%= user?.avatar || '/images/default-avatar.jpg' %>"
+                alt="Profile Picture"
+              />
+            </div>
+            <div class="profile-landing-info">
+              <h2>Username</h2>
+              <p class="email-landing">Email</p>
+              <div class="stats-landing">
+                <div class="stat-landing-item">
+                  <span class="stat-landing-number"></span>
+                  <span class="stat-landing-label">Stories</span>
+                </div>
+                <div class="stat-landing-item">
+                  <span class="stat-landing-number"></span>
+                  <span class="stat-landing-label">Articles</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="profile-landing-actions">
+            <button class="btn btn-landing-edit">Edit Profile</button>
+            <form action="/logout" method="POST" style="display: inline;">
+              <button type="submit" class="btn btn-landing-logout">Logout</button>
+            </form>
+          </div>
+        </div>
+      </section>
+
+      <!-- Content Creation Tabs -->
+      <div class="creation-landing-tabs">
+        <button class="tab-landing-btn active" data-tab="story">Add Story</button>
+        <button class="tab-landing-btn" data-tab="article">Add Article</button>
+      </div>
+
+      <!-- Add Story Section (Visible by default) -->
+      <section id="story-tab" class="content-landing-tab active">
+        <form
+          action="/stories"
+          method="POST"
+          enctype="multipart/form-data"
+          class="creation-landing-form"
+        >
+          <div class="form-landing-grid">
+            <div class="form-landing-group">
+              <label for="story-title">Story Title</label>
+              <input type="text" id="story-title" name="title" required />
+            </div>
+
+            <div class="form-landing-group">
+              <label for="story-category">Category</label>
+              <select id="story-category" name="category" required>
+                <option value="">Select Category</option>
+                <option value="news">News</option>
+                <option value="opinion">Opinion</option>
+                <option value="sports">Sports</option>
+                <option value="events">Events</option>
+              </select>
+            </div>
+
+            <div class="form-landing-group full-width">
+              <label for="story-description">Brief Description</label>
+              <textarea
+                id="story-description"
+                name="description"
+                rows="3"
+                required
+              ></textarea>
+            </div>
+
+            <div class="form-landing-group full-width">
+              <label for="story-content">Full Content</label>
+              <textarea
+                id="story-content"
+                name="content"
+                rows="8"
+                required
+              ></textarea>
+            </div>
+
+            <div class="form-landing-group">
+              <label for="story-image">Featured Image</label>
+              <input
+                type="file"
+                id="story-image"
+                name="image"
+                accept="image/*"
+              />
+            </div>
+
+            <div class="form-landing-group">
+              <label for="story-expiry">Expiry Date</label>
+              <input type="date" id="story-expiry" name="expiry_date" />
+            </div>
+          </div>
+
+          <div class="form-landing-actions">
+            <button type="submit" class="btn btn-landing-primary">Publish Story</button>
+            <button type="reset" class="btn btn-landing-outline">Clear Form</button>
+          </div>
+        </form>
+      </section>
+
+      <!-- Add Article Section (Hidden by default) -->
+      <section id="article-tab" class="content-landing-tab">
+        <form action="/articles" method="POST" class="creation-landing-form">
+          <div class="form-landing-grid">
+            <div class="form-landing-group full-width">
+              <label for="article-title">Article Title</label>
+              <input type="text" id="article-title" name="title" required />
+            </div>
+
+            <div class="form-landing-group">
+              <label for="article-category">Category</label>
+              <select id="article-category" name="category" required>
+                <option value="">Select Category</option>
+                <option value="technology">Technology</option>
+                <option value="health">Health</option>
+                <option value="education">Education</option>
+                <option value="business">Business</option>
+              </select>
+            </div>
+
+            <div class="form-landing-group">
+              <label for="article-tags">Tags (comma separated)</label>
+              <input type="text" id="article-tags" name="tags" />
+            </div>
+
+            <div class="form-landing-group full-width">
+              <label for="article-lead">Lead Paragraph</label>
+              <textarea
+                id="article-lead"
+                name="lead"
+                rows="3"
+                required
+              ></textarea>
+            </div>
+
+            <div class="form-landing-group full-width">
+              <label for="article-content">Article Content</label>
+              <textarea
+                id="article-content"
+                name="content"
+                rows="10"
+                required
+              ></textarea>
+            </div>
+
+            <div class="form-landing-group">
+              <label for="article-image-url">Featured Image URL</label>
+              <input type="url" id="article-image-url" name="image_url" />
+            </div>
+          </div>
+
+          <div class="form-landing-actions">
+            <button type="submit" class="btn btn-landing-primary">Submit Article</button>
+            <button
+              type="button"
+              class="btn btn-landing-outline preview-btn"
+            >
+              Preview
+            </button>
+          </div>
+        </form>
+      </section>
+    </main>
+
+    <!-- Footer Section -->
+    <%- include('./partials/footer.ejs') %>
+
+    <script>
+      // Tab switching functionality
+      document.querySelectorAll(".tab-landing-btn").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          // Remove active class from all buttons and tabs
+          document
+            .querySelectorAll(".tab-landing-btn")
+            .forEach((b) => b.classList.remove("active"));
+          document
+            .querySelectorAll(".content-landing-tab")
+            .forEach((tab) => tab.classList.remove("active"));
+
+          // Add active class to clicked button and corresponding tab
+          btn.classList.add("active");
+          const tabId = btn.getAttribute("data-tab") + "-tab";
+          document.getElementById(tabId).classList.add("active");
+        });
+      });
+    </script>
+  </body>
+</html>
