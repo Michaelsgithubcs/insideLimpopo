@@ -1,7 +1,8 @@
-/* ===== RESETS & FONTS ====== */
-/* ===== BASE STYLES ===== */
 @import url("https://fonts.googleapis.com/css2?family=PT+Sans:ital,wght@0,400;0,700;1,400&display=swap");
 
+/* =============================================== */
+/*                   BASE STYLE                    */
+/* =============================================== */
 * {
   box-sizing: border-box;
   margin: 0;
@@ -22,26 +23,24 @@ main {
   box-shadow: 0 0 10px rgba(210, 180, 180, 0.1);
 }
 
-/* Scrollbar */
+/* Scrollbar Styles */
 ::-webkit-scrollbar {
   width: 8px;
 }
+
 ::-webkit-scrollbar-track {
   background-color: transparent;
 }
+
 ::-webkit-scrollbar-thumb {
   background-color: #999;
   border-radius: 100px;
 }
 
-/* Links */
-a {
-  color: inherit;
-  text-decoration: none;
+.topHeadlines .right .topNews::-webkit-scrollbar {
+  width: 6px;
 }
 
-/* Form Elements */
-input, textarea, button {
-  font-family: inherit;
-  font-size: inherit;
+.topHeadlines .right .topNews::-webkit-scrollbar-thumb {
+  background-color: #777;
 }

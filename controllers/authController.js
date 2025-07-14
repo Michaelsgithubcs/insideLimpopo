@@ -1,23 +1,23 @@
 const bcrypt = require("bcrypt");
 const { pool } = require("../config/db");
-const { generateToken } = require("../middlewares/auth");
+// const { generateToken } = require("../middlewares/auth");
 
 module.exports = {
   // Render login page
   getLogin: (req, res) => {
-    res.render("/login", {
+    res.render("login", {
       title: "Login",
       error: req.flash("error"),
       success: req.flash("success"),
     });
   },
 
-  // Handle login
+  // Handle for the login
   postLogin: async (req, res) => {
     try {
       const { email, password } = req.body;
 
-      // Find user by email
+      // Finding the user by email
       const [users] = await pool.query("SELECT * FROM users WHERE email = ?", [
         email,
       ]);
@@ -29,27 +29,41 @@ module.exports = {
 
       const user = users[0];
 
-      // Verify password
+      // Verifying the password
       const isMatch = await bcrypt.compare(password, user.password);
       if (!isMatch) {
         req.flash("error", "Invalid email or password");
         return res.redirect("/login");
       }
 
-      // Create session
+      // const token = generateToken({
+      //   email: user.email,
+      //   role: user.role,
+      //   author_id: user.id,
+      // });
+
+      // Creating session
       req.session.userEmail = user.email;
       req.session.user = {
         email: user.email,
         role: user.role,
+        author_id: user.id
       };
 
-      // Save session before redirect
+      // req.session.token = token;
+
+      // Save the session before redirect
       req.session.save((err) => {
         if (err) {
           console.error("Session save error:", err);
           return res.redirect("/login");
         }
         console.log("Session saved successfully:", req.session);
+        res.json({ 
+          success: true, 
+          // token,
+          message: 'Login successful'
+        });
         res.redirect("/dashboard");
       });
     } catch (err) {
@@ -59,9 +73,9 @@ module.exports = {
     }
   },
 
-  // Render registration page
+  // Render the registration page
   getRegister: (req, res) => {
-    res.render("/register", {
+    res.render("register", {
       title: "Register",
       error: req.flash("error"),
     });
@@ -72,7 +86,7 @@ module.exports = {
     try {
       const { username, email, password } = req.body;
 
-      // Check if user exists
+      // Checking if the user exists
       const [existing] = await pool.query(
         "SELECT * FROM users WHERE email = ? OR username = ?",
         [email, username]
@@ -87,7 +101,7 @@ module.exports = {
       const salt = await bcrypt.genSalt(10);
       const hashedPassword = await bcrypt.hash(password, salt);
 
-      // Create user
+      // Creating user
       const [result] = await pool.query(
         "INSERT INTO users (username, email, password) VALUES (?, ?, ?)",
         [username, email, hashedPassword]
@@ -102,7 +116,7 @@ module.exports = {
     }
   },
 
-  // Handle logout
+  // Handle the logout
   logout: (req, res) => {
     req.session.destroy((err) => {
       if (err) {
@@ -114,7 +128,7 @@ module.exports = {
     });
   },
 
-  // Forgot password
+  // Forgot password later
   // forgotPassword: async (req, res) => {
 
   // }

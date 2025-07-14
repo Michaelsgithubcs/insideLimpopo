@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+  <%- include('../partials/head.ejs') %>
+  <body>
+    <%- include('../partials/header.ejs') %> 
+    <%- include('../partials/nav.ejs') %>
+
+    <!-- Main Content -->
+    <main class="about-container">
+      <!-- Mission Section -->
+      <section class="about-section" id="mission">
+        <div class="section-about-header">
+          <h2>Our Mission</h2>
+          <div class="section-divider"></div>
+        </div>
+        <p class="about-text">
+          At <strong class="brand-highlight">Inside Limpopo</strong>, our mission is to
+          provide accurate, timely, and engaging news and content to the people of
+          Limpopo. We aim to be the trusted source of information, empowering our
+          community with knowledge and fostering meaningful conversations.
+        </p>
+      </section>
+
+      <!-- Vision Section -->
+      <section class="about-section" id="vision">
+        <div class="section-about-header">
+          <h2>Our Vision</h2>
+          <div class="section-divider"></div>
+        </div>
+        <p class="about-text">
+          Our vision is to create a platform that not only informs but also
+          inspires and connects the people of Limpopo. We strive to be a catalyst
+          for positive change, promoting transparency, inclusivity, and progress
+          in our region.
+        </p>
+      </section>
+
+      <!-- Team Section -->
+      <section class="team-section" id="team">
+        <div class="section-about-header">
+          <h2>Meet Our Team</h2>
+          <div class="section-divider"></div>
+        </div>
+        <div class="team-grid">
+          <div class="team-member">
+            <div class="member-image">
+              <img src="/assets/team/yancy-rikhotso.jpg" alt="Yancy Rikhotso" />
+            </div>
+            <h3>Mthombeni Charity</h3>
+            <p class="position">Editor-in-Chief</p>
+            <p class="bio">With 10+ years in journalism, Yancy leads our editorial vision.</p>
+          </div>
+          
+          <div class="team-member">
+            <div class="member-image">
+              <img src="/assets/team/jane-rachidi.jpg" alt="Jane Rachidi" />
+            </div>
+            <h3>Jane Rachidi</h3>
+            <p class="position">Senior Reporter</p>
+            <p class="bio">Specializing in political and community affairs reporting.</p>
+          </div>
+          
+          <div class="team-member">
+            <div class="member-image">
+              <img src="/assets/team/sylvia-mojapelo.jpg" alt="Sylvia Mojapelo" />
+            </div>
+            <h3>Sylvia Mojapelo</h3>
+            <p class="position">Sports Analyst</p>
+            <p class="bio">Former athlete bringing deep sports insight to our coverage.</p>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Footer Section -->
+    <%- include('../partials/footer.ejs') %>
+  </body>
+</html>

@@ -12,10 +12,8 @@ const flash = require('connect-flash');
 const { v4: uuidv4 } = require('uuid');
 const rateLimit = require('express-rate-limit');
 const cookieParser = require('cookie-parser');
-const csrf = require('csurf');
-
-// const argon2 = require('argon2');
-
+const cors = require('cors');
+const articleRoutes = require('./routes/admin/articles'); 
 const app = express();
 
 // Database connection pool configuration
@@ -67,7 +65,7 @@ app.use(session({
   resave: false,
   saveUninitialized: false,
   cookie: {
-    secure: process.env.NODE_ENV === 'production',
+    secure: process.env.NODE_ENV === 'production' || false,
     httpOnly: true,
     maxAge: 24 * 60 * 60 * 1000, // 24 hours
     sameSite: 'strict'
@@ -77,16 +75,6 @@ app.use(session({
 // Flash messages
 app.use(flash());
 
-// Initialize CSRF protection AFTER session middleware
-// const csrfProtection = csrf({ cookie: true });
-// app.use(csrfProtection);
-
-// Make CSRF token available to all views
-// app.use((req, res, next) => {
-//   res.locals.csrfToken = req.csrfToken();
-//   next();
-// });
-
 // Template Engine
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
@@ -94,9 +82,15 @@ app.set('views', path.join(__dirname, 'views'));
 // Body parsing middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use('/api/articles', articleRoutes); // ✅ After session
 
 // Static files
 app.use(express.static(path.join(__dirname, 'public')));
+
+app.use(cors({
+  origin: 'http://localhost:3000', // or frontend domain
+  credentials: true
+}));
 
 // Make database pool available in requests
 app.use((req, res, next) => {

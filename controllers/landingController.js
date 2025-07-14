@@ -1,14 +1,14 @@
 const { pool } = require('../config/db');
 
 module.exports = {
-  // Render dashboard(landing) page
+  // Render the dashboard(landing) page
   getDashboard: async (req, res) => {
     try {
       if (!req.session.user) {
         return res.redirect('/login');
       }
 
-      // Get user stats
+      // Geting the user stats
       const [stories] = await pool.query(
         'SELECT COUNT(*) as count FROM stories WHERE email = ?',
         [req.session.user.email]
@@ -34,7 +34,7 @@ module.exports = {
     }
   },
 
-  // Render profile page
+  // Render the profile page
   getProfile: async (req, res) => {
     try {
       const [user] = await pool.query(
@@ -54,7 +54,7 @@ module.exports = {
     }
   },
 
-  // Update profile
+  // Updating profile
   updateProfile: async (req, res) => {
     try {
       const { username, email } = req.body;

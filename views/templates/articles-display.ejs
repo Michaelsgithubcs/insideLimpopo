@@ -1,0 +1,127 @@
+<%- include('../partials/head', { 
+  title: article.title || 'Daily News Article',
+  meta: {
+    description: article.content.substring(0, 160).replace(/[^\w\s]/gi, ''),
+    keywords: article.tags ? article.tags.join(', ') : article.category || 'news'
+  }
+}) %>
+
+<%- include('../partials/header') %>
+
+<main class="newspaper-template">
+  <!-- Article Content with Enhanced Features -->
+  <article class="newspaper-article">
+    <% if (article.featured_img) { %>
+      <div class="article-featured-img">
+        <img src="<%= article.featured_img %>" alt="<%= article.title %>">
+        <% if (article.img_caption) { %>
+          <p class="img-caption"><%= article.img_caption %></p>
+        <% } %>
+      </div>
+    <% } %>
+
+    <h2 class="headline"><%= article.title %></h2>
+
+    <% if (article.subtitle) { %>
+      <h3 class="subhead"><%= article.subtitle %></h3>
+    <% } %>
+
+    <!-- Formatted paragraphs with optional drop caps -->
+    <div class="article-body">
+      <% let firstParagraph = true; %>
+      <% article.content.split('\n').forEach((paragraph, index) => { %>
+        <% if (paragraph.trim()) { %>
+          <p class="<%= firstParagraph ? 'first-paragraph' : '' %>">
+            <% if (firstParagraph) { %>
+              <span class="drop-cap"><%= paragraph.substring(0,1) %></span>
+              <%= paragraph.substring(1) %>
+            <% } else { %>
+              <%= paragraph %>
+            <% } %>
+          </p>
+          <% firstParagraph = false; %>
+        <% } %>
+      <% }) %>
+    </div>
+
+    <!-- Author/Date Footer with Social Sharing -->
+    <div class="article-footer">
+      <div class="author-info">
+        <% if (article.author.avatar) { %>
+          <img src="<%= article.author.avatar %>" class="author-avatar" alt="<%= article.author.username %>">
+        <% } %>
+        <div>
+          <p>By <span class="author"><%= article.author.username %></span></p>
+          <% if (article.author.bio) { %>
+            <p class="author-bio"><%= article.author.bio %></p>
+          <% } %>
+        </div>
+      </div>
+      
+      <div class="article-meta">
+        <p class="publish-date">
+          Published: <%= new Date(article.published_at || article.createdAt).toLocaleDateString('en-US', { 
+            year: 'numeric', 
+            month: 'long', 
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit'
+          }) %>
+        </p>
+        
+        <div class="social-share">
+          <span>Share:</span>
+          <a href="#" class="social-icon twitter" data-share="twitter">Twitter</a>
+          <a href="#" class="social-icon facebook" data-share="facebook">Facebook</a>
+          <a href="#" class="social-icon linkedin" data-share="linkedin">LinkedIn</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Related Articles -->
+    <% if (relatedArticles && relatedArticles.length > 0) { %>
+      <div class="related-articles">
+        <h4>You Might Also Like</h4>
+        <div class="related-grid">
+          <% relatedArticles.forEach(related => { %>
+            <a href="/articles/<%= related.id %>" class="related-article">
+              <% if (related.featured_img) { %>
+                <img src="<%= related.featured_img %>" alt="<%= related.title %>">
+              <% } %>
+              <h5><%= related.title %></h5>
+            </a>
+          <% }) %>
+        </div>
+      </div>
+    <% } %>
+  </article>
+</main>
+
+<%- include('../partials/footer') %>
+
+<script>
+// Social sharing functionality
+document.querySelectorAll('[data-share]').forEach(button => {
+  button.addEventListener('click', function(e) {
+    e.preventDefault();
+    const platform = this.getAttribute('data-share');
+    const url = encodeURIComponent(window.location.href);
+    const text = encodeURIComponent('<%= article.title %>');
+    
+    let shareUrl;
+    switch(platform) {
+      case 'twitter':
+        shareUrl = `https://twitter.com/intent/tweet?text=${text}&url=${url}`;
+        break;
+      case 'facebook':
+        shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${url}`;
+        break;
+      case 'linkedin':
+        shareUrl = `https://www.linkedin.com/shareArticle?mini=true&url=${url}&title=${text}`;
+        break;
+    }
+    
+    window.open(shareUrl, '_blank', 'width=600,height=400');
+  });
+});
+</script>

@@ -1,18 +1,20 @@
 const express = require('express');
 const router = express.Router();
+const { authenticateToken } = require('../middlewares/authMiddleware');
 
-router.use('/', require('./home'));
-router.use('/', require('./events'));
-router.use('/', require('./sports'));
-router.use('/', require('./opinion'));
-router.use('/', require('./podcast'));
-router.use('/', require('./vacancies'));
-router.use('/', require('./contact'));
-router.use('/', require('./about'));
-router.use('/', require('./auth'));
-router.use('/', require('./landing'));
-router.use('/', require('./add-story'));
-router.use('/', require('./add-articles'));
+// Define routes
+router.use('/', require('./main/home'));
+router.use('/', require('./content/events'));
+router.use('/', require('./content/sports'));
+router.use('/', require('./content/opinion'));
+router.use('/', require('./content/podcast'));
+router.use('/', require('./content/vacancies'));
+router.use('/', require('./main/contact'));
+router.use('/', require('./main/about'));
+router.use('/', require('./auth/auth'));
+router.use('/', require('./admin/landing'));
+router.use('/api/articles', require('./admin/articles'));
+// router.use('/api/stories', require('./admin/stories'));
 router.use('/', require('./error'));
 
 module.exports = router;
