@@ -1,0 +1,53 @@
+/* ===== EVENT SECTION ===== */
+.events-page {
+    background-color: #f8f9fa;
+    color: #333;
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+  }
+  
+  /* ===== SPORTS SECTION ===== */
+  .sports-page {
+    background-color: #f5f5f5;
+    color: #333;
+    font-family: Arial, sans-serif;
+  }
+  
+  /* ===== OPINION SECTION ===== */
+  .opinion-page {
+    background-color: #f8f9fa;
+    color: #333;
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+  }
+  
+  /* ===== VACANCIES SECTION ===== */
+  .careers-page {
+    background-color: #f8f9fa;
+    color: #333;
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+  }
+  
+  /* ===== PODCAST SECTION ===== */
+  .podcast-page {
+    background-color: #f8f9fa;
+    color: #333;
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+  }
+  
+  /* ===== ABOUT SECTION ===== */
+  .about-container {
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+  }
+  
+  /* ===== CONTACT SECTION ===== */
+  .contact-page {
+    background-color: #f8f9fa;
+    color: #333;
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+  }
