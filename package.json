@@ -27,7 +27,11 @@
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
     "csurf": "^1.11.0",
+<<<<<<< HEAD
     "dotenv": "^16.6.1",
+=======
+    "dotenv": "^16.4.7",
+>>>>>>> f7c02ced8abc53d3d7c3da62dbfd6e98eeb9cee5
     "ejs": "^3.1.10",
     "express": "^4.21.2",
     "express-mysql-session": "^3.0.3",
