@@ -1,9 +1,9 @@
 const express = require("express");
 const router = express.Router();
-const pool = require("../../config/db");
 // const bcrypt = require("bcrypt");
 const argon2 = require("argon2");
 const { isNotAuthenticated, isAuthenticated } = require("../../middlewares/auth");
+const poolPromise = require("../../config/db");
 
 // Login page
 router.get("/login", isNotAuthenticated, (req, res) => {
@@ -20,6 +20,7 @@ router.post("/login", isNotAuthenticated, async (req, res) => {
   const { username, password } = req.body;
 
   try {
+    const pool = await poolPromise;
     // 1. Find user by username or email
     const [users] = await pool.query(
       "SELECT username, email, password, role FROM users WHERE username = ? OR email = ?",
@@ -41,7 +42,7 @@ router.post("/login", isNotAuthenticated, async (req, res) => {
         title: "Login", 
         error: "Incorrect email or password" 
       });
-          }
+    }
 
     // 3. Create and save session
     req.session.regenerate((err) => {
@@ -79,9 +80,20 @@ router.get("/register", isNotAuthenticated, (req, res) => {
 
 // Register handler
 router.post("/register", isNotAuthenticated, async (req, res) => {
-  const { email, username, password, repeat_password } = req.body;
+  const { email, username, password, repeat_password, role, first_name, last_name } = req.body;
+
+  // Log the full request body for debugging
+  console.log('Registration req.body:', req.body);
+
+  // Server-side required validation
+  if (!email || !username || !password || !repeat_password || !role || !first_name || !last_name) {
+    req.flash("error", "All fields are required.");
+    return res.redirect("/register");
+  }
 
   try { 
+    const pool = await poolPromise;
+    console.log('Registering user:', { email, username, role, first_name, last_name });
     // Validate password match
     if (password !== repeat_password) {
       req.flash("error", "Passwords do not match");
@@ -102,27 +114,16 @@ router.post("/register", isNotAuthenticated, async (req, res) => {
     // Hash password and create user
     const hashedPassword = await argon2.hash(password);
 
-    await pool.query(
-      "INSERT INTO users (email, username, password) VALUES (?, ?, ?)",
-      [email, username, hashedPassword]
+    // Insert user with role, first_name, last_name
+    const [result] = await pool.query(
+      "INSERT INTO users (email, username, password, role, first_name, last_name) VALUES (?, ?, ?, ?, ?, ?)",
+      [email, username, hashedPassword, role || 'user', first_name, last_name]
     );
+    console.log('User registered successfully, insert result:', result);
 
-    // Auto-login after registration
-    req.session.regenerate((err) => {
-      if (err) throw err;
-
-      req.session.username = username;
-      req.session.email = email;
-      req.session.role = "user";
-
-      req.session.save((err) => {
-        if (err) {
-          console.error("Session save error:", err);
-          return res.redirect("/login");
-        }
-        res.redirect("/landing");
-      });
-    });
+    // Show success message and redirect to login
+    req.flash("success", "Successfully registered! Please login to continue.");
+    return res.redirect("/login");
   } catch (err) {
     console.error("Registration error:", err);
     req.flash("error", "Registration failed. Please try again.");
@@ -146,6 +147,7 @@ router.post("/logout", (req, res) => {
 // Dashboard route
 router.get("/dashboard", isAuthenticated, async (req, res) => {
   try {
+    const pool = await poolPromise;
     // Get user stats
     const [user] = await pool.query(
       "SELECT username, email, role FROM users WHERE email = ?",

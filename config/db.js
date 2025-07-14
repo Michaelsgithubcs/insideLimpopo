@@ -1,28 +1,30 @@
 const mysql = require('mysql2/promise');
 const bcrypt = require('bcrypt');
 
-// Creating a connection pool
-const pool = mysql.createPool({
-  host: "localhost",
-  user: "root",
-  password: "", 
-  database: "insidelimpopo",
-  waitForConnections: true,
-  connectionLimit: 10,
-  queueLimit: 0
-});
+const DB_NAME = 'insidelimpopo';
 
-// Testing the connection
-async function testConnection() {
-  try {
-    const connection = await pool.getConnection();
-    console.log('Successfully connected to the database');
-    connection.release();
-  } catch (err) {
-    console.error('Error connecting to the database:', err);
-  }
+// First, connect without specifying a database
+async function ensureDatabaseExists() {
+  const connection = await mysql.createConnection({
+    host: 'localhost',
+    user: 'root',
+    password: '',
+  });
+  await connection.query('CREATE DATABASE IF NOT EXISTS `insidelimpopo`');
+  await connection.end();
 }
 
-testConnection();
+const poolPromise = (async () => {
+  await ensureDatabaseExists();
+  return mysql.createPool({
+    host: 'localhost',
+    user: 'root',
+    password: '',
+    database: DB_NAME,
+    waitForConnections: true,
+    connectionLimit: 10,
+    queueLimit: 0
+  });
+})();
 
-module.exports = pool;
+module.exports = poolPromise;

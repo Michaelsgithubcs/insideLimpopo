@@ -16,28 +16,23 @@
               <!-- Name Fields -->
               <div class="name-fields">
                 <div class="input-container">
-                  <input
-                    type="text"
-                    id="first_name"
-                    name="first_name"
-                    required
-                  />
+                  <input type="text" id="first_name" name="first_name" placeholder=" " required />
                   <label for="first_name">First Name</label>
                 </div>
 
                 <div class="input-container">
-                  <input type="text" id="last_name" name="last_name" required />
+                  <input type="text" id="last_name" name="last_name" placeholder=" " required />
                   <label for="last_name">Last Name</label>
                 </div>
               </div>
 
               <div class="input-container">
-                <input type="text" id="reg-username" name="username" required />
-                <label for="reg-username">Username</label>
+                <input type="text" id="username" name="username" placeholder=" " required />
+                <label for="username">Username</label>
               </div>
 
               <div class="input-container">
-                <input type="email" id="email" name="email" required />
+                <input type="email" id="email" name="email" placeholder=" " required />
                 <label for="email">Email Address</label>
               </div>
 
@@ -110,7 +105,7 @@
 
               <div class="terms-group">
                 <label class="terms-checkbox">
-                  <input type="checkbox" name="terms" required />
+                  <input type="checkbox" id="terms" name="terms" required />
                   <span
                     >I agree to the <a href="#terms">Terms of Service</a> and
                     <a href="#privacy">Privacy Policy</a></span
@@ -141,30 +136,46 @@
     <%- include('../partials/footer.ejs') %>
 
     <script>
-      // Password toggle functionality
-      document.querySelectorAll(".show-password").forEach((button) => {
-        button.addEventListener("click", function () {
-          const input = this.parentElement.querySelector(
-            'input[type="password"], input[type="text"]'
-          );
+      // Password toggle functionality (event delegation for reliability)
+      document.querySelector('.auth-form-content').addEventListener('click', function(e) {
+        if (e.target.classList.contains('show-password')) {
+          const input = e.target.parentElement.querySelector('input[type="password"], input[type="text"]');
+          if (!input) return;
           if (input.type === "password") {
             input.type = "text";
-            this.innerText = "hide";
-            this.setAttribute("aria-label", "hide password");
-            this.setAttribute("aria-checked", "true");
+            e.target.innerText = "Hide";
+            e.target.setAttribute("aria-label", "Hide password");
+            e.target.setAttribute("aria-checked", "true");
           } else {
             input.type = "password";
-            this.innerText = "show";
-            this.setAttribute("aria-label", "show password");
-            this.setAttribute("aria-checked", "false");
+            e.target.innerText = "Show";
+            e.target.setAttribute("aria-label", "Show password");
+            e.target.setAttribute("aria-checked", "false");
           }
-        });
+        }
       });
 
       // Password validation
       const password = document.getElementById("reg-password");
       const confirmPassword = document.getElementById("repeat-password");
-      const registerSubmit = document.getElementById("register-submit");
+      const errorMsg = document.getElementById("password-match-error");
+
+      function checkPasswordMatch() {
+        if (
+          password.value &&
+          confirmPassword.value &&
+          password.value !== confirmPassword.value
+        ) {
+          errorMsg.classList.remove("hidden");
+        } else {
+          errorMsg.classList.add("hidden");
+        }
+      }
+      if (password && confirmPassword) {
+        password.addEventListener("input", checkPasswordMatch);
+        confirmPassword.addEventListener("input", checkPasswordMatch);
+        errorMsg.classList.add("hidden");
+      }
 
       const updateRequirement = (id, valid) => {
         const requirement = document.getElementById(id);
@@ -188,21 +199,6 @@
           updateRequirement("characters", /[#.?!@$%^&*-]/.test(value));
           handleFormValidation();
         });
-      }
-
-      if (password && confirmPassword) {
-        const errorMsg = document.getElementById("password-match-error");
-        function checkPasswordMatch() {
-          if (password.value.length > 0 && confirmPassword.value.length > 0 && password.value !== confirmPassword.value) {
-            errorMsg.classList.remove("hidden");
-          } else {
-            errorMsg.classList.add("hidden");
-          }
-        }
-        password.addEventListener("input", checkPasswordMatch);
-        confirmPassword.addEventListener("input", checkPasswordMatch);
-        // Hide error on form load
-        errorMsg.classList.add("hidden");
       }
 
       const handleFormValidation = () => {

@@ -15,6 +15,7 @@ const cookieParser = require('cookie-parser');
 const cors = require('cors');
 const articleRoutes = require('./routes/admin/articles'); 
 const app = express();
+const createTablesIfNotExist = require('./config/initDb');
 
 // Database connection pool configuration
 const pool = mysql.createPool({
@@ -255,3 +256,5 @@ process.on('uncaughtException', (err) => {
   console.error('Uncaught Exception:', err);
   process.exit(1);
 });
+
+createTablesIfNotExist();
