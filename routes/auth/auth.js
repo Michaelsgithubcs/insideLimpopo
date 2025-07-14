@@ -17,26 +17,34 @@ router.get("/login", isNotAuthenticated, (req, res) => {
 
 // Login handler
 router.post("/login", isNotAuthenticated, async (req, res) => {
-  const { username, password } = req.body;
+  console.log('--- LOGIN HANDLER ---');
+  console.log('Login req.body:', req.body);
+  const { email, password } = req.body;
 
   try {
     const pool = await poolPromise;
-    // 1. Find user by username or email
+    // 1. Find user by email or username
     const [users] = await pool.query(
-      "SELECT username, email, password, role FROM users WHERE username = ? OR email = ?",
-      [username, username]
+      "SELECT username, email, password, role FROM users WHERE email = ? OR username = ?",
+      [email, email]
     );
 
+    console.log('Users found:', users);
+
     if (users.length === 0) {
+      console.log('No user found for:', email);
       req.flash("error", "Invalid username or password");
       return res.redirect("/login");
     }
 
     const user = users[0];
+    console.log('User from DB:', user);
+    console.log('Entered password:', password);
+    console.log('Stored hash:', user.password);
 
     // 2. Compare hashed password
-    // Verify password using argon2 helps with password
     const isPasswordValid = await argon2.verify(user.password, password);
+    console.log('argon2.verify result:', isPasswordValid);
     if (!isPasswordValid) {
       return res.render("login", { 
         title: "Login", 
@@ -80,6 +88,7 @@ router.get("/register", isNotAuthenticated, (req, res) => {
 
 // Register handler
 router.post("/register", isNotAuthenticated, async (req, res) => {
+  console.log('--- TOP OF REGISTER HANDLER ---');
   const { email, username, password, repeat_password, role, first_name, last_name } = req.body;
 
   // Log the full request body for debugging
@@ -121,11 +130,33 @@ router.post("/register", isNotAuthenticated, async (req, res) => {
     );
     console.log('User registered successfully, insert result:', result);
 
-    // Show success message and redirect to login
-    req.flash("success", "Successfully registered! Please login to continue.");
-    return res.redirect("/login");
+    // Log before session creation
+    console.log('About to create session for new user');
+
+    // Auto-login after registration
+    const user = { email, username, role: role || 'user' };
+    req.session.regenerate((err) => {
+      if (err) {
+        console.error('Session regenerate error:', err);
+        return res.redirect('/login');
+      }
+      req.session.username = user.username;
+      req.session.email = user.email;
+      req.session.role = user.role;
+      console.log('Session after setting user:', req.session);
+      req.session.save((err) => {
+        if (err) {
+          console.error('Session save error:', err);
+          return res.redirect('/login');
+        }
+        console.log('Session saved successfully, redirecting to /landing');
+        // Redirect to landing page (dashboard)
+        return res.redirect('/landing');
+      });
+    });
+    console.log('This should not print unless session code is skipped');
   } catch (err) {
-    console.error("Registration error:", err);
+    console.error("Registration error (catch block):", err);
     req.flash("error", "Registration failed. Please try again.");
     res.redirect("/register");
   }

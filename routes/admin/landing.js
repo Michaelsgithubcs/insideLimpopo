@@ -2,12 +2,12 @@ const express = require('express');
 const router = express.Router();
 const landingController = require('../../controllers/landingController');
 const { isAuthenticated } = require('../../middlewares/auth');
-const pool = require('../../config/db');
+const poolPromise = require('../../config/db');
 
 // Consolidated landing(dashboard) route
 router.get(['/landing', '/dashboard'], isAuthenticated, async (req, res) => {
   try {
-    
+    const pool = await poolPromise;
     // Get user data with a single query using JOINs for better performance
     const [results] = await pool.query(`
       SELECT 
@@ -20,7 +20,7 @@ router.get(['/landing', '/dashboard'], isAuthenticated, async (req, res) => {
 
     if (results.length === 0) {
       req.flash('error', 'User not found');
-      return res.redirect('/logout');
+      return res.redirect('/login');
     }
 
     const userData = results[0];
@@ -44,7 +44,7 @@ router.get(['/landing', '/dashboard'], isAuthenticated, async (req, res) => {
   } catch (err) {
     console.error('Dashboard error:', err);
     req.flash('error', 'Error loading dashboard');
-    res.redirect('/logout');
+    res.redirect('/login');
   }
 });
 

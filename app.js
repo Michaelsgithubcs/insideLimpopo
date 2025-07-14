@@ -83,6 +83,23 @@ app.set('views', path.join(__dirname, 'views'));
 // Body parsing middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+// Log all POST requests and their paths
+app.use((req, res, next) => {
+  if (req.method === 'POST') {
+    console.log('POST request to:', req.path);
+  }
+  next();
+});
+
+// Debug: log req.body for POST /login
+app.use((req, res, next) => {
+  if (req.path === '/login' && req.method === 'POST') {
+    console.log('BODY AT APP LEVEL:', req.body);
+  }
+  next();
+});
+
 app.use('/api/articles', articleRoutes); // ✅ After session
 
 // Static files

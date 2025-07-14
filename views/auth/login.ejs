@@ -19,10 +19,10 @@
               <div class="alert alert-danger"><%= error %></div>
             <% } %>
 
-            <form action="/login" method="POST" class="auth-form-content" id="login-form" enctype="multipart/form-data">
+            <form action="/login" method="POST" class="auth-form-content" id="login-form">
               <div class="input-container">
-                <input type="text" id="username" name="username" required placeholder=" " />
-                <label for="username">Email</label>
+                <input type="text" id="email" name="email" required placeholder=" " />
+                <label for="email">Email</label>
               </div>
 
               <div class="input-container">
@@ -113,7 +113,7 @@
 
       // Remember me
       const rmCheck = document.getElementById("rememberMe"),
-        emailInput = document.getElementById("username");
+        emailInput = document.getElementById("email");
 
       if (localStorage.checkbox && localStorage.checkbox !== "") {
         rmCheck.setAttribute("checked", "checked");
