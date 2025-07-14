@@ -533,7 +533,7 @@ input[type="text"] {
 
 .terms-checkbox {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   gap: 0.5rem;
   font-size: 0.85rem;
   color: #666;

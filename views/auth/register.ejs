@@ -106,12 +106,7 @@
                   Show
                 </button>
               </div>
-
-              <div class="password-requirements">
-                <p class="requirement hidden" id="match">
-                  Passwords must match
-                </p>
-              </div>
+              <p id="password-match-error" class="requirement error hidden" style="margin-top: -1rem; margin-bottom: 1rem; font-size: 0.9em;">Passwords do not match</p>
 
               <div class="terms-group">
                 <label class="terms-checkbox">
@@ -170,7 +165,6 @@
       const password = document.getElementById("reg-password");
       const confirmPassword = document.getElementById("repeat-password");
       const registerSubmit = document.getElementById("register-submit");
-      const matchPassword = document.getElementById("match");
 
       const updateRequirement = (id, valid) => {
         const requirement = document.getElementById(id);
@@ -196,22 +190,19 @@
         });
       }
 
-      if (confirmPassword) {
-        confirmPassword.addEventListener("input", (event) => {
-          const value = event.target.value;
-          if (value.length && value !== password.value) {
-            matchPassword.classList.remove("hidden");
-            matchPassword.classList.add("error");
-            matchPassword.classList.remove("valid");
-          } else if (value.length && value === password.value) {
-            matchPassword.classList.remove("hidden");
-            matchPassword.classList.add("valid");
-            matchPassword.classList.remove("error");
+      if (password && confirmPassword) {
+        const errorMsg = document.getElementById("password-match-error");
+        function checkPasswordMatch() {
+          if (password.value.length > 0 && confirmPassword.value.length > 0 && password.value !== confirmPassword.value) {
+            errorMsg.classList.remove("hidden");
           } else {
-            matchPassword.classList.add("hidden");
+            errorMsg.classList.add("hidden");
           }
-          handleFormValidation();
-        });
+        }
+        password.addEventListener("input", checkPasswordMatch);
+        confirmPassword.addEventListener("input", checkPasswordMatch);
+        // Hide error on form load
+        errorMsg.classList.add("hidden");
       }
 
       const handleFormValidation = () => {
