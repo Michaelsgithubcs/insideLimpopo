@@ -46,6 +46,12 @@ async function createDatabaseAndTables() {
     )
   `);
 
+  // Seed default categories if not present
+  const defaultCategories = ['sports', 'news', 'opinion', 'events', 'podcast'];
+  for (const name of defaultCategories) {
+    await pool.query('INSERT IGNORE INTO categories (name) VALUES (?)', [name]);
+  }
+
   await pool.query(`
     CREATE TABLE IF NOT EXISTS articles (
       article_id INT AUTO_INCREMENT PRIMARY KEY,
