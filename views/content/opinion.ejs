@@ -64,11 +64,10 @@
     <%- include('../partials/footer.ejs') %>
 
     <!-- Scripts -->
-    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="/assets/fontawesome/fontawesome-free-5.15.4-web/css/all.min.css">
     <script>
       // News API configuration
-      const apiKey = '94710bfc54a44f1a9796e81a0bd2e446';
-      const apiUrl = `https://newsapi.org/v2/top-headlines?country=us&pageSize=20&apiKey=${apiKey}`;
+      const apiUrl = '/api/opinion-news';
       
       // Cache for articles
       let articlesCache = [];
@@ -136,16 +135,18 @@
           
           articleCard.innerHTML = `
             <div class="article-image">
-              <img src="${article.urlToImage || 'https://via.placeholder.com/600x400?text=No+Image'}" 
+              <img src="${article.urlToImage || '/assets/opinionimages/chealse.jpg'}" 
                    alt="${article.title}" loading="lazy">
               <span class="article-category ${randomCategory}">${randomCategory.charAt(0).toUpperCase() + randomCategory.slice(1)}</span>
             </div>
             <div class="article-content">
               <div class="article-meta">
                 <span class="source">${article.source?.name || 'Unknown source'}</span>
-                <span class="date">${formatDate(article.publishedAt)}</span>
               </div>
               <h2 class="article-title">${article.title}</h2>
+              <div class="article-date">
+                <span class="date">${formatDate(article.publishedAt)}</span>
+              </div>
               <p class="article-excerpt">${article.description || 'No description available'}</p>
               <div class="article-footer">
                 <a href="${article.url}" target="_blank" class="read-more" aria-label="Read full article: ${article.title}">
