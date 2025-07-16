@@ -310,14 +310,7 @@
     </div>
 
     <script>
-      // Check authentication on page load
-      document.addEventListener('DOMContentLoaded', () => {
-        const token = localStorage.getItem('token');
-        if (!token) {
-          alert('Please login to access this page');
-          window.location.href = '/login';
-        }
-      });
+      // Removed client-side token authentication check. Server-side session handles auth.
 
       // Update the tab switching functionality
       document.querySelectorAll(".tab-landing-btn").forEach((btn) => {
@@ -414,13 +407,6 @@
         profileEditForm.addEventListener("submit", async (e) => {
           e.preventDefault();
 
-          const token = localStorage.getItem('token');
-          if (!token) {
-            alert('Session expired. Please login again.');
-            window.location.href = '/login';
-            return;
-          }
-
           const formData = {
             username: document.getElementById("edit-username").value,
             email: document.getElementById("edit-email").value,
@@ -431,8 +417,7 @@
             const response = await fetch("/api/profile", {
               method: "PUT",
               headers: {
-                "Content-Type": "application/json",
-                "Authorization": `Bearer ${token}`
+                "Content-Type": "application/json"
               },
               body: JSON.stringify(formData),
             });
@@ -472,21 +457,11 @@
         .getElementById("avatar-upload")
         ?.addEventListener("change", function () {
           if (this.files && this.files[0]) {
-            const token = localStorage.getItem('token');
-            if (!token) {
-              alert('Session expired. Please login again.');
-              window.location.href = '/login';
-              return;
-            }
-
             const formData = new FormData();
             formData.append("avatar", this.files[0]);
 
             fetch("/upload-avatar", {
               method: "POST",
-              headers: {
-                "Authorization": `Bearer ${token}`
-              },
               body: formData,
             })
               .then((response) => response.json())
@@ -561,7 +536,7 @@
         return isValid;
       }
 
-      // Article Form Submission with Token
+      // Article Form Submission (no token check)
       const articleForm = document.getElementById("article-form");
       if (articleForm) {
         articleForm.addEventListener("submit", async (e) => {
@@ -572,29 +547,16 @@
             return;
           }
 
-          const token = localStorage.getItem('token');
-          if (!token) {
-            alert('Please login to submit an article');
-            window.location.href = '/login';
-            return;
-          }
-
           const submitBtn = articleForm.querySelector('#article-submit-btn');
           const originalBtnText = submitBtn.textContent;
-          
           try {
             // Show loading state
             submitBtn.disabled = true;
             submitBtn.textContent = "Submitting...";
 
             const formData = new FormData(articleForm);
-            
-            const response = await fetch("http://localhost:3000/api/articles", {
+            const response = await fetch("/api/articles", {
               method: "POST",
-              headers: {
-                "Authorization": `Bearer ${token}`
-                // Don't set Content-Type - let browser set it with boundary
-              },
               body: formData
             });
 
