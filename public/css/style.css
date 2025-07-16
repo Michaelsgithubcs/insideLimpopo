@@ -1108,7 +1108,7 @@ input[type="text"] {
 /* ====== Hero Section ====== */
 .events-hero {
   background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),
-    url("./assets/events-hero-bg.jpg");
+    url("/assets/events/events.png");
   background-size: cover;
   background-position: center;
   height: 350px;
@@ -1585,10 +1585,9 @@ input[type="text"] {
 
 /* Hero Section */
 .sports-hero {
-  background: linear-gradient(
-    rgba(0, 0, 0, 0.6),
-    url("/public/assets/sportsimages/basketball.jpeg")
-  );
+  background-image: 
+    linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)),
+    url("/assets/sportsimages/tennis.jpeg");
   background-size: cover;
   background-position: center;
   height: 400px;
@@ -2482,7 +2481,7 @@ input[type="text"] {
 /* Hero Section */
 .careers-hero {
   background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),
-    url("./assets/careers-hero.jpg");
+    url("/assets/vacancies/join.png");
   background-size: cover;
   background-position: center;
   height: 350px;
@@ -3766,7 +3765,7 @@ input[type="text"] {
 /* Hero Section */
 .contact-hero {
   background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),
-    url("./assets/contact-hero.jpg");
+    url("/assets/contactUs/contact.jpg");
   background-size: cover;
   background-position: center;
   height: 300px;
