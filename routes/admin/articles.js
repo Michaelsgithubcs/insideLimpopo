@@ -7,28 +7,16 @@ const articleController = require('../../controllers/articleController');
 //   authorizeArticleEdit 
 // } = require('../../middlewares/articleMiddleware');
 const { upload } = require('../../middlewares/uploadMiddleware');
+const { isAuthenticated } = require('../../middlewares/auth');
 // const { authenticateToken } = require('../../middlewares/authMiddleware');
 
 // Create Article
 router.post('/', 
-  // authenticateToken,
+  isAuthenticated,
   upload.single('featured_img'), 
   // validateArticle, 
   articleController.createArticle
 );
-router.post('/api/articles', async (req, res) => {
-  try {
-    const newArticle = await createNewArticle(req.body);
-    res.status(201).json(newArticle);
-  } catch (error) {
-    console.error('Error creating article:', error.message);
-    res.status(500).json({
-      error: 'Internal Server Error',
-      message: error.message,
-    });
-  }
-  articleController.createArticle;
-});
 
 // Get Article
 router.get('/:id', 

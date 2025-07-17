@@ -56,6 +56,8 @@ router.post("/login", isNotAuthenticated, async (req, res) => {
     req.session.regenerate((err) => {
       if (err) throw err;
 
+      // Store the full user object in session
+      req.session.user = user;
       req.session.username = user.username;
       req.session.email = user.email;
       req.session.role = user.role;

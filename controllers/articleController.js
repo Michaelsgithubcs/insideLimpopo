@@ -2,11 +2,13 @@ const Article = require('../models/Article');
 const { upload } = require('../middlewares/uploadMiddleware');
 exports.createArticle = async (req, res) => {
   try {
+    console.log('SESSION DEBUG:', JSON.stringify(req.session, null, 2));
+    console.log('SESSION USER:', JSON.stringify(req.session.user, null, 2));
     const { title, content, category_id } = req.body;
     const featured_img = req.file ? `/uploads/${req.file.filename}` : null;
 
     // Using session instead of token
-    const author_id = req.session.user?.author_id;
+    const author_id = req.session.user?.email;
     if (!author_id) {
       return res.status(401).json({ error: 'User not authenticated' });
     }

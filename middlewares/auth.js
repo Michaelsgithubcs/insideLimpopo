@@ -6,7 +6,8 @@ module.exports = {
    * And also to checks for email in session
    */
   isAuthenticated: (req, res, next) => {
-    if (req.session.email) {  
+    console.log('AUTH MIDDLEWARE SESSION:', req.session);
+    if (req.session.user && req.session.user.email) {
       return next();
     }
     req.flash('error', 'Please login to access this page');

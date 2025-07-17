@@ -50,6 +50,13 @@ sessionStore.on('error', error => {
 
 // Security middleware
 app.use(helmet());
+
+// Allow FontAwesome CDN and inline scripts for CSP
+app.use((req, res, next) => {
+  res.setHeader("Content-Security-Policy", "script-src 'self' 'unsafe-inline' https://kit.fontawesome.com;");
+  next();
+});
+
 app.use(compression());
 
 // Request logging
@@ -66,10 +73,8 @@ app.use(session({
   resave: false,
   saveUninitialized: false,
   cookie: {
-    secure: process.env.NODE_ENV === 'production' || false,
-    httpOnly: true,
-    maxAge: 24 * 60 * 60 * 1000, // 24 hours
-    sameSite: 'strict'
+    secure: false, // Not secure for localhost
+    sameSite: 'lax' // Lax is safe for most local dev
   }
 }));
 
@@ -106,7 +111,7 @@ app.use('/api/articles', articleRoutes); // ✅ After session
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(cors({
-  origin: 'http://localhost:3000', // or frontend domain
+  origin: 'http://localhost:3000',
   credentials: true
 }));
 

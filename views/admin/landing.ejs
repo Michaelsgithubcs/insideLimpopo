@@ -557,7 +557,8 @@
             const formData = new FormData(articleForm);
             const response = await fetch("/api/articles", {
               method: "POST",
-              body: formData
+              body: formData,
+              credentials: "include"
             });
 
             const data = await response.json();
