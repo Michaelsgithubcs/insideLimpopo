@@ -2,12 +2,12 @@ const express = require('express');
 const router = express.Router();
 const landingController = require('../../controllers/landingController');
 const { isAuthenticated } = require('../../middlewares/auth');
-const poolPromise = require('../../config/db');
+const getPool = require('../../config/db');
 
 // Consolidated landing(dashboard) route
 router.get(['/landing', '/dashboard'], isAuthenticated, async (req, res) => {
   try {
-    const pool = await poolPromise;
+    const pool = await getPool();
     // Get user data with a single query using JOINs for better performance
     const [results] = await pool.query(`
       SELECT 
@@ -24,7 +24,8 @@ router.get(['/landing', '/dashboard'], isAuthenticated, async (req, res) => {
     }
 
     const userData = results[0];
-    
+    // Fetch categories for the add-article form
+    const [categories] = await pool.query('SELECT category_id, name FROM categories');
     res.render('admin/landing', {
       title: 'Dashboard',
       user: {
@@ -38,7 +39,8 @@ router.get(['/landing', '/dashboard'], isAuthenticated, async (req, res) => {
         role: userData.role,
         joinDate: userData.created_at
       },
-      currentUrl: req.originalUrl
+      currentUrl: req.originalUrl,
+      categories
     });
 
   } catch (err) {

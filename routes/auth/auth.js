@@ -3,7 +3,7 @@ const router = express.Router();
 // const bcrypt = require("bcrypt");
 const argon2 = require("argon2");
 const { isNotAuthenticated, isAuthenticated } = require("../../middlewares/auth");
-const poolPromise = require("../../config/db");
+const getPool = require("../../config/db");
 
 // Login page
 router.get("/login", isNotAuthenticated, (req, res) => {
@@ -22,10 +22,10 @@ router.post("/login", isNotAuthenticated, async (req, res) => {
   const { email, password } = req.body;
 
   try {
-    const pool = await poolPromise;
+    const pool = await getPool();
     // 1. Find user by email or username
     const [users] = await pool.query(
-      "SELECT username, email, password, role FROM users WHERE email = ? OR username = ?",
+      "SELECT id, username, email, password, role FROM users WHERE email = ? OR username = ?",
       [email, email]
     );
 
@@ -53,14 +53,32 @@ router.post("/login", isNotAuthenticated, async (req, res) => {
     }
 
     // 3. Create and save session
-    req.session.regenerate((err) => {
+    req.session.regenerate(async (err) => {
       if (err) throw err;
 
-      // Store the full user object in session
+      // Store the full user object in session, including id
       req.session.user = user;
       req.session.username = user.username;
       req.session.email = user.email;
       req.session.role = user.role;
+      req.session.userId = user.id;
+
+      // Debug log
+      console.log('SESSION USER SET:', req.session.user);
+
+      // Fallback: if id is missing, fetch it from DB
+      if (!user.id) {
+        try {
+          const [rows] = await pool.query("SELECT id FROM users WHERE email = ?", [user.email]);
+          if (rows.length > 0) {
+            req.session.user.id = rows[0].id;
+            req.session.userId = rows[0].id;
+            console.log('Fetched user id from DB:', rows[0].id);
+          }
+        } catch (fetchErr) {
+          console.error('Error fetching user id for session:', fetchErr);
+        }
+      }
 
       req.session.save((err) => {
         if (err) {
@@ -103,7 +121,7 @@ router.post("/register", isNotAuthenticated, async (req, res) => {
   }
 
   try { 
-    const pool = await poolPromise;
+    const pool = await getPool();
     console.log('Registering user:', { email, username, role, first_name, last_name });
     // Validate password match
     if (password !== repeat_password) {
@@ -136,15 +154,17 @@ router.post("/register", isNotAuthenticated, async (req, res) => {
     console.log('About to create session for new user');
 
     // Auto-login after registration
-    const user = { email, username, role: role || 'user' };
+    const user = { id: result.insertId, email, username, role: role || 'user' };
     req.session.regenerate((err) => {
       if (err) {
         console.error('Session regenerate error:', err);
         return res.redirect('/login');
       }
+      req.session.user = user;
       req.session.username = user.username;
       req.session.email = user.email;
       req.session.role = user.role;
+      req.session.userId = user.id;
       console.log('Session after setting user:', req.session);
       req.session.save((err) => {
         if (err) {
@@ -180,7 +200,7 @@ router.post("/logout", (req, res) => {
 // Dashboard route
 router.get("/dashboard", isAuthenticated, async (req, res) => {
   try {
-    const pool = await poolPromise;
+    const pool = await getPool();
     // Get user stats
     const [user] = await pool.query(
       "SELECT username, email, role FROM users WHERE email = ?",

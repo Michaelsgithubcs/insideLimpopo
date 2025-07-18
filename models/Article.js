@@ -1,7 +1,8 @@
-const { pool } = require('../config/db');
+const getPool = require('../config/db');
 
 class Article {
   static async create({ title, content, author_id, category_id, featured_img = null }) {
+    const pool = await getPool();
     const [result] = await pool.query(
       `INSERT INTO articles 
        (title, content, author_id, category_id, featured_img, created_at) 
@@ -12,6 +13,7 @@ class Article {
   }
 
   static async findById(id) {
+    const pool = await getPool();
     const [rows] = await pool.query(
       `SELECT articles.*, users.username, users.profile_picture, categories.name as category_name
        FROM articles
@@ -24,6 +26,7 @@ class Article {
   }
 
   static async findByCategory(category_id, limit = 3, excludeId = null) {
+    const pool = await getPool();
     let query = `SELECT article_id, title, featured_img FROM articles WHERE category_id = ?`;
     const params = [category_id];
     
@@ -40,6 +43,7 @@ class Article {
   }
 
   static async update(article_id, { title, content, category_id, featured_img }) {
+    const pool = await getPool();
     await pool.query(
       `UPDATE articles 
        SET title = ?, content = ?, category_id = ?, featured_img = ?, updated_at = NOW()
@@ -49,6 +53,7 @@ class Article {
   }
 
   static async delete(article_id) {
+    const pool = await getPool();
     await pool.query('DELETE FROM articles WHERE id = ?', [article_id]);
   }
 }

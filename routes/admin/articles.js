@@ -9,6 +9,7 @@ const articleController = require('../../controllers/articleController');
 const { upload } = require('../../middlewares/uploadMiddleware');
 const { isAuthenticated } = require('../../middlewares/auth');
 // const { authenticateToken } = require('../../middlewares/authMiddleware');
+const getPool = require('../../config/db');
 
 // Create Article
 router.post('/', 
@@ -42,5 +43,22 @@ router.delete('/:id',
   articleController.deleteArticle
 );
 
+// Render Add Article Form
+router.get('/add', isAuthenticated, async (req, res) => {
+  try {
+    const pool = await getPool();
+    const [categories] = await pool.query('SELECT category_id, name FROM categories');
+    res.render('admin/add-articles', { categories });
+  } catch (err) {
+    console.error('Error loading categories:', err);
+    req.flash('error', 'Could not load categories');
+    res.redirect('/landing');
+  }
+});
+
+// Redirect legacy or hardcoded add-article route to the correct one
+router.get('/admin/add-articles', (req, res) => {
+  res.redirect('/api/articles/add');
+});
 
 module.exports = router;

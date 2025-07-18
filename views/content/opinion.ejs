@@ -47,6 +47,45 @@
         </div>
       </section>
 
+      <!-- Posted Articles Section (above newsletter) -->
+      <section class="section-with-header">
+        <div class="section-sport-header">
+          <h2>Posted Articles</h2>
+          <p class="section-sport-description">
+            Browse all the latest posted articles, news, and updates from Limpopo.
+          </p>
+        </div>
+        <div class="sports-section">
+          <% if (postedArticles && postedArticles.length === 0) { %>
+            <p>No posted articles found.</p>
+          <% } else if (postedArticles) { %>
+            <% postedArticles.forEach(article => { %>
+              <div class="sports-card event-card">
+                <div class="card-image-container">
+                  <% if (article.featured_img) { %>
+                    <img src="<%= article.featured_img %>" alt="Featured image" />
+                  <% } else { %>
+                    <img src="/assets/sportsimages/logo.jpg" alt="No image available" />
+                  <% } %>
+                  <div class="event-date">
+                    <span class="day"><%= new Date(article.created_at).getDate() %></span>
+                    <span class="month"><%= new Date(article.created_at).toLocaleString('default', { month: 'short' }).toUpperCase() %></span>
+                  </div>
+                </div>
+                <div class="card-content">
+                  <span class="sport-tag football">Opinion</span>
+                  <h3><%= article.title %></h3>
+                  <p class="event-time">Posted on <%= new Date(article.created_at).toLocaleString() %></p>
+                  <p>
+                    <%= article.content.substring(0, 200) %>...
+                  </p>
+                </div>
+              </div>
+            <% }) %>
+          <% } %>
+        </div>
+      </section>
+
       <!-- Newsletter Section -->
       <section class="opinion-newsletter">
         <div class="newsletter-content">
@@ -65,6 +104,36 @@
 
     <!-- Scripts -->
     <link rel="stylesheet" href="/assets/fontawesome/fontawesome-free-5.15.4-web/css/all.min.css">
+    <style>
+      .view-more-opinions-btn {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin: 30px auto 0 auto;
+        padding: 12px 32px;
+        background: #1e90ff;
+        color: #fff;
+        border: none;
+        border-radius: 25px;
+        font-size: 1.1rem;
+        font-weight: 600;
+        cursor: pointer;
+        box-shadow: 0 2px 8px rgba(30,144,255,0.15);
+        transition: transform 0.2s, box-shadow 0.2s;
+        animation: bounce 1.2s infinite;
+      }
+      .view-more-opinions-btn:hover {
+        background: #156dc1;
+        box-shadow: 0 4px 16px rgba(30,144,255,0.25);
+      }
+      @keyframes bounce {
+        0%   { transform: translateY(0); }
+        30%  { transform: translateY(-10px); }
+        50%  { transform: translateY(0); }
+        70%  { transform: translateY(-5px); }
+        100% { transform: translateY(0); }
+      }
+    </style>
     <script>
       // News API configuration
       const apiUrl = '/api/opinion-news';
@@ -118,49 +187,59 @@
           showNoResults();
           return;
         }
-        
         opinionGrid.innerHTML = '';
-        
-        articles.forEach((article, index) => {
-          const articleCard = document.createElement('article');
-          articleCard.className = 'opinion-card';
-          
-          // Generate a random category for demonstration
-          const categories = ['politics', 'business', 'technology', 'health', 'entertainment', 'sports'];
-          const randomCategory = categories[Math.floor(Math.random() * categories.length)];
-          
-          articleCard.setAttribute('data-category', randomCategory);
-          articleCard.setAttribute('data-title', article.title.toLowerCase());
-          articleCard.setAttribute('data-description', article.description ? article.description.toLowerCase() : '');
-          
-          articleCard.innerHTML = `
-            <div class="article-image">
-              <img src="${article.urlToImage || '/assets/opinionimages/chealse.jpg'}" 
-                   alt="${article.title}" loading="lazy">
-              <span class="article-category ${randomCategory}">${randomCategory.charAt(0).toUpperCase() + randomCategory.slice(1)}</span>
-            </div>
-            <div class="article-content">
-              <div class="article-meta">
-                <span class="source">${article.source?.name || 'Unknown source'}</span>
+        const maxInitial = 3;
+        const showMoreBtn = document.createElement('button');
+        showMoreBtn.textContent = 'View More Opinions';
+        showMoreBtn.className = 'view-more-opinions-btn';
+        let showingAll = false;
+        function renderCards(count) {
+          opinionGrid.innerHTML = '';
+          articles.slice(0, count).forEach((article, index) => {
+            const articleCard = document.createElement('article');
+            articleCard.className = 'opinion-card';
+            // Generate a random category for demonstration
+            const categories = ['politics', 'business', 'technology', 'health', 'entertainment', 'sports'];
+            const randomCategory = categories[Math.floor(Math.random() * categories.length)];
+            articleCard.setAttribute('data-category', randomCategory);
+            articleCard.setAttribute('data-title', article.title.toLowerCase());
+            articleCard.setAttribute('data-description', article.description ? article.description.toLowerCase() : '');
+            articleCard.innerHTML = `
+              <div class="article-image">
+                <img src="${article.urlToImage || '/assets/opinionimages/chealse.jpg'}" 
+                     alt="${article.title}" loading="lazy">
+                <span class="article-category ${randomCategory}">${randomCategory.charAt(0).toUpperCase() + randomCategory.slice(1)}</span>
               </div>
-              <h2 class="article-title">${article.title}</h2>
-              <div class="article-date">
-                <span class="date">${formatDate(article.publishedAt)}</span>
+              <div class="article-content">
+                <div class="article-meta">
+                  <span class="source">${article.source?.name || 'Unknown source'}</span>
+                </div>
+                <h2 class="article-title">${article.title}</h2>
+                <div class="article-date">
+                  <span class="date">${formatDate(article.publishedAt)}</span>
+                </div>
+                <p class="article-excerpt">${article.description || 'No description available'}</p>
+                <div class="article-footer">
+                  <a href="${article.url}" target="_blank" class="read-more" aria-label="Read full article: ${article.title}">
+                    Read Full Opinion <i class="fas fa-arrow-right"></i>
+                  </a>
+                  <button class="save-article" aria-label="Save article">
+                    <i class="far fa-bookmark"></i>
+                  </button>
+                </div>
               </div>
-              <p class="article-excerpt">${article.description || 'No description available'}</p>
-              <div class="article-footer">
-                <a href="${article.url}" target="_blank" class="read-more" aria-label="Read full article: ${article.title}">
-                  Read Full Opinion <i class="fas fa-arrow-right"></i>
-                </a>
-                <button class="save-article" aria-label="Save article">
-                  <i class="far fa-bookmark"></i>
-                </button>
-              </div>
-            </div>
-          `;
-          
-          opinionGrid.appendChild(articleCard);
-        });
+            `;
+            opinionGrid.appendChild(articleCard);
+          });
+          if (!showingAll && articles.length > maxInitial) {
+            opinionGrid.appendChild(showMoreBtn);
+          }
+        }
+        renderCards(maxInitial);
+        showMoreBtn.onclick = function() {
+          showingAll = true;
+          renderCards(articles.length);
+        };
       }
 
       // Filter articles based on search and category

@@ -7,10 +7,11 @@
       <!-- Add Article Section -->
       <section id="article-tab" class="content-landing-tab active">
         <form
-          action="/articles"
+          action="/api/articles"
           method="POST"
           class="creation-landing-form"
           id="article-form"
+          enctype="multipart/form-data"
         >
           <div class="form-landing-grid">
             <div class="form-landing-group full-width">
@@ -30,14 +31,13 @@
               <label for="article-category">Category</label>
               <select id="article-category" name="category_id" required>
                 <option value="">Select Category</option>
-                <option value="opinion">Opinion</option>
-                <option value="sport">sports</option>
-                <option value="podcast">Podcast</option>
-                <option value="vacancy">Vacancy</option>
-                <option value="politics">Politics</option>
-                <option value="technology">Technology</option>
-                <option value="health">Health</option>
-                <option value="business">Business</option>
+                <% if (typeof categories !== 'undefined' && categories.length) { %>
+                  <% categories.forEach(function(category) { %>
+                    <option value="<%= category.category_id %>"><%= category.name %></option>
+                  <% }); %>
+                <% } else { %>
+                  <option value="">No categories available</option>
+                <% } %>
               </select>
             </div>
 
@@ -80,14 +80,8 @@
             </div>
 
             <div class="form-landing-group">
-              <label for="article-image-url">Featured Image URL</label>
-              <input
-                type="url"
-                id="article-image-url"
-                name="image_url"
-                placeholder="https://example.com/image.jpg"
-              />
-              <div class="image-preview" id="article-image-preview"></div>
+              <label for="featured_img">Featured Image</label>
+              <input type="file" id="featured_img" name="featured_img" accept="image/*" />
             </div>
           </div>
 

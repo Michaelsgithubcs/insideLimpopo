@@ -14,17 +14,22 @@ async function ensureDatabaseExists() {
   await connection.end();
 }
 
-const poolPromise = (async () => {
-  await ensureDatabaseExists();
-  return mysql.createPool({
-    host: 'localhost',
-    user: 'root',
-    password: '',
-    database: DB_NAME,
-    waitForConnections: true,
-    connectionLimit: 10,
-    queueLimit: 0
-  });
-})();
+let pool;
 
-module.exports = poolPromise;
+async function getPool() {
+  if (!pool) {
+    await ensureDatabaseExists();
+    pool = mysql.createPool({
+      host: 'localhost',
+      user: 'root',
+      password: '',
+      database: DB_NAME,
+      waitForConnections: true,
+      connectionLimit: 10,
+      queueLimit: 0
+    });
+  }
+  return pool;
+}
+
+module.exports = getPool;

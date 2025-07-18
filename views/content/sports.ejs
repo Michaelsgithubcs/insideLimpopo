@@ -19,33 +19,7 @@
       </section>
 
       <!-- Sports News Section -->
-      <section id="sports-news" class="section-with-header">
-        <div class="section-sport-header">
-          <h2>Latest Sports News</h2>
-          <p class="section-sport-description">
-            Stay updated with the latest sports news, scores, and match highlights from around Limpopo.
-          </p>
-        </div>
-        <div class="news-ticker">
-          <div class="ticker-wrapper">
-            <% sportsArticles.forEach(article => { %>
-              <div class="ticker-item">
-                <span class="ticker-badge football"><%= article.title %></span>
-                <span><%= article.content.substring(0, 100) %>...</span>
-              </div>
-              <% }) %>
-          </div>
-
-          <div class="ticker-item">
-            <span class="ticker-badge basketball">Basketball</span>
-            <span>Mojapelo's Riders set new league scoring record</span>
-          </div>
-          <div class="ticker-item">
-            <span class="ticker-badge tennis">Tennis</span>
-            <span>Mogano's Hot-Flurs to represent Limpopo in national tournament</span>
-          </div>
-        </div>
-      </section>
+      <!-- (Posted Articles section moved below) -->
 
       <!-- Featured Sports Events Section -->
       <section id="featured-events" class="section-with-header">
@@ -201,6 +175,45 @@
               </div>
             </div>
           </div>
+        </div>
+      </section>
+
+      <!-- Posted Articles Section (bottom, after teams) -->
+      <section class="section-with-header">
+        <div class="section-sport-header">
+          <h2>Posted Articles</h2>
+          <p class="section-sport-description">
+            Browse all the latest posted articles, news, and updates from Limpopo.
+          </p>
+        </div>
+        <div class="sports-section">
+          <% if (sportsArticles.length === 0) { %>
+            <p>No posted articles found.</p>
+          <% } else { %>
+            <% sportsArticles.forEach(article => { %>
+              <div class="sports-card event-card">
+                <div class="card-image-container">
+                  <% if (article.featured_img) { %>
+                    <img src="<%= article.featured_img %>" alt="Featured image" />
+                  <% } else { %>
+                    <img src="/assets/sportsimages/logo.jpg" alt="No image available" />
+                  <% } %>
+                  <div class="event-date">
+                    <span class="day"><%= new Date(article.created_at).getDate() %></span>
+                    <span class="month"><%= new Date(article.created_at).toLocaleString('default', { month: 'short' }).toUpperCase() %></span>
+                  </div>
+                </div>
+                <div class="card-content">
+                  <span class="sport-tag football">Sports</span>
+                  <h3><%= article.title %></h3>
+                  <p class="event-time">Posted on <%= new Date(article.created_at).toLocaleString() %></p>
+                  <p>
+                    <%= article.content.substring(0, 200) %>...
+                  </p>
+                </div>
+              </div>
+            <% }) %>
+          <% } %>
         </div>
       </section>
 

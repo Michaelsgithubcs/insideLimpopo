@@ -4,11 +4,14 @@ exports.createArticle = async (req, res) => {
   try {
     console.log('SESSION DEBUG:', JSON.stringify(req.session, null, 2));
     console.log('SESSION USER:', JSON.stringify(req.session.user, null, 2));
-    const { title, content, category_id } = req.body;
+    let { title, content, category_id } = req.body;
+    console.log('CATEGORY_ID RECEIVED:', category_id);
+    // Ensure category_id is an integer
+    category_id = parseInt(category_id, 10);
     const featured_img = req.file ? `/uploads/${req.file.filename}` : null;
 
     // Using session instead of token
-    const author_id = req.session.user?.email;
+    const author_id = req.session.user?.id;
     if (!author_id) {
       return res.status(401).json({ error: 'User not authenticated' });
     }
@@ -21,12 +24,18 @@ exports.createArticle = async (req, res) => {
       featured_img
     });
 
+    // Debug: fetch and log the created article
+    const pool = await require('../config/db')();
+    const [createdArticle] = await pool.query('SELECT * FROM articles WHERE article_id = ?', [articleId]);
+    console.log('CREATED ARTICLE:', createdArticle[0]);
+
     res.status(201).json({
       success: true,
       articleId,
       message: 'Article created successfully'
     });
   } catch (err) {
+    console.error('CREATE ARTICLE ERROR:', err);
     res.status(500).json({ error: err.message });
   }
 };
