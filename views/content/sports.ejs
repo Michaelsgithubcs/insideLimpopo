@@ -205,7 +205,8 @@
                 </div>
                 <div class="card-content">
                   <span class="sport-tag football">Sports</span>
-                  <h3><%= article.title %></h3>
+                  <h3 style="color: #343a40;"><%= article.title %></h3>
+
                   <p class="event-time">Posted on <%= new Date(article.created_at).toLocaleString() %></p>
                   <p>
                     <%= article.content.substring(0, 200) %>...
