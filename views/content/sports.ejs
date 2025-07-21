@@ -210,6 +210,9 @@
                   <p>
                     <%= article.content.substring(0, 200) %>...
                   </p>
+                  <a href="/articles/<%= article.article_id %>" class="read-button">
+                    <i class="fas fa-book-open"></i> Read More
+                  </a>
                 </div>
               </div>
             <% }) %>

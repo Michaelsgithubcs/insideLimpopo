@@ -15,11 +15,11 @@ class Article {
   static async findById(id) {
     const pool = await getPool();
     const [rows] = await pool.query(
-      `SELECT articles.*, users.username, users.profile_picture, categories.name as category_name
-       FROM articles
-       JOIN users ON articles.author_id = users.email
-       LEFT JOIN categories ON articles.category_id = categories.categoryid
-       WHERE articles.article_id = ?`,
+      `SELECT a.*, u.username, u.profile_picture, c.name as category_name
+       FROM articles a
+       LEFT JOIN users u ON a.author_id = u.id
+       LEFT JOIN categories c ON a.category_id = c.category_id
+       WHERE a.article_id = ?`,
       [id]
     );
     return rows[0];

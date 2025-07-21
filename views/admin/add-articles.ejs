@@ -83,6 +83,12 @@
               <label for="featured_img">Featured Image</label>
               <input type="file" id="featured_img" name="featured_img" accept="image/*" />
             </div>
+
+            <div class="form-landing-group">
+              <label for="featured_img_url">Or Featured Image URL</label>
+              <input type="url" id="featured_img_url" name="featured_img_url" placeholder="https://example.com/image.jpg" />
+              <div id="image-preview"></div>
+            </div>
           </div>
 
           <div class="form-landing-actions">
@@ -165,17 +171,19 @@
         return isValid;
       }
 
-      const imageUrlInput = document.getElementById("article-image-url");
-      const imagePreviewDiv = document.getElementById("article-image-preview");
+      const imageUrlInput = document.getElementById("featured_img_url");
+      const imagePreviewDiv = document.getElementById("image-preview");
 
-      imageUrlInput.addEventListener("input", function () {
-        const url = imageUrlInput.value.trim();
-        if (url) {
-          imagePreviewDiv.innerHTML = `<img src="${url}" alt="Image Preview" style="max-width: 100%; max-height: 200px; margin-top: 10px;" />`;
-        } else {
-          imagePreviewDiv.innerHTML = "";
-        }
-      });
+      if (imageUrlInput) {
+        imageUrlInput.addEventListener("input", function () {
+          const url = imageUrlInput.value.trim();
+          if (url) {
+            imagePreviewDiv.innerHTML = `<img src="${url}" alt="Image Preview" style="max-width: 100%; max-height: 200px; margin-top: 10px;" />`;
+          } else {
+            imagePreviewDiv.innerHTML = "";
+          }
+        });
+      }
     </script>
   </body>
-</html>
+</html> 

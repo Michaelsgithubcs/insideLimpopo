@@ -47,12 +47,12 @@
     <!-- Author/Date Footer with Social Sharing -->
     <div class="article-footer">
       <div class="author-info">
-        <% if (article.author.avatar) { %>
-          <img src="<%= article.author.avatar %>" class="author-avatar" alt="<%= article.author.username %>">
+        <% if ((article.author && article.author.avatar) || article.profile_picture) { %>
+          <img src="<%= (article.author && article.author.avatar) ? article.author.avatar : article.profile_picture %>" class="author-avatar" alt="<%= (article.author && article.author.username) ? article.author.username : (article.username || 'Author') %>">
         <% } %>
         <div>
-          <p>By <span class="author"><%= article.author.username %></span></p>
-          <% if (article.author.bio) { %>
+          <p>By <span class="author"><%= (article.author && article.author.username) ? article.author.username : (article.username || 'Unknown Author') %></span></p>
+          <% if (article.author && article.author.bio) { %>
             <p class="author-bio"><%= article.author.bio %></p>
           <% } %>
         </div>
@@ -60,7 +60,7 @@
       
       <div class="article-meta">
         <p class="publish-date">
-          Published: <%= new Date(article.published_at || article.createdAt).toLocaleDateString('en-US', { 
+          Published: <%= new Date(article.published_at || article.createdAt || article.created_at || Date.now()).toLocaleDateString('en-US', { 
             year: 'numeric', 
             month: 'long', 
             day: 'numeric',

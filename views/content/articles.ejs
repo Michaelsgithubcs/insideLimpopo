@@ -105,155 +105,40 @@
           </div>
           
           <div class="articles-container list-view">
-            <div class="article-item">
-              <div class="article-image">
-                <img src="/assets/articles/dealing-with-loss.jpg" alt="How to Deal with Loss cover">
-                <div class="read-overlay">
-                  <i class="fas fa-book-open"></i>
-                </div>
-              </div>
-              <div class="article-details">
-                <div class="article-header">
-                  <h3 class="item-title">
-                    <a href="/articles/dealing-with-loss">How to Deal with the Loss of a Family Member</a>
-                  </h3>
-                  <div class="item-meta">
-                    <span><i class="fas fa-user"></i> By Dr. James Peterson</span>
-                    <span><i class="fas fa-calendar-alt"></i> March 04, 2025</span>
-                    <span><i class="fas fa-tag"></i> Family</span>
-                    <span><i class="fas fa-clock"></i> 8 min read</span>
+            <% if (articles && articles.length > 0) { %>
+              <% articles.forEach(article => { %>
+                <div class="article-item">
+                  <div class="article-image">
+                    <img src="<%= article.featured_img ? article.featured_img : '/assets/articles/default.jpg' %>" alt="<%= article.title %> cover">
+                    <div class="read-overlay">
+                      <i class="fas fa-book-open"></i>
+                    </div>
+                  </div>
+                  <div class="article-details">
+                    <div class="article-header">
+                      <h3 class="item-title">
+                        <a href="/articles/<%= article.article_id %>"><%= article.title %></a>
+                      </h3>
+                      <div class="item-meta">
+                        <span><i class="fas fa-user"></i> By <%= article.author || 'Unknown' %></span>
+                        <span><i class="fas fa-calendar-alt"></i> <%= article.created_at ? new Date(article.created_at).toLocaleDateString() : '' %></span>
+                        <span><i class="fas fa-tag"></i> <%= article.category_name || 'General' %></span>
+                      </div>
+                    </div>
+                    <p class="item-excerpt">
+                      <%= article.content ? article.content.substring(0, 180) : '' %>...
+                    </p>
+                    <div class="item-actions">
+                      <a href="/articles/<%= article.article_id %>" class="read-button">
+                        <i class="fas fa-book-open"></i> Read More
+                      </a>
+                    </div>
                   </div>
                 </div>
-                <p class="item-excerpt">
-                  When we face the loss of a loved one, especially a child, or a parent, 
-                  it might be the most confusing process in our lives. This article explores
-                  professional advice from counselors on navigating grief and finding ways to heal...
-                </p>
-                <div class="item-actions">
-                  <a href="/articles/dealing-with-loss" class="read-button">
-                    <i class="fas fa-book-open"></i> Read Article
-                  </a>
-                  <a href="#" class="save-button">
-                    <i class="far fa-bookmark"></i> Save
-                  </a>
-                  <a href="#" class="share-button">
-                    <i class="fas fa-share-alt"></i> Share
-                  </a>
-                </div>
-              </div>
-            </div>
-
-            <div class="article-item">
-              <div class="article-image">
-                <img src="/assets/articles/baby-oral-health.jpg" alt="Baby Oral Health cover">
-                <div class="read-overlay">
-                  <i class="fas fa-book-open"></i>
-                </div>
-              </div>
-              <div class="article-details">
-                <div class="article-header">
-                  <h3 class="item-title">
-                    <a href="/articles/baby-oral-health">From Bump to First Tooth: Caring for Baby's Oral Health</a>
-                  </h3>
-                  <div class="item-meta">
-                    <span><i class="fas fa-user"></i> By Dr. Coené Bezuidenhout</span>
-                    <span><i class="fas fa-calendar-alt"></i> February 18, 2025</span>
-                    <span><i class="fas fa-tag"></i> Parenting</span>
-                    <span><i class="fas fa-clock"></i> 6 min read</span>
-                  </div>
-                </div>
-                <p class="item-excerpt">
-                  Discover the fascinating journey of healthy teeth & gums - and why it's 
-                  so important to ensure we have good oral health, even before we are pregnant. 
-                  Learn why the first 1000 days matter for your baby's dental development...
-                </p>
-                <div class="item-actions">
-                  <a href="/articles/baby-oral-health" class="read-button">
-                    <i class="fas fa-book-open"></i> Read Article
-                  </a>
-                  <a href="#" class="save-button">
-                    <i class="far fa-bookmark"></i> Save
-                  </a>
-                  <a href="#" class="share-button">
-                    <i class="fas fa-share-alt"></i> Share
-                  </a>
-                </div>
-              </div>
-            </div>
-
-            <div class="article-item">
-              <div class="article-image">
-                <img src="/assets/articles/joshua-baraka.jpg" alt="Joshua Baraka East Africans">
-                <div class="read-overlay">
-                  <i class="fas fa-book-open"></i>
-                </div>
-              </div>
-              <div class="article-details">
-                <div class="article-header">
-                  <h3 class="item-title">
-                    <a href="/articles/joshua-baraka">Joshua Baraka: East Africa's Rising Star</a>
-                  </h3>
-                  <div class="item-meta">
-                    <span><i class="fas fa-user"></i> By Music Reporter</span>
-                    <span><i class="fas fa-calendar-alt"></i> August 03, 2024</span>
-                    <span><i class="fas fa-tag"></i> Music</span>
-                    <span><i class="fas fa-clock"></i> 5 min read</span>
-                  </div>
-                </div>
-                <p class="item-excerpt">
-                  Joshua Baraka shares his journey from the ghetto to stardom. "I was born in the ghetto but I didn't
-                  participate in ghetto activities," says the young artist who is carrying his nation on his back...
-                </p>
-                <div class="item-actions">
-                  <a href="/articles/joshua-baraka" class="read-button">
-                    <i class="fas fa-book-open"></i> Read Article
-                  </a>
-                  <a href="#" class="save-button">
-                    <i class="far fa-bookmark"></i> Save
-                  </a>
-                  <a href="#" class="share-button">
-                    <i class="fas fa-share-alt"></i> Share
-                  </a>
-                </div>
-              </div>
-            </div>
-
-            <div class="article-item">
-              <div class="article-image">
-                <img src="/assets/articles/majozi-interview.jpg" alt="Majozi Interview">
-                <div class="read-overlay">
-                  <i class="fas fa-book-open"></i>
-                </div>
-              </div>
-              <div class="article-details">
-                <div class="article-header">
-                  <h3 class="item-title">
-                    <a href="/articles/majozi-interview">Majozi: The Spirit of South African Music</a>
-                  </h3>
-                  <div class="item-meta">
-                    <span><i class="fas fa-user"></i> By Arts Correspondent</span>
-                    <span><i class="fas fa-calendar-alt"></i> March 22, 2024</span>
-                    <span><i class="fas fa-tag"></i> Music</span>
-                    <span><i class="fas fa-clock"></i> 4 min read</span>
-                  </div>
-                </div>
-                <p class="item-excerpt">
-                  Majozi talks about the songs that embody the spirit of South Africa, the exciting technical 
-                  developments with his set, and how stoked he is to be a part of Halfway Group's new campaign...
-                </p>
-                <div class="item-actions">
-                  <a href="/articles/majozi-interview" class="read-button">
-                    <i class="fas fa-book-open"></i> Read Article
-                  </a>
-                  <a href="#" class="save-button">
-                    <i class="far fa-bookmark"></i> Save
-                  </a>
-                  <a href="#" class="share-button">
-                    <i class="fas fa-share-alt"></i> Share
-                  </a>
-                </div>
-              </div>
-            </div>
+              <% }) %>
+            <% } else { %>
+              <p>No articles found.</p>
+            <% } %>
           </div>
         </div>
 

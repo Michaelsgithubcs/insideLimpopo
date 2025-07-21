@@ -6,15 +6,17 @@ const articleController = require('../../controllers/articleController');
 //   checkArticleExists, 
 //   authorizeArticleEdit 
 // } = require('../../middlewares/articleMiddleware');
-const { upload } = require('../../middlewares/uploadMiddleware');
+const { upload, uploadAny } = require('../../middlewares/uploadMiddleware');
 const { isAuthenticated } = require('../../middlewares/auth');
 // const { authenticateToken } = require('../../middlewares/authMiddleware');
 const getPool = require('../../config/db');
+const { fixFeaturedImageUrl } = require('../../middlewares/formFixMiddleware');
 
 // Create Article
 router.post('/', 
   isAuthenticated,
-  upload.single('featured_img'), 
+  uploadAny,
+  fixFeaturedImageUrl,
   // validateArticle, 
   articleController.createArticle
 );

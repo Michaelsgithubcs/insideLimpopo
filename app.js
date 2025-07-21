@@ -13,7 +13,7 @@ const { v4: uuidv4 } = require('uuid');
 const rateLimit = require('express-rate-limit');
 const cookieParser = require('cookie-parser');
 const cors = require('cors');
-const articleRoutes = require('./routes/admin/articles'); 
+const articleRoutes = require('./routes/admin/articles');
 const app = express();
 const createTablesIfNotExist = require('./config/initDb');
 
@@ -109,6 +109,7 @@ app.use('/api/articles', articleRoutes); // ✅ After session
 
 // Static files
 app.use(express.static(path.join(__dirname, 'public')));
+app.use('/uploads', express.static(path.join(__dirname, 'public/uploads')));
 
 app.use(cors({
   origin: 'http://localhost:3000',
@@ -148,7 +149,7 @@ app.post('/upload', upload.single('file'), (req, res, next) => {
   if (!req.file) {
     return res.status(400).json({ error: 'Please upload a file' });
   }
-  res.json({ 
+  res.json({
     success: true,
     message: 'File uploaded successfully',
     filePath: `/uploads/${req.file.filename}`
@@ -174,7 +175,7 @@ app.post('/upload', upload.single('file'), (req, res, next) => {
 //       }
 
 //       // Verify password using argon2 helps with password
-//       const isPasswordValid = await argon2.verify(user.password, password); 
+//       const isPasswordValid = await argon2.verify(user.password, password);
 //       if (!isPasswordValid) {
 //           return res.render('login', { error: "Incorrect email or password" });
 //       }
@@ -201,12 +202,12 @@ app.post('/upload', upload.single('file'), (req, res, next) => {
 //Server error, please try again later code(Helps you to login with your updated)
 // async function updateUser(email, updatedData) {
 //     try {
-//         await connection.query('UPDATE user SET username = ?, email = ?, password = ?, Role = ? WHERE email = ?', 
+//         await connection.query('UPDATE user SET username = ?, email = ?, password = ?, Role = ? WHERE email = ?',
 //             [updatedData.username, updatedData.email, updatedData.password, updatedData.Role, email]);
 //         console.log('User updated successfully');
 //     } catch (err) {
 //         console.error('Error updating user:', err);
-//         throw err;  
+//         throw err;
 //     }
 // }
 
@@ -233,12 +234,13 @@ app.use('/api/', apiLimiter);
 // app.use(csrfProtection);
 
 // Routes
+app.use('/articles', require('./routes/content/articles'));
 app.use('/', require('./routes/index'));
 
 // Error handling middleware
 app.use((err, req, res, next) => {
   console.error(err.stack);
-  
+
   // Handle CSRF token errors specifically
   if (err.code === 'EBADCSRFTOKEN') {
     return res.status(403).render('error', {
@@ -246,7 +248,7 @@ app.use((err, req, res, next) => {
       error: process.env.NODE_ENV === 'development' ? err : {}
     });
   }
-  
+
   res.status(500).render('error', {
     message: 'Something went wrong!',
     error: process.env.NODE_ENV === 'development' ? err : {}
@@ -279,4 +281,4 @@ process.on('uncaughtException', (err) => {
   process.exit(1);
 });
 
-createTablesIfNotExist();
+createTablesIfNotExist(); 
