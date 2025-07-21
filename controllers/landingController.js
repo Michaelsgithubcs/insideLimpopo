@@ -1,4 +1,6 @@
 const { pool } = require('../config/db');
+const argon2 = require('argon2');
+const bcrypt = require('bcrypt');
 
 module.exports = {
   // Render the dashboard(landing) page
@@ -88,21 +90,25 @@ module.exports = {
         [req.session.user.email]
       );
 
-      const isMatch = await bcrypt.compare(currentPassword, user[0].password);
+      const storedHash = user[0].password;
+      let isMatch;
+
+      // Check if the hash is argon2 or bcrypt
+      if (storedHash.startsWith('$argon2')) {
+        isMatch = await argon2.verify(storedHash, currentPassword);
+      } else {
+        isMatch = await bcrypt.compare(currentPassword, storedHash);
+        if (isMatch) {
+          // Rehash and update the password to argon2
+          const newHash = await argon2.hash(newPassword);
+          await pool.query('UPDATE users SET password = ? WHERE id = ?', [newHash, req.session.user.id]);
+        }
+      }
+
       if (!isMatch) {
         req.flash('error', 'Current password is incorrect');
         return res.redirect('/profile');
       }
-
-      // Hash new password
-      const salt = await bcrypt.genSalt(10);
-      const hashedPassword = await bcrypt.hash(newPassword, salt);
-
-      // Update password
-      await pool.query(
-        'UPDATE users SET password = ? WHERE email = ?',
-        [hashedPassword, req.session.user.email]
-      );
 
       req.flash('success', 'Password changed successfully');
       res.redirect('/profile');

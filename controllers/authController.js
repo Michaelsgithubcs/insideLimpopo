@@ -1,6 +1,7 @@
-const bcrypt = require("bcrypt");
+const argon2 = require('argon2');
 const { pool } = require("../config/db");
 // const { generateToken } = require("../middlewares/auth");
+const User = require('../models/User');
 
 module.exports = {
   // Render login page
@@ -36,4 +37,16 @@ module.exports = {
   // forgotPassword: async (req, res) => {
 
   // }
+
+  register: async (req, res) => {
+    const { username, email, password, role } = req.body;
+    try {
+      const hashedPassword = await argon2.hash(password);
+      await User.create({ username, email, password: hashedPassword, role });
+      res.redirect('/login');
+    } catch (error) {
+      console.error(error);
+      res.render('auth/register', { title: 'Register', error: 'Error creating user' });
+    }
+  },
 };
