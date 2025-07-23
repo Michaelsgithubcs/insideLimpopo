@@ -84,7 +84,7 @@
         <h4>You Might Also Like</h4>
         <div class="related-grid">
           <% relatedArticles.forEach(related => { %>
-            <a href="/articles/<%= related.id %>" class="related-article">
+            <a href="/articles/<%= article.article_id %>" class="related-article">
               <% if (related.featured_img) { %>
                 <img src="<%= related.featured_img %>" alt="<%= related.title %>">
               <% } %>

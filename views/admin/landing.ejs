@@ -59,9 +59,6 @@
 
       <!-- Content Creation Tabs -->
       <div class="creation-landing-tabs">
-        <button class="tab-landing-btn" data-tab="story" id="story-tab-btn">
-          Add Story
-        </button>
         <button
           class="tab-landing-btn active"
           data-tab="article"
@@ -70,98 +67,6 @@
           Add Article
         </button>
       </div>
-
-      <!-- Add Story Section -->
-      <section id="story-tab" class="content-landing-tab">
-        <form
-          action="/stories"
-          method="POST"
-          enctype="multipart/form-data"
-          class="creation-landing-form"
-          id="story-form"
-        >
-          <div class="form-landing-grid">
-            <div class="form-landing-group">
-              <label for="story-title">Story Title</label>
-              <input
-                type="text"
-                id="title"
-                name="title"
-                required
-                minlength="5"
-                maxlength="100"
-              />
-              <div class="form-error" id="story-title-error"></div>
-            </div>
-
-            <div class="form-landing-group">
-              <label for="story-category">Category</label>
-              <select id="category" name="category" required>
-                <option value="">Select Category</option>
-                <option value="news">News</option>
-                <option value="opinion">Opinion</option>
-                <option value="sports">Sports</option>
-                <option value="events">Events</option>
-              </select>
-            </div>
-
-            <div class="form-landing-group full-width">
-              <label for="story-description">Brief Description</label>
-              <textarea
-                id="description"
-                name="description"
-                rows="3"
-                required
-                minlength="20"
-                maxlength="200"
-              ></textarea>
-              <div class="form-error" id="story-description-error"></div>
-            </div>
-
-            <div class="form-landing-group full-width">
-              <label for="story-content">Full Content</label>
-              <textarea
-                id="content"
-                name="content"
-                rows="8"
-                required
-                minlength="100"
-              ></textarea>
-              <div class="form-error" id="story-content-error"></div>
-            </div>
-
-            <div class="form-landing-group">
-              <label for="story-image">Featured Image</label>
-              <input type="file" id="image" name="image" accept="image/*" />
-              <div class="image-preview" id="story-image-preview"></div>
-              <div class="form-error" id="story-image-error"></div>
-            </div>
-
-            <div class="form-landing-group">
-              <label for="story-expiry">Expiry Date</label>
-              <input
-                type="date"
-                id="date"
-                name="date"
-                min="<%= new Date().toISOString().split('T')[0] %>"
-              />
-            </div>
-          </div>
-
-          <div class="form-landing-actions">
-            <button
-              type="submit"
-              class="btn btn-landing-primary"
-              id="story-submit-btn"
-            >
-              Publish Story
-            </button>
-            <button type="reset" class="btn btn-landing-outline">
-              Clear Form
-            </button>
-          </div>
-        </form>
-      </section>
 
       <!-- Add Article Section -->
       <section id="article-tab" class="content-landing-tab active">
