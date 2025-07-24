@@ -15,6 +15,7 @@ const cookieParser = require('cookie-parser');
 const cors = require('cors');
 const articleRoutes = require('./routes/admin/articles');
 const app = express();
+//const breaking=require('./routes/breakingNews/breakingNews');
 const createTablesIfNotExist = require('./config/initDb');
 
 // Database connection pool configuration
@@ -106,6 +107,7 @@ app.use((req, res, next) => {
 });
 
 app.use('/api/articles', articleRoutes); // ✅ After session
+//app.use('/api/breaking-news',breaking);
 
 // Static files
 app.use(express.static(path.join(__dirname, 'public')));
