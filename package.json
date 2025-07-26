@@ -44,6 +44,7 @@
     "mysql": "^2.18.1",
     "mysql2": "^3.14.2",
     "newsapi": "^2.4.1",
+    "node-cron": "^3.0.3",
     "sequelize": "^6.37.6",
     "sequelize-cli": "^6.6.2",
     "uuid": "^11.1.0"

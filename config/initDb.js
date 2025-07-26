@@ -82,7 +82,24 @@ async function createDatabaseAndTables() {
     )
   `);
 
-  console.log('Checked/created all main tables.');
+  await pool.query(`
+    CREATE TABLE IF NOT EXISTS cached_news (
+      id INT AUTO_INCREMENT PRIMARY KEY,
+      title VARCHAR(500) NOT NULL,
+      description TEXT,
+      url VARCHAR(1000) NOT NULL,
+      url_to_image VARCHAR(1000),
+      published_at DATETIME,
+      source JSON,
+      category VARCHAR(100) DEFAULT 'general',
+      cached_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      INDEX idx_category (category),
+      INDEX idx_cached_at (cached_at),
+      INDEX idx_published_at (published_at)
+    )
+  `);
+
+  console.log('Checked/created all main tables including cached_news.');
 }
 
 module.exports = createDatabaseAndTables; 

@@ -17,6 +17,7 @@ const articleRoutes = require('./routes/admin/articles');
 const app = express();
 //const breaking=require('./routes/breakingNews/breakingNews');
 const createTablesIfNotExist = require('./config/initDb');
+const schedulerService = require('./services/schedulerService');
 
 // Database connection pool configuration
 const pool = mysql.createPool({
@@ -107,6 +108,7 @@ app.use((req, res, next) => {
 });
 
 app.use('/api/articles', articleRoutes); // ✅ After session
+app.use('/api/news', require('./routes/api/news')); // Cached news API
 //app.use('/api/breaking-news',breaking);
 
 // Static files
@@ -283,4 +285,9 @@ process.on('uncaughtException', (err) => {
   process.exit(1);
 });
 
-createTablesIfNotExist(); 
+createTablesIfNotExist().then(() => {
+  // Start the news cache refresh scheduler after database is initialized
+  schedulerService.startNewsCacheRefresh();
+}).catch(err => {
+  console.error('Error initializing database:', err);
+}); 

@@ -1,4 +1,4 @@
-const apiUrl = `https://newsapi.org/v2/top-headlines?country=us&apiKey=94710bfc54a44f1a9796e81a0bd2e446`;
+const apiUrl = `/api/news/headlines?category=general&limit=20`;
 
 
 async function fetchNews(apiUrl) {
@@ -42,7 +42,7 @@ function displayNews(articles){
 function searchNews(query) {
   query.preventDefault(); 
   const search = document.getElementById("search").value;
-  const searchUrl = `https://newsapi.org/v2/everything?q=${search}&apiKey=94710bfc54a44f1a9796e81a0bd2e446`; 
+  const searchUrl = `/api/news/search?q=${encodeURIComponent(search)}&limit=20`; 
 
   fetchNews(searchUrl); 
 }

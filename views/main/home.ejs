@@ -120,8 +120,6 @@
     <%- include('../partials/footer.ejs') %>
 
     <script>
-      const API_KEY = "b58aae20fe8c8763d71035f682ca20ad";
-      
       // DOM Elements
       const breakingImg = document.getElementById("breakingImg");
       const breakingTitle = document.getElementById("breakingTitle");
@@ -134,18 +132,18 @@
       const businessGrid = document.getElementById("businessGrid");
       const techGrid = document.getElementById("techGrid");
 
-      // Fetch data from GNews API
-      const fetchData = async (category, pageSize) => {
-        const url = `https://gnews.io/api/v4/top-headlines?category=${category}&max=${pageSize}&lang=en&country=za&apikey=${API_KEY}`;
+      // Fetch data from cached news API
+      const fetchData = async (category, pageSize = 10) => {
         try {
+          const url = `/api/news/headlines?category=${category}&limit=${pageSize}`;
           const response = await fetch(url);
           if (!response.ok) {
-            throw new Error(`HTTP error! Status: ${response.status}`);
+            throw new Error(`HTTP error! status: ${response.status}`);
           }
           const data = await response.json();
           return data.articles;
         } catch (error) {
-          console.error("Error fetching news:", error);
+          console.error("Error fetching cached news:", error);
           return [];
         }
       };
@@ -160,7 +158,7 @@
       // Display breaking news
       const displayBreakingNews = (article) => {
         if (article) {
-          breakingImg.style.backgroundImage = `url(${article.image || 'https://via.placeholder.com/800x450?text=No+Image'})`;
+          breakingImg.style.backgroundImage = `url(${article.urlToImage || 'https://via.placeholder.com/800x450?text=No+Image'})`;
           breakingTitle.textContent = article.title;
           breakingDesc.textContent = article.description || 'No description available';
           breakingSource.textContent = article.source?.name || 'Unknown source';
@@ -177,18 +175,36 @@
       const displayTopHeadlines = (articles) => {
         let html = '';
         articles.slice(0, 5).forEach(article => {
-          html += `
-            <div class="headline-item">
-              <div class="headline-image" style="background-image: url(${article.image || 'https://via.placeholder.com/150x100?text=No+Image'})"></div>
-              <div class="headline-content">
-                <h3><a href="${article.url}" target="_blank">${article.title}</a></h3>
-                <div class="headline-meta">
-                  <span>${article.source?.name || 'Unknown'}</span>
-                  <span>${formatDate(article.publishedAt)}</span>
+          const hasImage = article.urlToImage && article.urlToImage.trim() !== '' && article.urlToImage !== 'null';
+          
+          if (hasImage) {
+            html += `
+              <div class="headline-item">
+                <div class="headline-image" style="background-image: url('${article.urlToImage}')" 
+                     onerror="this.style.backgroundImage='url(data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTUwIiBoZWlnaHQ9IjEwMCIgdmlld0JveD0iMCAwIDE1MCAxMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIxNTAiIGhlaWdodD0iMTAwIiBmaWxsPSIjY2NjY2NjIi8+Cjx0ZXh0IHg9Ijc1IiB5PSI1NSIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjEyIiBmaWxsPSIjNjY2NjY2IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5ObyBJbWFnZTwvdGV4dD4KPC9zdmc+)'"></div>
+                <div class="headline-content">
+                  <h3><a href="${article.url}" target="_blank">${article.title}</a></h3>
+                  <div class="headline-meta">
+                    <span>${article.source?.name || 'Unknown'}</span>
+                    <span>${formatDate(article.publishedAt)}</span>
+                  </div>
                 </div>
               </div>
-            </div>
-          `;
+            `;
+          } else {
+            html += `
+              <div class="headline-item">
+                <div class="headline-image" style="background-color: #cccccc; display: flex; align-items: center; justify-content: center; color: #666666; font-size: 12px; font-family: Arial, sans-serif;">No Image</div>
+                <div class="headline-content">
+                  <h3><a href="${article.url}" target="_blank">${article.title}</a></h3>
+                  <div class="headline-meta">
+                    <span>${article.source?.name || 'Unknown'}</span>
+                    <span>${formatDate(article.publishedAt)}</span>
+                  </div>
+                </div>
+              </div>
+            `;
+          }
         });
         topHeadlines.innerHTML = html || '<p>No headlines available</p>';
       };
@@ -199,7 +215,7 @@
         articles.slice(0, 4).forEach(article => {
           html += `
             <div class="news-card">
-              <div class="card-image" style="background-image: url(${article.image || 'https://via.placeholder.com/300x200?text=No+Image'})">
+              <div class="card-image" style="background-image: url(${article.urlToImage || 'https://via.placeholder.com/300x200?text=No+Image'})">
                 <div class="category-overlay">${container.id.replace('Grid', '')}</div>
               </div>
               <div class="card-content">
