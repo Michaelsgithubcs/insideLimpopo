@@ -9,67 +9,23 @@
     </section>
 
     <script>
-    // Fetch breaking news from database
+    // Fetch breaking news from cached database
     async function loadBreakingNews() {
       try {
-        const response = await fetch('/api/breaking-news/latest?limit=6');
+        // Fetch latest general news from cached database for breaking news ticker
+        const response = await fetch('/api/news/headlines?category=general&limit=6');
         const data = await response.json();
         
         if (data.status === 'ok' && data.articles && data.articles.length > 0) {
           const tickerContent = document.getElementById('breaking-news-content');
           tickerContent.innerHTML = '';
           
-          // Create ticker items from database data
+          // Create ticker items from cached database
           data.articles.forEach((article, index) => {
             const tickerItem = document.createElement('div');
             tickerItem.className = 'ticker-item';
             
             // Use article image if available, otherwise use default images
-            const defaultImages = [
-              './assets/home/ramapho.jpeg',
-              './assets/home/outa.jpeg', 
-              './assets/home/investigat.jpeg',
-              './assets/home/kzn.jpeg',
-              './assets/home/us.jpeg',
-              './assets/home/rain.jpeg'
-            ];
-            
-            const imageUrl = article.urlToImage || defaultImages[index % defaultImages.length];
-            
-            tickerItem.innerHTML = `
-              <img src="${imageUrl}" alt="News Image" onerror="this.src='${defaultImages[index % defaultImages.length]}'" />
-              <a href="${article.url}" target="_blank" title="${article.title}">
-                ${article.title}
-              </a>
-            `;
-            
-            tickerContent.appendChild(tickerItem);
-          });
-        } else {
-          // Fallback to cached news if no breaking news in database
-          await loadFallbackNews();
-        }
-      } catch (error) {
-        console.error('Error loading breaking news:', error);
-        // Fallback to cached news on error
-        await loadFallbackNews();
-      }
-    }
-    
-    // Fallback function to load cached news if no breaking news available
-    async function loadFallbackNews() {
-      try {
-        const response = await fetch('/api/news/headlines?limit=6');
-        const data = await response.json();
-        
-        if (data.status === 'ok' && data.articles && data.articles.length > 0) {
-          const tickerContent = document.getElementById('breaking-news-content');
-          tickerContent.innerHTML = '';
-          
-          data.articles.forEach((article, index) => {
-            const tickerItem = document.createElement('div');
-            tickerItem.className = 'ticker-item';
-            
             const defaultImages = [
               './assets/home/ramapho.jpeg',
               './assets/home/outa.jpeg', 
@@ -92,7 +48,8 @@
           });
         }
       } catch (error) {
-        console.error('Error loading fallback news:', error);
+        console.error('Error loading breaking news:', error);
+        // Keep default content on error
       }
     }
     
