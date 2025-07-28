@@ -1,40 +1,101 @@
 <section class="breaking-news-ticker">
-      <div class="ticker-content">
+      <div class="ticker-content" id="breaking-news-content">
+        <!-- Loading placeholder -->
         <div class="ticker-item">
-          <img src="./assets/home/ramapho.jpeg" alt="News Image" />
-          <a href="https://www.enca.com/top-stories/we-are-working-mending-relationship-us-ramaphosa" target="_blank">
-            We are working on mending relationship with US - Ramaphosa
-          </a>
-        </div>
-        <div class="ticker-item">
-          <img src="./assets/home/outa.jpeg" alt="News Image" />
-          <a href="https://www.enca.com/news-top-stories/outa-uncovers-systemic-fraud-testing-stations" target="_blank">
-            Outa uncovers systemic fraud at testing stations
-          </a>
-        </div>
-        <div class="ticker-item">
-          <img src="./assets/home/investigat.jpeg" alt="News Image" />
-          <a href="https://www.enca.com/news-top-stories/investigation-finds-counterfeit-electrical-goods-appliances-widely-available" target="_blank">
-            Investigations finds counterfeit electrical goods, appliances widely available
-          </a>
-        </div>
-        <div class="ticker-item">
-          <img src="./assets/home/kzn.jpeg" alt="News Image" />
-          <a href="https://www.enca.com/news-top-stories/kzn-anc-task-team-focuses-tripartite-alliance" target="_blank">
-            KZN task team focuses on Tripartite Alliance
-          </a>
-        </div>
-        <div class="ticker-item">
-          <img src="./assets/home/us.jpeg" alt="News Image" />
-          <a href="https://www.enca.com/opinion/us-democrats-fume-some-party-cave-trump-spending-bill" target="_blank">
-            US Democrats fume as some in party cave Trump on spending bill
-          </a>
-        </div>
-        <div class="ticker-item">
-          <img src="./assets/home/rain.jpeg" alt="News Image" />
-          <a href="https://www.enca.com/sport/norris-holds-verstappen-win-rain-hit-australian-grand-prix" target="_blank">
-            Norris holds off Verstappen to win rain-hit Australian Grand Prix FM
-          </a>
+          <img src="./assets/home/ramapho.jpeg" alt="Loading..." />
+          <span>Loading breaking news...</span>
         </div>
       </div>
     </section>
+
+    <script>
+    // Fetch breaking news from database
+    async function loadBreakingNews() {
+      try {
+        const response = await fetch('/api/breaking-news/latest?limit=6');
+        const data = await response.json();
+        
+        if (data.status === 'ok' && data.articles && data.articles.length > 0) {
+          const tickerContent = document.getElementById('breaking-news-content');
+          tickerContent.innerHTML = '';
+          
+          // Create ticker items from database data
+          data.articles.forEach((article, index) => {
+            const tickerItem = document.createElement('div');
+            tickerItem.className = 'ticker-item';
+            
+            // Use article image if available, otherwise use default images
+            const defaultImages = [
+              './assets/home/ramapho.jpeg',
+              './assets/home/outa.jpeg', 
+              './assets/home/investigat.jpeg',
+              './assets/home/kzn.jpeg',
+              './assets/home/us.jpeg',
+              './assets/home/rain.jpeg'
+            ];
+            
+            const imageUrl = article.urlToImage || defaultImages[index % defaultImages.length];
+            
+            tickerItem.innerHTML = `
+              <img src="${imageUrl}" alt="News Image" onerror="this.src='${defaultImages[index % defaultImages.length]}'" />
+              <a href="${article.url}" target="_blank" title="${article.title}">
+                ${article.title}
+              </a>
+            `;
+            
+            tickerContent.appendChild(tickerItem);
+          });
+        } else {
+          // Fallback to cached news if no breaking news in database
+          await loadFallbackNews();
+        }
+      } catch (error) {
+        console.error('Error loading breaking news:', error);
+        // Fallback to cached news on error
+        await loadFallbackNews();
+      }
+    }
+    
+    // Fallback function to load cached news if no breaking news available
+    async function loadFallbackNews() {
+      try {
+        const response = await fetch('/api/news/headlines?limit=6');
+        const data = await response.json();
+        
+        if (data.status === 'ok' && data.articles && data.articles.length > 0) {
+          const tickerContent = document.getElementById('breaking-news-content');
+          tickerContent.innerHTML = '';
+          
+          data.articles.forEach((article, index) => {
+            const tickerItem = document.createElement('div');
+            tickerItem.className = 'ticker-item';
+            
+            const defaultImages = [
+              './assets/home/ramapho.jpeg',
+              './assets/home/outa.jpeg', 
+              './assets/home/investigat.jpeg',
+              './assets/home/kzn.jpeg',
+              './assets/home/us.jpeg',
+              './assets/home/rain.jpeg'
+            ];
+            
+            const imageUrl = article.urlToImage || defaultImages[index % defaultImages.length];
+            
+            tickerItem.innerHTML = `
+              <img src="${imageUrl}" alt="News Image" onerror="this.src='${defaultImages[index % defaultImages.length]}'" />
+              <a href="${article.url}" target="_blank" title="${article.description || article.title}">
+                ${article.title}
+              </a>
+            `;
+            
+            tickerContent.appendChild(tickerItem);
+          });
+        }
+      } catch (error) {
+        console.error('Error loading fallback news:', error);
+      }
+    }
+    
+    // Load breaking news when page loads
+    document.addEventListener('DOMContentLoaded', loadBreakingNews);
+    </script>

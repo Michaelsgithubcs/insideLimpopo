@@ -6,40 +6,59 @@ class SchedulerService {
     this.jobs = new Map();
   }
 
-  // Start the news cache refresh job (every 2 hours)
+  // Start staggered news cache refresh jobs
   startNewsCacheRefresh() {
-    // Run every 2 hours: '0 */2 * * *'
-    // For testing, you can use '*/5 * * * *' (every 5 minutes)
-    const job = cron.schedule('0 */2 * * *', async () => {
-      console.log('Starting scheduled news cache refresh...');
-      try {
-        await newsCacheService.refreshAllCategories();
-        console.log('Scheduled news cache refresh completed successfully');
-      } catch (error) {
-        console.error('Error during scheduled news cache refresh:', error.message);
-      }
-    }, {
-      scheduled: false,
-      timezone: "Africa/Johannesburg" // Adjust to your timezone
-    });
-
-    this.jobs.set('newsCacheRefresh', job);
-    job.start();
-    console.log('News cache refresh scheduler started (runs every 2 hours)');
+    const categories = ['general', 'business', 'entertainment', 'health', 'science', 'sports', 'technology'];
     
-    // Also run an initial cache refresh on startup
+    categories.forEach((category, index) => {
+      // Stagger each category by 20 minutes: 0, 20, 40 minutes past the hour
+      const minutes = (index * 20) % 60;
+      const hours = Math.floor(index * 20 / 60);
+      const cronPattern = `${minutes} ${hours}-23/2 * * *`; // Every 2 hours starting at different times
+      
+      const job = cron.schedule(cronPattern, async () => {
+        console.log(`Starting scheduled refresh for category: ${category}`);
+        try {
+          await newsCacheService.fetchAndCacheNews(category, 'us', 20);
+          console.log(`Scheduled refresh completed for category: ${category}`);
+        } catch (error) {
+          console.error(`Error refreshing category ${category}:`, error.message);
+        }
+      }, {
+        scheduled: false,
+        timezone: "Africa/Johannesburg"
+      });
+      
+      this.jobs.set(`refresh_${category}`, job);
+      job.start();
+      console.log(`Scheduler started for ${category} (${cronPattern})`);
+    });
+    
+    // Run initial refresh with delays
     this.initialCacheRefresh();
   }
 
-  // Run initial cache refresh when server starts
+  // Run initial cache refresh with staggered timing
   async initialCacheRefresh() {
-    console.log('Running initial news cache refresh...');
-    try {
-      await newsCacheService.refreshAllCategories();
-      console.log('Initial news cache refresh completed successfully');
-    } catch (error) {
-      console.error('Error during initial news cache refresh:', error.message);
+    console.log('Running initial staggered news cache refresh...');
+    const categories = ['general', 'business', 'entertainment', 'health', 'science', 'sports', 'technology'];
+    
+    for (let i = 0; i < categories.length; i++) {
+      const category = categories[i];
+      try {
+        console.log(`Fetching initial data for: ${category}`);
+        await newsCacheService.fetchAndCacheNews(category, 'us', 20);
+        
+        // Wait 2 minutes between each category on startup
+        if (i < categories.length - 1) {
+          console.log(`Waiting 2 minutes before next category...`);
+          await new Promise(resolve => setTimeout(resolve, 2 * 60 * 1000));
+        }
+      } catch (error) {
+        console.error(`Error during initial refresh for ${category}:`, error.message);
+      }
     }
+    console.log('Initial staggered news cache refresh completed');
   }
 
   // Stop a specific job

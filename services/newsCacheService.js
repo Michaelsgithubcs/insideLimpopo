@@ -62,28 +62,43 @@ class NewsCacheService {
 
   async getCachedNews(category = 'general', limit = 20) {
     try {
+      // Always try to return existing cached data first
+      const existingCache = await CachedNews.getByCategory(category, limit);
+      
       // Check if cache needs refresh
       const shouldRefresh = await CachedNews.shouldRefreshCache(category, this.cacheRefreshHours);
       
       if (shouldRefresh) {
         console.log(`Cache expired for category: ${category}, fetching fresh data`);
-        await this.fetchAndCacheNews(category, 'us', limit);
+        try {
+          await this.fetchAndCacheNews(category, 'us', limit);
+          // Return fresh data if successful
+          return await CachedNews.getByCategory(category, limit);
+        } catch (apiError) {
+          console.log(`API error (${apiError.message}), returning existing cache for ${category}`);
+          // Return existing cache if API fails
+          return existingCache;
+        }
       }
 
-      // Return cached news
-      const cachedNews = await CachedNews.getByCategory(category, limit);
+      // If cache doesn't need refresh, return existing data
+      if (existingCache.length > 0) {
+        return existingCache;
+      }
       
-      if (cachedNews.length === 0 && !shouldRefresh) {
-        // If no cached news and we didn't just refresh, try fetching
-        console.log(`No cached news found for category: ${category}, fetching fresh data`);
+      // Only try API if no cache exists at all
+      console.log(`No cached news found for category: ${category}, fetching fresh data`);
+      try {
         await this.fetchAndCacheNews(category, 'us', limit);
         return await CachedNews.getByCategory(category, limit);
+      } catch (apiError) {
+        console.log(`API error (${apiError.message}), no cache available for ${category}`);
+        return [];
       }
-
-      return cachedNews;
+      
     } catch (error) {
       console.error('Error getting cached news:', error.message);
-      throw error;
+      return [];
     }
   }
 
@@ -119,8 +134,8 @@ class NewsCacheService {
     for (const category of categories) {
       try {
         await this.fetchAndCacheNews(category, 'us', 20);
-        // Add small delay to avoid hitting API rate limits
-        await new Promise(resolve => setTimeout(resolve, 1000));
+        // Add 10-minute delay between categories to avoid rate limits
+        await new Promise(resolve => setTimeout(resolve, 10 * 60 * 1000)); // 10 minutes
       } catch (error) {
         console.error(`Error refreshing category ${category}:`, error.message);
       }
