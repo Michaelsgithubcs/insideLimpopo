@@ -12,7 +12,15 @@ router.get('/podcast', async (req, res) => {
       return res.render('content/podcast', { title: 'Podcast', postedArticles: [] });
     }
 
-    const postedArticles = await Article.findByCategory(category[0].category_id);
+    // Get all podcast articles with full details, ordered by newest first
+    const [postedArticles] = await pool.query(
+      `SELECT a.*, u.username 
+       FROM articles a
+       LEFT JOIN users u ON a.author_id = u.id
+       WHERE a.category_id = ?
+       ORDER BY a.created_at DESC`,
+      [category[0].category_id]
+    );
     res.render('content/podcast', { title: 'Podcast', postedArticles });
   } catch (error) {
     console.error('Error fetching podcast articles:', error);

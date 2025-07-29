@@ -6,7 +6,7 @@ exports.createArticle = async (req, res) => {
     console.log('REQ.FILE:', req.file);
     console.log('SESSION DEBUG:', JSON.stringify(req.session, null, 2));
     console.log('SESSION USER:', JSON.stringify(req.session.user, null, 2));
-    let { title, content, category_id, image_url, image_type } = req.body;
+    let { title, content, category_id, image_url, image_type, episode_link, episode_date, episode_tag, episode_duration } = req.body;
     console.log('CATEGORY_ID RECEIVED:', category_id);
     console.log('IMAGE_URL RECEIVED:', image_url);
     console.log('IMAGE_TYPE RECEIVED:', image_type);
@@ -36,7 +36,11 @@ exports.createArticle = async (req, res) => {
       content,
       author_id,
       category_id,
-      featured_img
+      featured_img,
+      episode_link: episode_link || null,
+      episode_date: episode_date || null,
+      episode_tag: episode_tag || null,
+      episode_duration: episode_duration || null
     });
 
     // Debug: fetch and log the created article

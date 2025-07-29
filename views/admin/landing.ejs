@@ -144,6 +144,46 @@
               <div class="form-error" id="article-content-error"></div>
             </div>
 
+            <!-- Podcast-specific fields (hidden by default) -->
+            <div class="form-landing-group podcast-field" id="episode-link-group" style="display: none;">
+              <label for="episode-link">Episode Link (YouTube/Audio URL)</label>
+              <input
+                type="url"
+                id="episode-link"
+                name="episode_link"
+                placeholder="https://youtu.be/..."
+              />
+            </div>
+
+            <div class="form-landing-group podcast-field" id="episode-date-group" style="display: none;">
+              <label for="episode-date">Episode Date</label>
+              <input
+                type="date"
+                id="episode-date"
+                name="episode_date"
+              />
+            </div>
+
+            <div class="form-landing-group podcast-field" id="episode-tag-group" style="display: none;">
+              <label for="episode-tag">Episode Tag/Category</label>
+              <input
+                type="text"
+                id="episode-tag"
+                name="episode_tag"
+                placeholder="Kids & Family, Business, Music Interview, etc."
+              />
+            </div>
+
+            <div class="form-landing-group podcast-field" id="episode-duration-group" style="display: none;">
+              <label for="episode-duration">Episode Duration</label>
+              <input
+                type="text"
+                id="episode-duration"
+                name="episode_duration"
+                placeholder="42 min"
+              />
+            </div>
+
             <div class="form-landing-group">
               <label>Featured Image</label>
               <div class="image-input-options">
@@ -284,6 +324,20 @@
             reader.readAsDataURL(this.files[0]);
           }
         });
+
+      // Category change handler for podcast fields
+      document.getElementById('article-category')?.addEventListener('change', function() {
+        const podcastFields = document.querySelectorAll('.podcast-field');
+        const isPodcast = this.options[this.selectedIndex].text.toLowerCase().includes('podcast');
+        
+        podcastFields.forEach(field => {
+          field.style.display = isPodcast ? 'block' : 'none';
+          const input = field.querySelector('input');
+          if (input) {
+            input.required = isPodcast;
+          }
+        });
+      });
 
       // Image input type switching
       document.querySelectorAll('input[name="image_type"]').forEach(radio => {
