@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
   <%- include('../partials/head.ejs') %>
+  <link rel="stylesheet" href="/css/image-options.css">
 
   <body>
     <!-- Main Section -->
@@ -144,13 +145,35 @@
             </div>
 
             <div class="form-landing-group">
-              <label for="article-image-url">Featured Image URL</label>
-              <input
-                type="url"
-                id="article-image-url"
-                name="image_url"
-                placeholder="https://example.com/image.jpg"
-              />
+              <label>Featured Image</label>
+              <div class="image-input-options">
+                <div class="image-option">
+                  <input type="radio" id="use-url" name="image_type" value="url" checked>
+                  <label for="use-url">Use Image URL</label>
+                </div>
+                <div class="image-option">
+                  <input type="radio" id="use-upload" name="image_type" value="upload">
+                  <label for="use-upload">Upload Image</label>
+                </div>
+              </div>
+              
+              <div id="url-input" class="image-input-section">
+                <input
+                  type="url"
+                  id="article-image-url"
+                  name="image_url"
+                  placeholder="https://example.com/image.jpg"
+                />
+              </div>
+              
+              <div id="upload-input" class="image-input-section" style="display: none;">
+                <input
+                  type="file"
+                  id="article-image-file"
+                  accept="image/*"
+                />
+              </div>
+              
               <div class="image-preview" id="article-image-preview"></div>
             </div>
           </div>
@@ -262,6 +285,30 @@
           }
         });
 
+      // Image input type switching
+      document.querySelectorAll('input[name="image_type"]').forEach(radio => {
+        radio.addEventListener('change', function() {
+          const urlSection = document.getElementById('url-input');
+          const uploadSection = document.getElementById('upload-input');
+          const preview = document.getElementById('article-image-preview');
+          
+          if (this.value === 'url') {
+            urlSection.style.display = 'block';
+            uploadSection.style.display = 'none';
+            document.getElementById('article-image-file').value = '';
+            document.getElementById('article-image-file').removeAttribute('name');
+            document.getElementById('article-image-url').setAttribute('name', 'image_url');
+          } else {
+            urlSection.style.display = 'none';
+            uploadSection.style.display = 'block';
+            document.getElementById('article-image-url').value = '';
+            document.getElementById('article-image-url').removeAttribute('name');
+            document.getElementById('article-image-file').setAttribute('name', 'featured_img');
+          }
+          preview.innerHTML = '';
+        });
+      });
+
       // URL image preview
       document
         .getElementById("article-image-url")
@@ -277,6 +324,25 @@
               preview.innerHTML = '<p class="error">Could not load image</p>';
             };
             preview.appendChild(img);
+          }
+        });
+
+      // File upload image preview
+      document
+        .getElementById("article-image-file")
+        ?.addEventListener("change", function () {
+          const preview = document.getElementById("article-image-preview");
+          preview.innerHTML = "";
+          if (this.files && this.files[0]) {
+            const reader = new FileReader();
+            reader.onload = function (e) {
+              const img = document.createElement("img");
+              img.src = e.target.result;
+              img.style.maxWidth = "200px";
+              img.style.maxHeight = "200px";
+              preview.appendChild(img);
+            };
+            reader.readAsDataURL(this.files[0]);
           }
         });
 

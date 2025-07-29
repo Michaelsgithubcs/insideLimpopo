@@ -6,17 +6,20 @@ exports.createArticle = async (req, res) => {
     console.log('REQ.FILE:', req.file);
     console.log('SESSION DEBUG:', JSON.stringify(req.session, null, 2));
     console.log('SESSION USER:', JSON.stringify(req.session.user, null, 2));
-    let { title, content, category_id, featured_img_url } = req.body;
+    let { title, content, category_id, image_url, image_type } = req.body;
     console.log('CATEGORY_ID RECEIVED:', category_id);
-    console.log('FEATURED_IMG_URL RECEIVED:', featured_img_url);
+    console.log('IMAGE_URL RECEIVED:', image_url);
+    console.log('IMAGE_TYPE RECEIVED:', image_type);
+    console.log('REQ.FILE:', req.file);
+    
     // Ensure category_id is an integer
     category_id = parseInt(category_id, 10);
     
     let featured_img;
-    if (featured_img_url) {
-      featured_img = featured_img_url;
-    } else if (req.file) {
+    if (image_type === 'upload' && req.file) {
       featured_img = `/uploads/${req.file.filename}`;
+    } else if (image_type === 'url' && image_url) {
+      featured_img = image_url;
     } else {
       featured_img = null;
     }

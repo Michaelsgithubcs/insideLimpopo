@@ -15,7 +15,7 @@ const { fixFeaturedImageUrl } = require('../../middlewares/formFixMiddleware');
 // Create Article
 router.post('/', 
   isAuthenticated,
-  uploadAny,
+  upload.single('featured_img'),
   fixFeaturedImageUrl,
   // validateArticle, 
   articleController.createArticle
