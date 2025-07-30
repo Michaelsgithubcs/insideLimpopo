@@ -162,68 +162,8 @@ app.post('/upload', upload.single('file'), (req, res, next) => {
   res.status(400).json({ error: err.message });
 });
 
-// Argon2 funtion for password encryption
-// Login code: (//New code)
-// app.post('/login', async (req, res) => {
-//   const { email, password } = req.body;
-
-//   if (!email || !password) {
-//       return res.render('login', { error: "Please provide both email and password" });
-//   }
-
-//   try {
-//       // Find user by email
-//       const user = await findUserByEmail(email);
-//       if (!user) {
-//           return res.render('login', { error: "This email is not registered" });
-//       }
-
-//       // Verify password using argon2 helps with password
-//       const isPasswordValid = await argon2.verify(user.password, password);
-//       if (!isPasswordValid) {
-//           return res.render('login', { error: "Incorrect email or password" });
-//       }
-
-//       // Set session variables
-//       // req.session.userId = user.unique_id;
-//       req.session.username = user.username;
-//       req.session.email = user.email;
-
-//       // Redirect based on role
-//       if (user.Role === "Admin") {
-//           return res.redirect('/profile1');
-//       } else if (user.Role === "User") {
-//           return res.redirect('/profile2');
-//       } else {
-//           return res.render('login', { error: "Access Denied, you are not an Admin or User" });
-//       }
-//   } catch (err) {
-//       console.error('Error during login:', err); // Logs the error for debugging
-//       return res.render('login', { error: "Server error, please try again later" });
-//   }
-// });
-
-//Server error, please try again later code(Helps you to login with your updated)
-// async function updateUser(email, updatedData) {
-//     try {
-//         await connection.query('UPDATE user SET username = ?, email = ?, password = ?, Role = ? WHERE email = ?',
-//             [updatedData.username, updatedData.email, updatedData.password, updatedData.Role, email]);
-//         console.log('User updated successfully');
-//     } catch (err) {
-//         console.error('Error updating user:', err);
-//         throw err;
-//     }
-// }
-
-
-// Middleware to check if the user is logged in
-// function isAuthenticated(req, res, next) {
-//     if (req.session && req.session.userId) {
-//         return next();
-//     } else {
-//         res.redirect('/login');
-//     }
-// }
+const subscribe= require('./routes/subscribeRoute')(pool);
+app.use('/subscribe', subscribe);
 
 // Rate limiting for API routes
 const apiLimiter = rateLimit({

@@ -63,24 +63,48 @@
       </section>
 
       <!-- Newsletter Section -->
-      <section class="newsletter-section">
-        <div class="newsletter-container">
-          <div class="newsletter-content">
-            <h2>Stay Updated</h2>
-            <p>Subscribe to our newsletter for daily news updates</p>
-            <form class="newsletter-form">
-              <input type="email" placeholder="Your email address" required>
-              <button type="submit">Subscribe</button>
-            </form>
-          </div>
-        </div>
-      </section>
+Newsletter section
+<section class="newsletter-section">
+  <div class="newsletter-container">
+    <div class="newsletter-content">
+      <h2>Stay Updated</h2>
+      <p>Subscribe to our newsletter for daily news updates</p>
+      <form class="newsletter-form" id="newsletterForm">
+        <input type="email" name="email" placeholder="Your email address" required>
+        <button type="submit">Subscribe</button>
+      </form>
+      <p id="responseMessage"></p>
+    </div>
+  </div>
+</section>
     </main>
 
     <!-- Footer Section -->
     <%- include('../partials/footer.ejs') %>
 
     <script>
+      document.getElementById('newsletterForm').addEventListener('submit', async function(e) {
+  e.preventDefault();
+  const email = this.email.value;
+  const responseMessage = document.getElementById('responseMessage');
+  
+  try {
+    const res = await fetch('/subscribe', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email })
+    });
+
+    const data = await res.json();
+    responseMessage.textContent = data.message;
+    responseMessage.style.color = res.ok ? 'green' : 'red';
+    if (res.ok) this.reset();
+  } catch (error) {
+    responseMessage.textContent = 'Network error, please try again.';
+    responseMessage.style.color = 'red';
+  }
+});
+
       // DOM Elements
       const breakingImg = document.getElementById("breakingImg");
       const breakingTitle = document.getElementById("breakingTitle");
