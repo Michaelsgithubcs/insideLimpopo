@@ -305,15 +305,21 @@
 
         <!-- Newsletter Section -->
         <section class="events-newsletter">
-            <div class="newsletter-content">
-                <h3>Stay Updated on Future Events</h3>
-                <p>Subscribe to our newsletter to receive announcements about upcoming media events, workshops, and conferences.</p>
-                <form class="newsletter-form">
-                    <input type="email" placeholder="Your email address" required>
-                    <button type="submit">Subscribe</button>
-                </form>
-            </div>
+     <div class="newsletter-container">
+    <div class="newsletter-content">
+      <h2>Stay Updated</h2>
+      <p>Subscribe to our newsletter for daily news updates</p>
+      <form class="newsletter-form" id="newsletterForm">
+        <input type="email" name="email" placeholder="Your email address" required>
+        <button type="submit">Subscribe</button>
+      </form>
+      <p id="responseMessage"></p>
+    </div>
+  </div>
         </section>
+             <!-- Newsletter Section -->
+
+
     </main>
 
      <!-- Footer Section -->
@@ -327,6 +333,28 @@
     <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
     <script src="/public/scrips/scipt.js"></script>
     <script>
+    document.getElementById('newsletterForm').addEventListener('submit', async function(e) {
+  e.preventDefault();
+  const email = this.email.value;
+  const responseMessage = document.getElementById('responseMessage');
+  
+  try {
+    const res = await fetch('/subscribe', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email })
+    });
+
+    const data = await res.json();
+    responseMessage.textContent = data.message;
+    responseMessage.style.color = res.ok ? 'green' : 'red';
+    if (res.ok) this.reset();
+  } catch (error) {
+    responseMessage.textContent = 'Network error, please try again.';
+    responseMessage.style.color = 'red';
+  }
+});
+
         // Initialize AOS animation library
         AOS.init({
             duration: 800,
