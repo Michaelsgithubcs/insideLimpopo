@@ -24,7 +24,16 @@ async function createDatabaseAndTables() {
   });
 
   // 3. Create tables as before, using this pool
+   async function createNewsletterTable(pool) {
   await pool.query(`
+    CREATE TABLE IF NOT EXISTS newsletter_subscribers (
+      id INT AUTO_INCREMENT PRIMARY KEY,
+      email VARCHAR(255) NOT NULL UNIQUE,
+      subscribed_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    );
+  `);
+}
+await pool.query(`
     CREATE TABLE IF NOT EXISTS users (
       id INT AUTO_INCREMENT PRIMARY KEY,
       username VARCHAR(255) NOT NULL UNIQUE,
