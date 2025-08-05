@@ -109,6 +109,7 @@ app.use((req, res, next) => {
 
 app.use('/api/articles', articleRoutes); // ✅ After session
 app.use('/api/news', require('./routes/api/news')); // Cached news API
+app.use('/api/categories', require('./routes/admin/categories')); // Category management API
 //app.use('/api/breaking-news',breaking);
 
 // Static files
@@ -125,6 +126,10 @@ app.use((req, res, next) => {
   req.pool = pool;
   next();
 });
+
+// Fetch visible categories for navigation and footer
+const { fetchVisibleCategories } = require('./middlewares/categoryMiddleware');
+app.use(fetchVisibleCategories);
 
 // File upload route with error handling
 const upload = multer({

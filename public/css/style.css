@@ -946,7 +946,7 @@ input[type="text"] {
 }
 
 .content-landing-tab.active {
-  display: block;
+  display: block !important;
 }
 
 /* ===== Newsletter Section ====== */

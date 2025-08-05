@@ -67,6 +67,13 @@
         >
           Add Article
         </button>
+        <button
+          class="tab-landing-btn"
+          data-tab="categories"
+          id="categories-tab-btn"
+        >
+          Manage Categories
+        </button>
       </div>
 
       <!-- Add Article Section -->
@@ -236,6 +243,24 @@
           </div>
         </form>
       </section>
+
+      <!-- Manage Categories Section -->
+      <section id="categories-tab" class="content-landing-tab">
+        <div class="creation-landing-form">
+          <h3 style="margin-bottom: 1.5rem; color: #333;">Category Visibility Settings</h3>
+          <p style="margin-bottom: 2rem; color: #666;">Hide categories that you don't want to show in navigation and footer. Hidden categories won't appear to users.</p>
+          
+          <div id="categories-list">
+            <!-- Categories will be loaded here -->
+          </div>
+          
+          <div class="form-landing-actions">
+            <button type="button" class="btn-landing btn-landing-primary" id="save-categories">
+              Save Changes
+            </button>
+          </div>
+        </div>
+      </section>
     </main>
 
     <!-- Footer Section -->
@@ -283,7 +308,7 @@
       document.querySelectorAll(".tab-landing-btn").forEach((btn) => {
         btn.addEventListener("click", (e) => {
           e.preventDefault();
-          const tabId = btn.getAttribute("data-tab");
+          const tabId = btn.getAttribute("data-tab") + '-tab';
 
           // Update active tab button
           document
@@ -294,14 +319,17 @@
           // Update visible tab content
           document.querySelectorAll(".content-landing-tab").forEach((tab) => {
             tab.classList.remove("active");
-            tab.style.display = "none";
           });
 
           // Show the selected tab
           const activeTab = document.getElementById(tabId);
           if (activeTab) {
             activeTab.classList.add("active");
-            activeTab.style.display = "block";
+          }
+          
+          // Load categories when categories tab is clicked
+          if (tabId === 'categories-tab') {
+            loadCategories();
           }
         });
       });
@@ -605,6 +633,82 @@
           }
         });
       }
+
+      // Load categories for management
+      async function loadCategories() {
+        try {
+          const response = await fetch('/api/categories');
+          const categories = await response.json();
+          
+          const categoriesList = document.getElementById('categories-list');
+          if (!categoriesList) {
+            return;
+          }
+          
+          if (!categories || categories.length === 0) {
+            categoriesList.innerHTML = '<p>No categories found</p>';
+            return;
+          }
+          
+          categoriesList.innerHTML = categories.map(cat => `
+            <div style="display: flex; align-items: center; justify-content: space-between; padding: 1rem; border: 1px solid #ddd; border-radius: 6px; margin-bottom: 1rem;">
+              <div>
+                <strong>${cat.name}</strong>
+                <p style="margin: 0; color: #666; font-size: 0.9rem;">${cat.description || 'No description'}</p>
+              </div>
+              <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+                <input type="checkbox" ${cat.visible ? 'checked' : ''} data-category-id="${cat.category_id}" style="transform: scale(1.2);">
+                <span style="color: ${cat.visible ? '#28a745' : '#dc3545'}; font-weight: 600;">
+                  ${cat.visible ? 'Visible' : 'Hidden'}
+                </span>
+              </label>
+            </div>
+          `).join('');
+          
+          // Add change listeners
+          document.querySelectorAll('#categories-list input[type="checkbox"]').forEach(checkbox => {
+            checkbox.addEventListener('change', function() {
+              const label = this.nextElementSibling;
+              label.textContent = this.checked ? 'Visible' : 'Hidden';
+              label.style.color = this.checked ? '#28a745' : '#dc3545';
+            });
+          });
+        } catch (error) {
+          console.error('Error loading categories:', error);
+          const categoriesList = document.getElementById('categories-list');
+          if (categoriesList) {
+            categoriesList.innerHTML = '<p style="color: red;">Error loading categories: ' + error.message + '</p>';
+          }
+        }
+      }
+      
+      // Save category visibility
+      document.getElementById('save-categories')?.addEventListener('click', async function() {
+        const checkboxes = document.querySelectorAll('#categories-list input[type="checkbox"]');
+        const updates = Array.from(checkboxes).map(cb => ({
+          category_id: cb.dataset.categoryId,
+          visible: cb.checked
+        }));
+        
+        try {
+          const response = await fetch('/api/categories/visibility', {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ categories: updates })
+          });
+          
+          if (response.ok) {
+            alert('Category visibility updated successfully!');
+          } else {
+            throw new Error('Failed to update categories');
+          }
+        } catch (error) {
+          console.error('Error saving categories:', error);
+          alert('Error updating categories: ' + error.message);
+        }
+      });
+
+
     </script>
   </body>
 </html>
