@@ -12,21 +12,25 @@ router.post('/',
   isAuthenticated,
   upload.single('featured_img'),
   fixFeaturedImageUrl,
-  // validateArticle,
   async (req, res, next) => {
     try {
-      // Call your existing controller
+      // Create article (controller should set res.locals.articleId)
       await articleController.createArticle(req, res);
+      const articleId = res.locals.articleId; // <-- FIX: Retrieve created article ID
 
-      const articleId = res.locals.articleId; // Assuming you set this in the controller
+      if (!articleId) {
+        console.error('Article ID not found. Newsletter not sent.');
+        return; // Do not send if article creation failed
+      }
+
       // Get subscribers
       const pool = await getPool();
       const [subscribers] = await pool.query('SELECT email FROM newsletter_subscribers');
 
       if (subscribers.length > 0) {
-        const emails = subscribers.map(s => s.email); // Extract only emails
-        
-        // Build styled email
+        const emails = subscribers.map(s => s.email);
+
+        // Newsletter HTML
         const htmlContent = `
           <div style="font-family: Arial, sans-serif; background-color: #f4f6fa; padding: 20px; color: #333;">
             <div style="max-width: 600px; margin: auto; background: #ffffff; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
@@ -38,7 +42,7 @@ router.post('/',
                 <p style="color: #555555; font-size: 16px;">
                   ${req.body.content.substring(0, 200)}...
                 </p>
-                <a href="http://localhost:3000/articles/${articleId || '#'}" 
+                <a href="${req.protocol}://${req.get('host')}/articles/${articleId}" 
                    style="display: inline-block; margin-top: 15px; padding: 12px 20px; background: #cc0000; color: #ffffff; text-decoration: none; border-radius: 5px; font-weight: bold;">
                   Read More
                 </a>
@@ -47,9 +51,9 @@ router.post('/',
                 <p style="margin: 0; font-size: 14px;">Thank you for subscribing to our newsletter!</p>
               </div>
             </div>
-          </div>
-        `;
+          </div>`;
 
+        // Send the newsletter
         await sendNewsletter(emails, `New Article: ${req.body.title}`, htmlContent);
       }
     } catch (err) {
@@ -58,6 +62,7 @@ router.post('/',
     }
   }
 );
+
 
 // Get Article
 router.get('/:id',

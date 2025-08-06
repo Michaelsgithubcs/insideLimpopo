@@ -101,3 +101,12 @@ exports.deleteArticle = async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 };
+exports.getAllArticles = async (req, res) => {
+  try {
+    const articles = await Article.getAll();
+    res.json({ articles });
+  } catch (err) {
+    console.error('Error fetching articles:', err);
+    res.status(500).json({ error: 'Failed to fetch articles' });
+  }
+};
