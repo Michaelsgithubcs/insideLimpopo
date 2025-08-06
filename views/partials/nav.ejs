@@ -1,11 +1,17 @@
 <nav>
   <ul>
     <li><a href="/">Home</a></li>
-    <li><a href="/events">Events</a></li>
-    <li><a href="/sports">Sports</a></li>
-    <li><a href="/opinion">Opinion</a></li>
-    <li><a href="/podcast">Podcast</a></li>
-    <li><a href="/vacancies">Vacancies</a></li>
+    <% if (typeof visibleCategories !== 'undefined') { %>
+      <% visibleCategories.forEach(category => { %>
+        <li><a href="/<%= category.name.toLowerCase() %>"><%= category.name %></a></li>
+      <% }) %>
+    <% } else { %>
+      <li><a href="/events">Events</a></li>
+      <li><a href="/sports">Sports</a></li>
+      <li><a href="/opinion">Opinion</a></li>
+      <li><a href="/podcast">Podcast</a></li>
+      <li><a href="/vacancies">Vacancies</a></li>
+    <% } %>
     
     <input
       type="search"
