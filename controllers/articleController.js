@@ -43,6 +43,9 @@ exports.createArticle = async (req, res) => {
       episode_duration: episode_duration || null
     });
 
+    // *** MISSING LINE ADDED HERE ***
+    res.locals.articleId = articleId;
+
     // Debug: fetch and log the created article
     const pool = await require('../config/db')();
     const [createdArticle] = await pool.query('SELECT * FROM articles WHERE article_id = ?', [articleId]);
@@ -58,7 +61,6 @@ exports.createArticle = async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 };
-
 
 exports.getArticle = async (req, res) => {
   try {
@@ -97,5 +99,14 @@ exports.deleteArticle = async (req, res) => {
     res.json({ success: true, message: 'Article deleted successfully' });
   } catch (err) {
     res.status(500).json({ error: err.message });
+  }
+};
+exports.getAllArticles = async (req, res) => {
+  try {
+    const articles = await Article.getAll();
+    res.json({ articles });
+  } catch (err) {
+    console.error('Error fetching articles:', err);
+    res.status(500).json({ error: 'Failed to fetch articles' });
   }
 };

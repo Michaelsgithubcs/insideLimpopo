@@ -56,6 +56,11 @@ class Article {
     const pool = await getPool();
     await pool.query('DELETE FROM articles WHERE id = ?', [article_id]);
   }
+  static async getAll() {
+    const pool = await getPool();
+    const [rows] = await pool.query('SELECT * FROM articles ORDER BY created_at DESC');
+    return rows;
+  }
 }
 
 module.exports = Article;
