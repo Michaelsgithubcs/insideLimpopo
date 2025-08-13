@@ -12,9 +12,15 @@
   <body class="admin-page">
     <%- include('../partials/admin-header', { currentPath: '/api/articles/edit/' + article.article_id }) %>
 
-    <main class="dashboard-landing-container">
-      <div class="creation-landing-form">
-        <h1>Edit Article</h1>
+    <main class="main-content">
+      <div class="container">
+        <div class="page-header">
+          <h1>Edit Article</h1>
+          <p class="page-description">Update your article details below</p>
+        </div>
+        
+        <div class="card">
+          <div class="card-body">
         
         <% if (typeof errors !== 'undefined' && errors.length) { %>
           <div class="alert alert-error">
@@ -103,18 +109,19 @@
               minlength="100"><%= article.content %></textarea>
           </div>
 
-          <div class="form-landing-actions">
-            <button type="submit" class="btn-landing btn-landing-primary">
-              <i class="fas fa-save"></i> Update Article
+          <div class="btn-group">
+            <button type="submit" class="btn btn-primary">
+              <i class="fas fa-save mr-2"></i> Update Article
             </button>
-            <a href="/landing" class="btn-landing btn-landing-secondary">
-              <i class="fas fa-times"></i> Cancel
+            <a href="/landing" class="btn btn-outline">
+              <i class="fas fa-times mr-2"></i> Cancel
             </a>
           </div>
-      </form>
-      </form>
+        </form>
       </div>
-    </main>
+    </div>
+  </div>
+</main>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
