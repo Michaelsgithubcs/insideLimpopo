@@ -33,7 +33,6 @@
         <% } %>
         
         <form action="/api/articles/<%= article.article_id %>" method="POST" enctype="multipart/form-data" class="article-form">
-          <input type="hidden" name="_method" value="PUT">
           <div class="form-landing-group full-width">
             <label for="title">Article Title</label>
             <input 

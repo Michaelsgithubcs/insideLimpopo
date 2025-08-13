@@ -69,8 +69,14 @@ router.get('/:id',
   articleController.getArticle
 );
 
-// Update Article
+// Update Article (support both PUT and POST methods)
 router.put('/:id',
+  upload.single('featured_img'),
+  articleController.updateArticle
+);
+
+// Support POST for form submissions
+router.post('/:id',
   upload.single('featured_img'),
   articleController.updateArticle
 );
