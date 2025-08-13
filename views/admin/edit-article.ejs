@@ -4,9 +4,9 @@
   <link rel="stylesheet" href="/css/image-options.css">
   <link rel="stylesheet" href="/css/admin-styles.css">
   <body>
-    <%- include('../partials/admin-header') %>
+    <%- include('../partials/header', { user: user }) %>
 
-    <main class="dashboard-container">
+    <main class="dashboard-container" style="padding: 20px;">
       <h1>Edit Article</h1>
       
       <form action="/api/articles/<%= article.article_id %>?_method=PUT" method="POST" enctype="multipart/form-data" class="article-form">
@@ -39,16 +39,17 @@
             </div>
           </div>
           
-          <div id="url-input" class="image-input-section" style="<%= article.featured_img && article.featured_img.startsWith('http') ? '' : 'display: none;' %>">
+          <div id="url-input" class="image-input-section" style="<%= article.featured_img && article.featured_img.startsWith('http') ? 'display: block;' : 'display: none;' %>">
             <input type="url" id="image_url" name="image_url" 
                    placeholder="https://example.com/image.jpg" 
-                   value="<%= article.featured_img && article.featured_img.startsWith('http') ? article.featured_img : '' %>">
+                   value="<%= article.featured_img && article.featured_img.startsWith('http') ? article.featured_img : '' %>"
+                   style="width: 100%; padding: 8px; margin: 5px 0;">
           </div>
           
-          <div id="upload-input" class="image-input-section" style="<%= article.featured_img && !article.featured_img.startsWith('http') ? '' : 'display: none;' %>">
-            <input type="file" id="featured_img" name="featured_img" accept="image/*">
+          <div id="upload-input" class="image-input-section" style="<%= article.featured_img && !article.featured_img.startsWith('http') ? 'display: block;' : 'display: none;' %>">
+            <input type="file" id="featured_img" name="featured_img" accept="image/*" style="margin: 5px 0;">
             <% if (article.featured_img && !article.featured_img.startsWith('http')) { %>
-              <p>Current image: <a href="<%= article.featured_img %>" target="_blank">View</a></p>
+              <p style="margin: 5px 0;">Current image: <a href="<%= article.featured_img %>" target="_blank" style="color: #0066cc; text-decoration: none;">View</a></p>
             <% } %>
           </div>
           

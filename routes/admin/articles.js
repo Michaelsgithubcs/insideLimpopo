@@ -110,8 +110,10 @@ router.get('/edit/:id', isAuthenticated, async (req, res) => {
     const [categories] = await pool.query('SELECT category_id, name FROM categories');
     
     res.render('admin/edit-article', { 
+      title: 'Edit Article',
       article: article[0],
-      categories 
+      categories,
+      user: req.user || req.session.user
     });
   } catch (err) {
     console.error('Error loading article for edit:', err);
