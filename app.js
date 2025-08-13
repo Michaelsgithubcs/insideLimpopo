@@ -13,7 +13,7 @@ const { v4: uuidv4 } = require('uuid');
 const rateLimit = require('express-rate-limit');
 const cookieParser = require('cookie-parser');
 const cors = require('cors');
-const articleRoutes = require('./routes/admin/articles');
+const adminArticleRoutes = require('./routes/admin/articles');
 const app = express();
 //const breaking=require('./routes/breakingNews/breakingNews');
 const createTablesIfNotExist = require('./config/initDb');
@@ -107,7 +107,7 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use('/api/articles', articleRoutes); // ✅ After session
+app.use('/api/articles', adminArticleRoutes); // ✅ After session
 app.use('/api/news', require('./routes/api/news')); // Cached news API
 app.use('/api/categories', require('./routes/admin/categories')); // Category management API
 //app.use('/api/breaking-news',breaking);

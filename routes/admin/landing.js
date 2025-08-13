@@ -26,6 +26,24 @@ router.get(['/landing', '/dashboard'], isAuthenticated, async (req, res) => {
     const userData = results[0];
     // Fetch categories for the add-article form
     const [categories] = await pool.query('SELECT category_id, name FROM categories');
+    
+    // Fetch recent articles for management
+    const [recentArticles] = await pool.query(
+      `SELECT a.*, c.name as category_name 
+       FROM articles a 
+       LEFT JOIN categories c ON a.category_id = c.category_id 
+       ORDER BY a.created_at DESC 
+       LIMIT 20`
+    );
+
+    // Format dates for display
+    const { format } = require('date-fns');
+    const formattedArticles = recentArticles.map(article => ({
+      ...article,
+      formatted_date: format(new Date(article.created_at), 'MMM d, yyyy HH:mm'),
+      excerpt: article.content.substring(0, 150) + '...'
+    }));
+
     res.render('admin/landing', {
       title: 'Dashboard',
       user: {
@@ -40,7 +58,8 @@ router.get(['/landing', '/dashboard'], isAuthenticated, async (req, res) => {
         joinDate: userData.created_at
       },
       currentUrl: req.originalUrl,
-      categories
+      categories,
+      recentArticles: formattedArticles
     });
 
   } catch (err) {

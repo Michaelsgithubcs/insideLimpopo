@@ -2,6 +2,7 @@
 <html lang="en">
   <%- include('../partials/head.ejs') %>
   <link rel="stylesheet" href="/css/image-options.css">
+  <link rel="stylesheet" href="/css/admin-styles.css">
 
   <body>
     <!-- Main Section -->
@@ -74,10 +75,17 @@
         >
           Manage Categories
         </button>
+        <button
+          class="tab-landing-btn"
+          data-tab="manage-articles"
+          id="manage-articles-tab-btn"
+        >
+          Manage Articles
+        </button>
       </div>
 
       <!-- Add Article Section -->
-      <section id="article-tab" class="content-landing-tab active">
+      <section id="article" class="content-landing-tab active">
         <form
           action="/api/articles"
           method="POST"
@@ -244,8 +252,38 @@
         </form>
       </section>
 
+      <!-- Manage Articles Section -->
+      <section id="manage-articles" class="content-landing-tab">
+        <div class="creation-landing-form">
+          <h2>Recent Articles</h2>
+          <div class="articles-list">
+            <% if (recentArticles && recentArticles.length > 0) { %>
+              <% recentArticles.forEach(article => { %>
+                <div class="article-item">
+                  <div class="article-header">
+                    <h3><%= article.title %></h3>
+                    <span class="article-meta">
+                      <%= article.formatted_date %> • 
+                      <span class="category-tag"><%= article.category_name || 'Uncategorized' %></span>
+                    </span>
+                  </div>
+                  <p class="article-excerpt"><%= article.excerpt %></p>
+                  <div class="article-actions">
+                    <a href="/api/articles/edit/<%= article.article_id %>" class="btn btn-edit">Edit</a>
+                    <button class="btn btn-delete" onclick="deleteArticle('<%= article.article_id %>')">Delete</button>
+                    <a href="/articles/<%= article.article_id %>" target="_blank" class="btn btn-view">View</a>
+                  </div>
+                </div>
+              <% }); %>
+            <% } else { %>
+              <p>No articles found. Create your first article using the 'Add Article' tab.</p>
+            <% } %>
+          </div>
+        </div>
+      </section>
+
       <!-- Manage Categories Section -->
-      <section id="categories-tab" class="content-landing-tab">
+      <section id="categories" class="content-landing-tab">
         <div class="creation-landing-form">
           <h3 style="margin-bottom: 1.5rem; color: #333;">Category Visibility Settings</h3>
           <p style="margin-bottom: 2rem; color: #666;">Hide categories that you don't want to show in navigation and footer. Hidden categories won't appear to users.</p>
@@ -302,34 +340,74 @@
     </div>
 
     <script>
+      // Delete article function
+      async function deleteArticle(articleId) {
+        if (!confirm('Are you sure you want to delete this article? This action cannot be undone.')) {
+          return;
+        }
+        
+        try {
+          console.log('Deleting article with ID:', articleId);
+          const response = await fetch(`/api/articles/${articleId}`, {
+            method: 'DELETE',
+            headers: {
+              'Content-Type': 'application/json',
+              'X-Requested-With': 'XMLHttpRequest'
+            },
+            credentials: 'same-origin'
+          });
+          
+          if (!response.ok) {
+            const errorData = await response.json().catch(() => ({}));
+            throw new Error(errorData.error || 'Failed to delete article');
+          }
+          
+          const result = await response.json();
+          
+          if (response.ok) {
+            alert('Article deleted successfully');
+            // Refresh the articles list
+            window.location.reload();
+          } else {
+            throw new Error(result.message || 'Failed to delete article');
+          }
+        } catch (error) {
+          console.error('Error deleting article:', error);
+          alert('Error deleting article: ' + error.message);
+        }
+      }
+
       // Removed client-side token authentication check. Server-side session handles auth.
 
       // Update the tab switching functionality
       document.querySelectorAll(".tab-landing-btn").forEach((btn) => {
         btn.addEventListener("click", (e) => {
           e.preventDefault();
-          const tabId = btn.getAttribute("data-tab") + '-tab';
+          const tabId = btn.getAttribute("data-tab");
+          console.log('Tab clicked:', tabId);
 
           // Update active tab button
-          document
-            .querySelectorAll(".tab-landing-btn")
+          document.querySelectorAll(".tab-landing-btn")
             .forEach((b) => b.classList.remove("active"));
           btn.classList.add("active");
 
-          // Update visible tab content
+          // Hide all tab content
           document.querySelectorAll(".content-landing-tab").forEach((tab) => {
             tab.classList.remove("active");
           });
 
           // Show the selected tab
-          const activeTab = document.getElementById(tabId);
-          if (activeTab) {
-            activeTab.classList.add("active");
-          }
-          
-          // Load categories when categories tab is clicked
-          if (tabId === 'categories-tab') {
-            loadCategories();
+          const selectedTab = document.getElementById(tabId);
+          if (selectedTab) {
+            selectedTab.classList.add("active");
+            console.log('Showing tab:', tabId);
+            
+            // Load categories when categories tab is clicked
+            if (tabId === 'categories') {
+              loadCategories();
+            }
+          } else {
+            console.error('Tab content not found for ID:', tabId);
           }
         });
       });

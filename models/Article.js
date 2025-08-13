@@ -54,7 +54,7 @@ class Article {
 
   static async delete(article_id) {
     const pool = await getPool();
-    await pool.query('DELETE FROM articles WHERE id = ?', [article_id]);
+    await pool.query('DELETE FROM articles WHERE article_id = ?', [article_id]);
   }
   static async getAll() {
     const pool = await getPool();

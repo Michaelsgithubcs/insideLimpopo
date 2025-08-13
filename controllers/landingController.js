@@ -1,6 +1,7 @@
 const { pool } = require('../config/db');
 const argon2 = require('argon2');
 const bcrypt = require('bcrypt');
+const { format } = require('date-fns');
 
 module.exports = {
   // Render the dashboard(landing) page
@@ -21,13 +22,30 @@ module.exports = {
         [req.session.user.email]
       );
 
+      // Get recent articles for management
+      const [recentArticles] = await pool.query(
+        `SELECT a.*, c.name as category_name 
+         FROM articles a 
+         LEFT JOIN categories c ON a.category_id = c.id 
+         ORDER BY a.created_at DESC 
+         LIMIT 20`
+      );
+
+      // Format dates for display
+      const formattedArticles = recentArticles.map(article => ({
+        ...article,
+        formatted_date: format(new Date(article.created_at), 'MMM d, yyyy HH:mm'),
+        excerpt: article.content.substring(0, 150) + '...'
+      }));
+
       res.render('dashboard/index', {
         title: 'Dashboard',
         user: req.session.user,
         stats: {
           stories: stories[0].count,
           articles: articles[0].count
-        }
+        },
+        recentArticles: formattedArticles
       });
 
     } catch (err) {

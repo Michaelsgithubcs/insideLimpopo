@@ -95,12 +95,18 @@ exports.updateArticle = async (req, res) => {
 
 exports.deleteArticle = async (req, res) => {
   try {
-    await Article.delete(req.params.author_id);
+    const articleId = req.params.id;
+    if (!articleId) {
+      return res.status(400).json({ error: 'Article ID is required' });
+    }
+    await Article.delete(articleId);
     res.json({ success: true, message: 'Article deleted successfully' });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    console.error('Error deleting article:', err);
+    res.status(500).json({ error: 'Failed to delete article: ' + err.message });
   }
 };
+
 exports.getAllArticles = async (req, res) => {
   try {
     const articles = await Article.getAll();

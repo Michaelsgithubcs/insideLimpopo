@@ -5,7 +5,7 @@ const { upload, uploadAny } = require('../../middlewares/uploadMiddleware');
 const { isAuthenticated } = require('../../middlewares/auth');
 const getPool = require('../../config/db');
 const { fixFeaturedImageUrl } = require('../../middlewares/formFixMiddleware');
-const { sendNewsletter } = require('../../services/emailService'); // <-- Added
+const { sendNewsletter } = require('../../services/emailService');
 
 // Create Article
 router.post('/',
@@ -89,6 +89,33 @@ router.get('/add', isAuthenticated, async (req, res) => {
   } catch (err) {
     console.error('Error loading categories:', err);
     req.flash('error', 'Could not load categories');
+    res.redirect('/landing');
+  }
+});
+
+// Render Edit Article Form
+router.get('/edit/:id', isAuthenticated, async (req, res) => {
+  try {
+    const pool = await getPool();
+    const [article] = await pool.query(
+      'SELECT * FROM articles WHERE article_id = ?', 
+      [req.params.id]
+    );
+    
+    if (!article.length) {
+      req.flash('error', 'Article not found');
+      return res.redirect('/landing');
+    }
+    
+    const [categories] = await pool.query('SELECT category_id, name FROM categories');
+    
+    res.render('admin/edit-article', { 
+      article: article[0],
+      categories 
+    });
+  } catch (err) {
+    console.error('Error loading article for edit:', err);
+    req.flash('error', 'Error loading article');
     res.redirect('/landing');
   }
 });
