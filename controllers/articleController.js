@@ -73,23 +73,34 @@ exports.getArticle = async (req, res) => {
 
 exports.updateArticle = async (req, res) => {
   try {
-    const { title, content, category_id } = req.body;
-    let featured_img = res.locals.article.featured_img;
+    const { title, content, category_id, image_type, image_url } = req.body;
+    const articleId = req.params.id;
     
-    if (req.file) {
+    // Handle featured image based on the selected type
+    let featured_img = req.body.current_image; // Keep existing image by default
+    
+    if (image_type === 'url' && image_url) {
+      featured_img = image_url;
+    } else if (req.file) {
+      // If a new file was uploaded
       featured_img = `/uploads/${req.file.filename}`;
+    } else if (image_type === 'upload' && !req.file) {
+      // If upload was selected but no file was provided
+      return res.redirect(`/api/articles/edit/${articleId}?error=Please upload an image`);
     }
     
-    await Article.update(req.params.author_id, {
+    await Article.update(articleId, {
       title,
       content,
       category_id,
       featured_img
     });
     
-    res.json({ success: true, message: 'Article updated successfully' });
+    // Redirect back to edit page with success message
+    res.redirect(`/api/articles/edit/${articleId}?success=Article updated successfully`);
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    console.error('Error updating article:', err);
+    res.redirect(`/api/articles/edit/${req.params.id}?error=Error updating article`);
   }
 };
 

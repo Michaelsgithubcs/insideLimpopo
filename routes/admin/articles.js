@@ -96,28 +96,50 @@ router.get('/add', isAuthenticated, async (req, res) => {
 // Render Edit Article Form
 router.get('/edit/:id', isAuthenticated, async (req, res) => {
   try {
+    console.log('Edit article route hit for ID:', req.params.id);
     const pool = await getPool();
+    
+    // Log pool connection status
+    console.log('Database pool status:', pool ? 'Connected' : 'Not connected');
+    
     const [article] = await pool.query(
       'SELECT * FROM articles WHERE article_id = ?', 
       [req.params.id]
     );
     
-    if (!article.length) {
+    console.log('Article query result:', article);
+    
+    if (!article || !article.length) {
+      console.error('Article not found with ID:', req.params.id);
       req.flash('error', 'Article not found');
       return res.redirect('/landing');
     }
     
     const [categories] = await pool.query('SELECT category_id, name FROM categories');
+    console.log('Categories loaded:', categories.length);
+    
+    // Check for success/error messages in query params
+    const success = req.query.success || null;
+    const error = req.query.error || null;
+    
+    console.log('Rendering edit-article template with article ID:', article[0].article_id);
     
     res.render('admin/edit-article', { 
-      title: 'Edit Article',
       article: article[0],
       categories,
-      user: req.user || req.session.user
+      success,
+      error,
+      currentImage: article[0].featured_img,
+      currentPath: req.path
     });
   } catch (err) {
-    console.error('Error loading article for edit:', err);
-    req.flash('error', 'Error loading article');
+    console.error('Error in edit article route:', {
+      message: err.message,
+      stack: err.stack,
+      params: req.params,
+      query: req.query
+    });
+    req.flash('error', `Error loading article: ${err.message}`);
     res.redirect('/landing');
   }
 });
