@@ -2,12 +2,12 @@
 <html lang="en">
   <%- include('../partials/head.ejs') %>
 
-  <body class="careers-page">
+  <body class="careers-page" style="color: black;">
     <!-- Header Section -->
     <%- include('../partials/header.ejs') %>
     <%- include('../partials/nav.ejs') %>
+    <%- include('../partials/BreakingNews.ejs') %>
 
-      <%- include('../partials/BreakingNews.ejs') %>
     <main class="careers-container">
       <!-- Hero Section -->
       <section class="careers-hero">
@@ -18,7 +18,7 @@
       </section>
 
       <!-- Vacancies Section -->
-      <section id="vacancies" class="section-with-header">
+      <section class="benefits-section">
         <div class="section-vacancy-header">
           <h2>Current Job Vacancies</h2>
           <p class="section-vacancy-description">
@@ -27,167 +27,84 @@
           </p>
         </div>
 
-        <div class="filter-controls">
-          <div class="search-bar">
-            <i class="fas fa-search"></i>
-            <input type="text" id="jobSearch" placeholder="Search by job title, location or keywords..." 
-                   onkeyup="filterJobs()" aria-label="Search jobs">
-          </div>
-          <div class="filter-dropdown">
-            <select id="locationFilter" onchange="filterJobs()">
-              <option value="">All Locations</option>
-              <option value="Johannesburg">Johannesburg</option>
-              <option value="Cape Town">Cape Town</option>
-              <option value="Remote">Remote</option>
-              <option value="Hybrid">Hybrid</option>
-            </select>
-          </div>
-        </div>
+        <div id="fh5co-categories" class="fh5co-section-gray">
+          <div class="container">
+            <div class="row">
+              <div class="col-md-12">
+                <div class="category-cards">
+                  <div class="row">
+                    <div class="col-md-4">
+                      <div class="category-card">
+                        <i class="fas fa-briefcase"></i>
+                        <h4><a href="https://spane4all.co.za/Jobs">Jobs</a></h4>
+                        <p>Find job opportunities that fit your skills.</p>
+                      </div>
+                    </div>
+                    <div class="col-md-4">
+                      <div class="category-card">
+                        <i class="fas fa-graduation-cap"></i>
+                        <h4><a href="https://spane4all.co.za/bursaries">Bursaries</a></h4>
+                        <p>Find funding opportunities to support your education.</p>
+                      </div>
+                    </div>
+                    <div class="col-md-4">
+                      <div class="category-card">
+                        <i class="fas fa-chalkboard-teacher"></i>
+                        <h4><a href="https://spane4all.co.za/scholarships">Learnerships</a></h4>
+                        <p>Gain practical experience while studying.</p>
+                      </div>
+                    </div>
+                  </div>
 
-        <div id="no-results" class="no-results-message">No matching jobs found. Try adjusting your search criteria.</div>
+                  <div class="row">
+                    <div class="col-md-4">
+                      <div class="category-card">
+                        <i class="fas fa-laptop-code"></i>
+                        <h4><a href="https://spane4all.co.za/internships">Internships</a></h4>
+                        <p>Discover internship opportunities that suit your skills.</p>
+                      </div>
+                    </div>
+                    <div class="col-md-4">
+                      <div class="category-card">
+                        <i class="fas fa-book-open"></i>
+                        <h4><a href="https://spane4all.co.za/grade12">Grade 12</a></h4>
+                        <p>Resources and opportunities for Grade 12 students.</p>
+                      </div>
+                    </div>
+                    <div class="col-md-4">
+                      <div class="category-card">
+                        <i class="fas fa-briefcase"></i>
+                        <h4><a href="https://spane4all.co.za/general_jobs">General Jobs</a></h4>
+                        <p>Unlock your potential and discover endless opportunities with General Jobs tailored to your unique skills.</p>
+                      </div>
+                    </div>
+                  </div>
 
-        <div class="vacancy-grid">
-          <div class="vacancy-card" data-location="Johannesburg" data-department="Editorial">
-            <div class="vacancy-header">
-              <h3>Senior Content Editor</h3>
-              <span class="job-type full-time">Full-time</span>
-            </div>
-            <div class="vacancy-meta">
-              <span class="location"><i class="fas fa-map-marker-alt"></i> Johannesburg</span>
-              <span class="department"><i class="fas fa-briefcase"></i> Editorial</span>
-              <span class="date-posted"><i class="far fa-calendar-alt"></i> Posted 2 days ago</span>
-            </div>
-            <div class="vacancy-content">
-              <h4>Job Description:</h4>
-              <p>Lead our content strategy and editorial team to produce high-quality content across our media channels. Oversee content planning, creation, and distribution.</p>
-              
-              <h4>Key Responsibilities:</h4>
-              <ul class="responsibilities">
-                <li>Develop and implement content strategies</li>
-                <li>Manage and mentor editorial team</li>
-                <li>Ensure content quality and consistency</li>
-                <li>Collaborate with other departments</li>
-              </ul>
-              
-              <h4>Requirements:</h4>
-              <ul class="requirements">
-                <li>5+ years of editorial experience</li>
-                <li>Proven leadership skills</li>
-                <li>Strong writing and editing skills</li>
-                <li>Degree in Journalism or related field</li>
-              </ul>
-            </div>
-            <div class="vacancy-footer">
-              <a href="#apply" class="apply-button">Apply Now</a>
-              <a href="#details" class="details-button">View Details</a>
-            </div>
-          </div>
-
-          <div class="vacancy-card" data-location="Cape Town" data-department="Design">
-            <div class="vacancy-header">
-              <h3>Graphic Designer</h3>
-              <span class="job-type full-time">Full-time</span>
-            </div>
-            <div class="vacancy-meta">
-              <span class="location"><i class="fas fa-map-marker-alt"></i> Cape Town</span>
-              <span class="department"><i class="fas fa-briefcase"></i> Design</span>
-              <span class="date-posted"><i class="far fa-calendar-alt"></i> Posted 1 week ago</span>
-            </div>
-            <div class="vacancy-content">
-              <h4>Job Description:</h4>
-              <p>Create visually compelling designs for our publications and digital platforms. Work closely with the editorial and marketing teams.</p>
-              
-              <h4>Key Responsibilities:</h4>
-              <ul class="responsibilities">
-                <li>Design layouts for print and digital</li>
-                <li>Create marketing materials</li>
-                <li>Maintain brand consistency</li>
-                <li>Collaborate with content team</li>
-              </ul>
-              
-              <h4>Requirements:</h4>
-              <ul class="requirements">
-                <li>Proficiency in Adobe Creative Suite</li>
-                <li>3+ years design experience</li>
-                <li>Strong portfolio required</li>
-                <li>Degree in Design preferred</li>
-              </ul>
-            </div>
-            <div class="vacancy-footer">
-              <a href="#apply" class="apply-button">Apply Now</a>
-              <a href="#details" class="details-button">View Details</a>
-            </div>
-          </div>
-
-          <div class="vacancy-card" data-location="Remote" data-department="Marketing">
-            <div class="vacancy-header">
-              <h3>Social Media Manager</h3>
-              <span class="job-type full-time">Full-time</span>
-            </div>
-            <div class="vacancy-meta">
-              <span class="location"><i class="fas fa-map-marker-alt"></i> Remote</span>
-              <span class="department"><i class="fas fa-briefcase"></i> Marketing</span>
-              <span class="date-posted"><i class="far fa-calendar-alt"></i> Posted 3 days ago</span>
-            </div>
-            <div class="vacancy-content">
-              <h4>Job Description:</h4>
-              <p>Develop and implement our social media strategy to increase engagement and grow our audience across platforms.</p>
-              
-              <h4>Key Responsibilities:</h4>
-              <ul class="responsibilities">
-                <li>Manage all social media channels</li>
-                <li>Create content calendar</li>
-                <li>Analyze performance metrics</li>
-                <li>Engage with our community</li>
-              </ul>
-              
-              <h4>Requirements:</h4>
-              <ul class="requirements">
-                <li>Proven social media experience</li>
-                <li>Excellent writing skills</li>
-                <li>Analytical mindset</li>
-                <li>Knowledge of social media tools</li>
-              </ul>
-            </div>
-            <div class="vacancy-footer">
-              <a href="#apply" class="apply-button">Apply Now</a>
-              <a href="#details" class="details-button">View Details</a>
-            </div>
-          </div>
-
-          <div class="vacancy-card" data-location="Johannesburg" data-department="Technology">
-            <div class="vacancy-header">
-              <h3>Frontend Developer</h3>
-              <span class="job-type full-time">Full-time</span>
-            </div>
-            <div class="vacancy-meta">
-              <span class="location"><i class="fas fa-map-marker-alt"></i> Johannesburg</span>
-              <span class="department"><i class="fas fa-briefcase"></i> Technology</span>
-              <span class="date-posted"><i class="far fa-calendar-alt"></i> Posted 5 days ago</span>
-            </div>
-            <div class="vacancy-content">
-              <h4>Job Description:</h4>
-              <p>Build and maintain our digital platforms with clean, efficient code and excellent user experiences.</p>
-              
-              <h4>Key Responsibilities:</h4>
-              <ul class="responsibilities">
-                <li>Develop responsive web applications</li>
-                <li>Collaborate with design team</li>
-                <li>Optimize for performance</li>
-                <li>Write maintainable code</li>
-              </ul>
-              
-              <h4>Requirements:</h4>
-              <ul class="requirements">
-                <li>Proficiency in HTML, CSS, JavaScript</li>
-                <li>Experience with React/Vue</li>
-                <li>2+ years development experience</li>
-                <li>Computer Science degree preferred</li>
-              </ul>
-            </div>
-            <div class="vacancy-footer">
-              <a href="#apply" class="apply-button">Apply Now</a>
-              <a href="#details" class="details-button">View Details</a>
+                  <div class="row">
+                    <div class="col-md-4">
+                      <div class="category-card">
+                        <i class="fas fa-landmark"></i>
+                        <h4><a href="https://spane4all.co.za/government_intern">Government Intern</a></h4>
+                        <p>Kickstart your career with a government internship.</p>
+                      </div>
+                    </div>
+                    <div class="col-md-4">
+                      <div class="category-card">
+                        <i class="fas fa-landmark"></i>
+                        <h4><a href="https://spane4all.co.za/government_job">Government Job</a></h4>
+                        <p>Explore job opportunities in the public sector.</p>
+                      </div>
+                    </div>
+                    <div class="col-md-4">
+                      <div class="category-card">
+                        <i class="fas fa-comments"></i>
+                        <h4><a href="https://chat.whatsapp.com/FtPtmr6Fp4N7EpiRH2FXif">Daily Updates</a></h4>
+                        <p>Stay informed with daily updates on opportunities.</p>
+                      </div>
+                    </div>
+                  </div>
+                </div><!-- end category-cards -->
+              </div>
             </div>
           </div>
         </div>
@@ -221,47 +138,7 @@
       </section>
 
       <!-- Application Form Section -->
-      <section id="apply" class="application-section">
-        <div class="application-container">
-          <div class="application-info">
-            <h2>Ready to Apply?</h2>
-            <p>Submit your application and join our team of media professionals. We're excited to hear from you!</p>
-            <div class="contact-info">
-              <p><i class="fas fa-envelope"></i> careers@seopamedia.co.za</p>
-              <p><i class="fas fa-phone"></i> +27 11 123 4567</p>
-            </div>
-          </div>
-          <form class="application-form">
-            <div class="form-group">
-              <input type="text" placeholder="Full Name" required>
-            </div>
-            <div class="form-group">
-              <input type="email" placeholder="Email Address" required>
-            </div>
-            <div class="form-group">
-              <input type="tel" placeholder="Phone Number">
-            </div>
-            <div class="form-group">
-              <select required>
-                <option value="">Position Applying For</option>
-                <option>Senior Content Editor</option>
-                <option>Graphic Designer</option>
-                <option>Social Media Manager</option>
-                <option>Frontend Developer</option>
-              </select>
-            </div>
-            <div class="form-group">
-              <textarea placeholder="Cover Letter" rows="4"></textarea>
-            </div>
-            <div class="form-group file-upload">
-              <label for="resume">Upload Resume/CV</label>
-              <input type="file" id="resume" accept=".pdf,.doc,.docx">
-            </div>
-            <button type="submit" class="submit-button">Submit Application</button>
-          </form>
-        </div>
-      </section>
-    </main>
+     
 
     <!-- Footer Section -->
     <%- include('../partials/footer.ejs') %>
@@ -269,39 +146,5 @@
     <!-- Scripts -->
     <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
     <script src="/public/scrips/scipt.js"></script>
-    <script>
-      // Job filtering functionality
-      function filterJobs() {
-        const searchInput = document.getElementById('jobSearch').value.toLowerCase();
-        const locationFilter = document.getElementById('locationFilter').value.toLowerCase();
-        const jobs = document.querySelectorAll('.vacancy-card');
-        let noResults = true;
-
-        jobs.forEach(job => {
-          const title = job.querySelector('h3').textContent.toLowerCase();
-          const location = job.querySelector('.location').textContent.toLowerCase();
-          const department = job.getAttribute('data-department').toLowerCase();
-          const description = job.querySelector('.vacancy-content').textContent.toLowerCase();
-          
-          const matchesSearch = title.includes(searchInput) || 
-                              description.includes(searchInput) || 
-                              department.includes(searchInput);
-          const matchesLocation = locationFilter === '' || 
-                                location.includes(locationFilter);
-
-          if (matchesSearch && matchesLocation) {
-            job.style.display = 'block';
-            noResults = false;
-          } else {
-            job.style.display = 'none';
-          }
-        });
-
-        document.getElementById('no-results').style.display = noResults ? 'block' : 'none';
-      }
-
-      // Initialize filtering
-      filterJobs();
-    </script>
   </body>
 </html>
