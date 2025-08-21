@@ -127,3 +127,20 @@ exports.getAllArticles = async (req, res) => {
     res.status(500).json({ error: 'Failed to fetch articles' });
   }
 };
+
+exports.searchArticles = async (req, res) => {
+  try {
+    const q = req.query.q || '';
+    if (!q) {
+      return res.status(400).render('error', { message: 'Search query cannot be empty' });
+    }
+
+    const articles = await Article.search(q);
+
+    // Render search results page
+    res.status(200).json( { articles, query: q });
+  } catch (err) {
+    console.error('Error searching articles:', err);
+    res.status(500).render('error', { message: 'Internal server error' });
+  };
+};

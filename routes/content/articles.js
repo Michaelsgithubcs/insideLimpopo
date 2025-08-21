@@ -1,6 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const Article = require('../../models/Article');
+const pool = require('../../config/db');
+const articleController = require('../../controllers/articleController');
 
 router.get('/:id', async (req, res) => {
   try {
@@ -15,5 +17,12 @@ router.get('/:id', async (req, res) => {
     res.status(500).send('Server Error');
   }
 });
+
+
+// Article search route
+router.get('/search', articleController.searchArticles);
+
+
+
 
 module.exports = router; 

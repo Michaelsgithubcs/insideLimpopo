@@ -1,24 +1,36 @@
-<nav>
-  <ul>
-    <li><a href="/">Home</a></li>
-    <% if (typeof visibleCategories !== 'undefined') { %>
-      <% visibleCategories.forEach(category => { %>
-        <li><a href="/<%= category.name.toLowerCase() %>"><%= category.name %></a></li>
-      <% }) %>
-    <% } else { %>
-      <li><a href="/events">Events</a></li>
-      <li><a href="/sports">Sports</a></li>
-      <li><a href="/opinion">Opinion</a></li>
-      <li><a href="/podcast">Podcast</a></li>
-      <li><a href="/vacancies">Vacancies</a></li>
-    <% } %>
+<nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #001f4d;">
+  <div class="container-fluid">
     
-    <input
-      type="search"
-      class="search"
-      id="search"
-      placeholder="Search News"
-      label="search"
-    />
-  </ul>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+      aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+          <a class="nav-link" href="/">Home</a>
+        </li>
+
+        <% if (typeof visibleCategories !== 'undefined') { %>
+          <% visibleCategories.forEach(category => { %>
+            <li class="nav-item">
+              <a class="nav-link" href="/<%= category.name.toLowerCase() %>"><%= category.name %></a>
+            </li>
+          <% }) %>
+        <% } else { %>
+          <li class="nav-item"><a class="nav-link" href="/events">Events</a></li>
+          <li class="nav-item"><a class="nav-link" href="/sports">Sports</a></li>
+          <li class="nav-item"><a class="nav-link" href="/opinion">Opinion</a></li>
+          <li class="nav-item"><a class="nav-link" href="/podcast">Podcast</a></li>
+          <li class="nav-item"><a class="nav-link" href="/vacancies">Vacancies</a></li>
+        <% } %>
+      </ul>
+
+      <form class="d-flex" action="/search" method="get">
+        <input class="form-control me-2" type="search" id="search" name="q" placeholder="Search News" aria-label="Search">
+        <button class="btn" type="submit" style="background-color: #0056b3; color: #fff;"><i class="fas fa-search"></i></button>
+      </form>
+    </div>
+  </div>
 </nav>

@@ -61,6 +61,19 @@ class Article {
     const [rows] = await pool.query('SELECT * FROM articles ORDER BY created_at DESC');
     return rows;
   }
+    static async search(query) {
+    const pool = await getPool();
+    const [rows] = await pool.query(
+      `SELECT a.article_id, a.title, a.content, a.featured_img, u.username as author, a.created_at, c.name as category_name
+       FROM articles a
+       LEFT JOIN users u ON a.author_id = u.id
+       LEFT JOIN categories c ON a.category_id = c.category_id
+       WHERE a.title LIKE ? OR a.content LIKE ? 
+       ORDER BY a.created_at DESC`,
+      [`%${query}%`, `%${query}%`]
+    );
+    return rows;
+  }
 }
 
 module.exports = Article;

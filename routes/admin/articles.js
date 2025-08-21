@@ -63,6 +63,7 @@ router.post('/',
   }
 );
 
+router.get('/search', articleController.searchArticles);
 
 // Get Article
 router.get('/:id',
