@@ -55,22 +55,99 @@ class CachedNews {
     }));
   }
 
-  static async search(query, limit = 20) {
+  static async search(query, limit = 20, page = 1) {
     const pool = await getPool();
-    const searchTerm = `%${query}%`;
-    const [rows] = await pool.query(
-      `SELECT * FROM cached_news 
-       WHERE title LIKE ? OR description LIKE ? 
-       ORDER BY published_at DESC 
-       LIMIT ?`,
-      [searchTerm, searchTerm, limit]
-    );
+    const offset = (page - 1) * limit;
     
-    // Parse the source JSON back to object
-    return rows.map(row => ({
-      ...row,
-      source: JSON.parse(row.source)
-    }));
+    // Clean and prepare search terms
+    const cleanQuery = query.replace(/[^\w\s]/gi, '');
+    const searchTerms = cleanQuery.split(/\s+/).filter(term => term.length > 2);
+    
+    if (searchTerms.length === 0) {
+      return { articles: [], totalResults: 0, page, totalPages: 0 };
+    }
+    
+    // Build the WHERE clause with full-text search
+    const whereClause = searchTerms
+      .map(term => `(MATCH(title, description) AGAINST(? IN BOOLEAN MODE))`)
+      .join(' AND ');
+      
+    const searchValues = searchTerms.map(term => `+${term}*`);
+    
+    try {
+      // Get total count for pagination
+      const [countRows] = await pool.query(
+        `SELECT COUNT(*) as total FROM cached_news WHERE ${whereClause}`,
+        [...searchValues]
+      );
+      
+      const totalResults = countRows[0].total;
+      const totalPages = Math.ceil(totalResults / limit);
+      
+      // Get paginated results with relevance scoring
+      const [rows] = await pool.query(
+        `SELECT *, 
+                MATCH(title, description) AGAINST(? IN BOOLEAN MODE) as relevance,
+                (CASE 
+                  WHEN title LIKE ? THEN 2 
+                  WHEN description LIKE ? THEN 1 
+                  ELSE 0 
+                END) as title_boost
+         FROM cached_news 
+         WHERE ${whereClause}
+         ORDER BY (relevance * 2) + title_boost DESC, published_at DESC
+         LIMIT ? OFFSET ?`,
+        [
+          searchValues[0], // For the relevance calculation
+          `%${searchTerms[0]}%`, // For title boost
+          `%${searchTerms[0]}%`, // For description boost
+          limit,
+          offset
+        ]
+      );
+      
+      // Parse the source JSON back to object
+      const articles = rows.map(row => ({
+        ...row,
+        source: row.source ? JSON.parse(row.source) : { name: 'Unknown' },
+        // Remove the temporary fields we added for sorting
+        relevance: undefined,
+        title_boost: undefined
+      }));
+      
+      return {
+        articles,
+        totalResults,
+        page,
+        totalPages,
+        hasMore: page < totalPages
+      };
+      
+    } catch (error) {
+      console.error('Search error:', error);
+      // Fallback to simple LIKE search if full-text search fails
+      const searchTerm = `%${query}%`;
+      const [rows] = await pool.query(
+        `SELECT * FROM cached_news 
+         WHERE title LIKE ? OR description LIKE ? 
+         ORDER BY published_at DESC 
+         LIMIT ? OFFSET ?`,
+        [searchTerm, searchTerm, limit, offset]
+      );
+      
+      const articles = rows.map(row => ({
+        ...row,
+        source: row.source ? JSON.parse(row.source) : { name: 'Unknown' }
+      }));
+      
+      return {
+        articles,
+        totalResults: articles.length,
+        page,
+        totalPages: 1,
+        hasMore: false
+      };
+    }
   }
 
   static async clearOldCache(category = null) {

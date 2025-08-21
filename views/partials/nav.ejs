@@ -13,12 +13,17 @@
       <li><a href="/vacancies">Vacancies</a></li>
     <% } %>
     
-    <input
-      type="search"
-      class="search"
-      id="search"
-      placeholder="Search News"
-      label="search"
-    />
+    <div class="search-container">
+      <input
+        type="search"
+        class="search-input"
+        id="search"
+        placeholder="Search news..."
+        aria-label="Search news"
+      />
+      <button class="search-button" type="button" aria-label="Search">
+        <i class="fas fa-search"></i>
+      </button>
+    </div>
   </ul>
 </nav>
