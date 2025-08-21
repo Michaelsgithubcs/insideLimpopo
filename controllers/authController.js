@@ -1,5 +1,5 @@
 const argon2 = require('argon2');
-const { pool } = require("../config/db");
+const { pool } = require("../config/db"); 
 // const { generateToken } = require("../middlewares/auth");
 const User = require('../models/User');
 

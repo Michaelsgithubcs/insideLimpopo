@@ -31,22 +31,30 @@ router.get('/headlines', async (req, res) => {
   }
 });
 
-// Search cached news
+// Search cached news with pagination
 router.get('/search', async (req, res) => {
   try {
-    const { q: query, limit = 20 } = req.query;
+    const { q: query, limit = 20, page = 1 } = req.query;
     
-    if (!query) {
-      return res.status(400).json({ error: 'Search query is required' });
+    if (!query || query.trim().length < 2) {
+      return res.status(400).json({ 
+        status: 'error',
+        code: 'missing_query',
+        message: 'Search query is required and must be at least 2 characters long' 
+      });
     }
     
-    const searchResults = await newsCacheService.searchCachedNews(query, parseInt(limit));
+    const searchResults = await newsCacheService.searchCachedNews(
+      query.trim(), 
+      parseInt(limit), 
+      Math.max(1, parseInt(page))
+    );
     
     // Format response to match NewsAPI structure
     const response = {
       status: 'ok',
-      totalResults: searchResults.length,
-      articles: searchResults.map(article => ({
+      totalResults: searchResults.totalResults,
+      articles: searchResults.articles.map(article => ({
         source: article.source,
         author: article.source?.name || null,
         title: article.title,
@@ -54,14 +62,23 @@ router.get('/search', async (req, res) => {
         url: article.url,
         urlToImage: article.url_to_image,
         publishedAt: article.published_at,
-        content: article.description
-      }))
+        content: article.description,
+        category: article.category
+      })),
+      page: searchResults.page,
+      totalPages: searchResults.totalPages,
+      hasMore: searchResults.hasMore
     };
     
     res.json(response);
   } catch (error) {
     console.error('Error searching cached news:', error.message);
-    res.status(500).json({ error: 'Failed to search news' });
+    res.status(500).json({ 
+      status: 'error',
+      code: 'search_error',
+      message: 'Failed to search news',
+      details: process.env.NODE_ENV === 'development' ? error.message : undefined
+    });
   }
 });
 

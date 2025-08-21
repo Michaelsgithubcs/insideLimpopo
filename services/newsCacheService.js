@@ -102,12 +102,30 @@ class NewsCacheService {
     }
   }
 
-  async searchCachedNews(query, limit = 20) {
+  async searchCachedNews(query, limit = 20, page = 1) {
     try {
-      return await CachedNews.search(query, limit);
+      if (!query || typeof query !== 'string' || query.trim().length < 2) {
+        throw new Error('Search query must be at least 2 characters long');
+      }
+      
+      const result = await CachedNews.search(query, limit, page);
+      
+      // If no results and we're not on the first page, try the first page
+      if (result.articles.length === 0 && page > 1) {
+        return this.searchCachedNews(query, limit, 1);
+      }
+      
+      return result;
     } catch (error) {
       console.error('Error searching cached news:', error.message);
-      throw error;
+      // Return empty result set on error
+      return {
+        articles: [],
+        totalResults: 0,
+        page: parseInt(page) || 1,
+        totalPages: 0,
+        hasMore: false
+      };
     }
   }
 

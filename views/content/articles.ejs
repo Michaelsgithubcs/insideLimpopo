@@ -94,6 +94,9 @@
 
       <!-- Article Content -->
       <div class="article-content">
+        <!-- Search Results Container -->
+        <div id="posts" class="search-results"></div>
+        
         <!-- Main Article List -->
         <div class="article-list">
           <div class="section-article-header">
@@ -105,7 +108,7 @@
             </div>
           </div>
           
-          <div class="articles-container list-view">
+          <div class="articles-container list-view" id="articles-container">
             <% if (articles && articles.length > 0) { %>
               <% articles.forEach(article => { %>
                 <div class="article-item">
@@ -325,5 +328,8 @@
         });
       });
     </script>
+    
+    <!-- Search Functionality -->
+    <script src="/scripts/script.js"></script>
   </body>
 </html>
