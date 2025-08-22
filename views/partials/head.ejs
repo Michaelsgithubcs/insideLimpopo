@@ -131,6 +131,98 @@
 .category-card a:hover {
   color: #04c3f3; /* Change link color on hover */
 }
+/* Posts container */
+#posts {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 50px;
+  margin: 30px 0;
+  padding: 0 15px;
+}
+
+/* Each post card */
+.post-card {
+  background: #fff;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.post-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+}
+
+/* Image section */
+.post-image-container {
+  position: relative;
+  width: 100%;
+  height: 200px;
+  overflow: hidden;
+}
+
+.post-thumbnail {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.source-tag {
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+  background: rgba(0,0,0,0.7);
+  color: #fff;
+  font-size: 12px;
+  padding: 4px 8px;
+  border-radius: 6px;
+}
+
+/* Content section */
+.post-content {
+  padding: 15px;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.post-date {
+  font-size: 13px;
+  color: #777;
+  margin-bottom: 8px;
+}
+
+.post-title {
+  font-size: 18px;
+  font-weight: bold;
+  margin: 0 0 10px;
+  line-height: 1.4;
+}
+
+.post-description {
+  font-size: 15px;
+  color: #444;
+  flex-grow: 1;
+  margin-bottom: 15px;
+}
+
+/* Read more link */
+.read-more {
+  color: #007bff;
+  text-decoration: none;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  transition: color 0.2s;
+}
+
+.read-more:hover {
+  color: #0056b3;
+}
+
   </style>
 
 </head>
