@@ -1,11 +1,26 @@
-<nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #001f4d;">
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark" style="background-color: #001f4d !important;">
   <div class="container-fluid">
+    <!-- Brand / Logo -->
+    <a class="navbar-brand fw-bold" href="/">
+      <img src="/assets/logo/InsideLimpopoLogoTransparent.png" alt="Logo" width="35" height="35" class="d-inline-block align-text-top">
+      Inside Limpopo
+    </a>
+
+    <!-- Hamburger button for mobile -->
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+      aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <!-- Navbar items -->
     <div class="collapse navbar-collapse" id="navbarNav">
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <!-- Home link -->
         <li class="nav-item">
           <a class="nav-link" href="/">Home</a>
         </li>
 
+        <!-- Dynamic categories -->
         <% if (typeof visibleCategories !== 'undefined') { %>
           <% visibleCategories.forEach(category => { %>
             <li class="nav-item">

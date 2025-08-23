@@ -35,4 +35,35 @@ router.put('/visibility', isAuthenticated, async (req, res) => {
   }
 });
 
+// Add new category
+// Add new category
+router.post('/', async (req, res) => {
+  try {
+    const { name, visible } = req.body;
+
+    if (!name || name.trim() === '') {
+      return res.status(400).json({ error: 'Category name is required' });
+    }
+
+    const pool = await getPool();
+
+    // Insert category
+    const [result] = await pool.query(
+      'INSERT INTO categories (name, visible) VALUES (?, ?)',
+      [name.trim(), visible ? 1 : 0]
+    );
+
+    res.status(201).json({ 
+      success: true, 
+      message: 'Category added successfully', 
+      category: { category_id: result.insertId, name: name.trim(), visible: !!visible }
+    });
+  } catch (error) {
+    console.error('Error adding category:', error);
+    res.status(500).json({ error: 'Failed to add category' });
+  }
+});
+
+
+
 module.exports = router;
