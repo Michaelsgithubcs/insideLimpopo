@@ -77,6 +77,9 @@ router.get('/:id', async (req, res) => {
     res.status(500).send('Server Error');
   }
 });
+// Example Express route
+router.get("/added/:categoryName", articleController.getArticleByCategory);
+
 
 
 // Article search route

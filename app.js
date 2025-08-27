@@ -14,6 +14,7 @@ const rateLimit = require('express-rate-limit');
 const cookieParser = require('cookie-parser');
 const cors = require('cors');
 const adminArticleRoutes = require('./routes/admin/articles');
+const publicRoutes=require('./routes/content/articles');
 const app = express();
 //const breaking=require('./routes/breakingNews/breakingNews');
 const createTablesIfNotExist = require('./config/initDb');
@@ -183,7 +184,7 @@ app.use('/api/', apiLimiter);
 // app.use(csrfProtection);
 
 // Routes
-app.use('/articles', require('./routes/content/articles'));
+app.use('/articles', publicRoutes);
 app.use('/', require('./routes/index'));
 
 // Error handling middleware

@@ -23,11 +23,24 @@
         <!-- Dynamic categories -->
         <% if (typeof visibleCategories !== 'undefined') { %>
           <% visibleCategories.forEach(category => { %>
-            <li class="nav-item">
-              <a class="nav-link" href="/<%= category.name.toLowerCase() %>"><%= category.name %></a>
-            </li>
+            <% 
+              const excluded = ['sports', 'news', 'events', 'podcast', 'opinion', 'vacancies']; 
+              const catName = category.name.toLowerCase();
+            %>
+            <% if (excluded.includes(catName)) { %>
+              <!-- Main category -->
+              <li class="nav-item">
+                <a class="nav-link" href="/<%= catName %>"><%= category.name %></a>
+              </li>
+            <% } else { %>
+              <!-- Custom/added category -->
+              <li class="nav-item">
+                <a class="nav-link" href="/articles/added/<%= catName %>"><%= category.name %></a>
+              </li>
+            <% } %>
           <% }) %>
         <% } else { %>
+          <!-- Fallback static categories -->
           <li class="nav-item"><a class="nav-link" href="/events">Events</a></li>
           <li class="nav-item"><a class="nav-link" href="/sports">Sports</a></li>
           <li class="nav-item"><a class="nav-link" href="/opinion">Opinion</a></li>
@@ -35,6 +48,8 @@
           <li class="nav-item"><a class="nav-link" href="/vacancies">Vacancies</a></li>
         <% } %>
       </ul>
+
+      <!-- Search box -->
       <div class="search-container" style="display: flex; align-items: center;">
         <input
           type="search"

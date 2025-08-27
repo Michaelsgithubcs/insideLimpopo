@@ -1,0 +1,71 @@
+<%- include('../partials/head', { 
+  title: categoryName || 'Category Page',
+  meta: { description: `Articles for category ${categoryName}`, keywords: categoryName }
+}) %>
+
+<%- include('../partials/header') %>
+
+<main class="newspaper-template">
+
+  <h1 class="category-title">Category: <%= categoryName %></h1>
+
+  <% if (articles && articles.length > 0) { %>
+    <div class="articles-grid">
+      <% articles.forEach(article => { %>
+        <article class="newspaper-article">
+          
+          <% if (article.featured_img) { %>
+            <div class="article-featured-img">
+              <a href="/articles/<%= article.article_id %>">
+                <img src="<%= article.featured_img %>" alt="<%= article.title %>">
+              </a>
+            </div>
+          <% } %>
+
+          <h2 class="headline">
+            <a href="/articles/<%= article.article_id %>"><%= article.title %></a>
+          </h2>
+
+          <% if (article.category_name) { %>
+            <p class="article-category">
+              Category: 
+              <a href="/added/<%= article.category_name %>"><%= article.category_name %></a>
+            </p>
+          <% } %>
+
+          <p class="article-meta">
+            By <%= article.author || article.username || 'Unknown Author' %> | 
+            Published: <%= new Date(article.created_at).toLocaleDateString('en-US', { 
+              year: 'numeric', month: 'long', day: 'numeric' 
+            }) %>
+          </p>
+
+          <div class="article-excerpt">
+            <% let firstParagraph = true; %>
+            <% article.content.split('\n').slice(0,2).forEach(paragraph => { %>
+              <% if (paragraph.trim()) { %>
+                <p class="<%= firstParagraph ? 'first-paragraph' : '' %>">
+                  <% if (firstParagraph) { %>
+                    <span class="drop-cap"><%= paragraph.substring(0,1) %></span>
+                    <%= paragraph.substring(1, 150) %>...
+                  <% } else { %>
+                    <%= paragraph.substring(0, 150) %>...
+                  <% } %>
+                </p>
+                <% firstParagraph = false; %>
+              <% } %>
+            <% }) %>
+          </div>
+
+          <a href="/articles/<%= article.article_id %>" class="read-more-btn">Read More</a>
+
+        </article>
+      <% }) %>
+    </div>
+  <% } else { %>
+    <p>No articles found in this category.</p>
+  <% } %>
+
+</main>
+
+<%- include('../partials/footer') %>
