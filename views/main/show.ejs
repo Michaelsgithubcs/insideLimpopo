@@ -15,69 +15,45 @@
     <div class="hero-content">
       <h1><%= categoryName %></h1>
       <p class="subtitle">Stay informed with the latest <%= categoryName %> stories and updates from across Limpopo</p>
-      <button class="cta-button">Subscribe for Updates</button>
     </div>
   </section>
 
   <!-- Articles Section -->
   <section class="section-with-header">
-    <div class="section-category-header">
-      <h2>Latest <%= categoryName %> Articles</h2>
-      <p class="section-category-description">
-        Discover the most recent news, updates, and stories related to <%= categoryName %>
+    <div class="section-sport-header">
+      <h2>Posted Articles</h2>
+      <p class="section-sport-description">
+        Browse all the latest <%= categoryName %> articles, news, and updates from Limpopo
       </p>
     </div>
 
     <% if (articles && articles.length > 0) { %>
-      <div class="articles-grid">
+      <div class="sports-section">
         <% articles.forEach(article => { %>
-          <article class="newspaper-article">
-            
-            <% if (article.featured_img) { %>
-              <div class="article-featured-img">
-                <a href="/articles/<%= article.article_id %>">
-                  <img src="<%= article.featured_img %>" alt="<%= article.title %>">
-                </a>
+          <div class="sports-card event-card">
+            <div class="card-image-container">
+              <% if (article.featured_img) { %>
+                <img src="<%= article.featured_img %>" alt="<%= article.title %>">
+              <% } else { %>
+                <img src="/assets/logo/InsideLimpopoLogoTransparent.png" alt="No image available" />
+              <% } %>
+              <div class="event-date">
+                <span class="day"><%= new Date(article.created_at).getDate() %></span>
+                <span class="month"><%= new Date(article.created_at).toLocaleString('default', { month: 'short' }).toUpperCase() %></span>
               </div>
-            <% } %>
-
-            <h2 class="headline">
-              <a href="/articles/<%= article.article_id %>"><%= article.title %></a>
-            </h2>
-
-            <% if (article.category_name) { %>
-              <p class="article-category">
-                <a href="/added/<%= article.category_name %>"><%= article.category_name %></a>
-              </p>
-            <% } %>
-
-            <p class="article-meta">
-              By <%= article.author || article.username || 'Unknown Author' %> | 
-              Published: <%= new Date(article.created_at).toLocaleDateString('en-US', { 
-                year: 'numeric', month: 'long', day: 'numeric' 
-              }) %>
-            </p>
-
-            <div class="article-excerpt">
-              <% let firstParagraph = true; %>
-              <% article.content.split('\n').slice(0,2).forEach(paragraph => { %>
-                <% if (paragraph.trim()) { %>
-                  <p class="<%= firstParagraph ? 'first-paragraph' : '' %>">
-                    <% if (firstParagraph) { %>
-                      <span class="drop-cap"><%= paragraph.substring(0,1) %></span>
-                      <%= paragraph.substring(1, 150) %>...
-                    <% } else { %>
-                      <%= paragraph.substring(0, 150) %>...
-                    <% } %>
-                  </p>
-                  <% firstParagraph = false; %>
-                <% } %>
-              <% }) %>
             </div>
-
-            <a href="/articles/<%= article.article_id %>" class="read-more-btn">Read More</a>
-
-          </article>
+            <div class="card-content">
+              <span class="sport-tag football"><%= categoryName %></span>
+              <h3 style="color: #343a40;"><%= article.title %></h3>
+              <p class="event-time">Posted on <%= new Date(article.created_at).toLocaleString() %></p>
+              <p>
+                <%= article.content.substring(0, 200) %>...
+              </p>
+              <a href="/articles/<%= article.article_id %>" class="read-button">
+                <i class="fas fa-book-open"></i> Read More
+              </a>
+            </div>
+          </div>
         <% }) %>
       </div>
     <% } else { %>
@@ -86,43 +62,6 @@
       </div>
     <% } %>
   </section>
-
-  <!-- Newsletter Section -->
-  <section class="newsletter-section">
-    <div class="newsletter-content">
-      <h2>Stay Updated</h2>
-      <p>Subscribe to our newsletter for the latest <%= categoryName %> updates and news</p>
-      <form class="newsletter-form" id="newsletterForm">
-        <input type="email" name="email" placeholder="Your email address" required>
-        <button type="submit">Subscribe</button>
-      </form>
-      <p id="responseMessage"></p>
-    </div>
-  </section>
 </main>
 
 <%- include('../partials/footer') %>
-
-<script>
-document.getElementById('newsletterForm')?.addEventListener('submit', async function(e) {
-  e.preventDefault();
-  const email = this.email.value;
-  const responseMessage = document.getElementById('responseMessage');
-  
-  try {
-    const res = await fetch('/subscribe', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email })
-    });
-
-    const data = await res.json();
-    responseMessage.textContent = data.message;
-    responseMessage.style.color = res.ok ? 'green' : 'red';
-    if (res.ok) this.reset();
-  } catch (error) {
-    responseMessage.textContent = 'Network error, please try again.';
-    responseMessage.style.color = 'red';
-  }
-});
-</script>
