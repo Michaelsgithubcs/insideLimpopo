@@ -25,17 +25,31 @@ class Article {
     return rows[0];
   }
 
-  static async findByCategory(category_id, limit = 3, excludeId = null) {
+  static async findByCategory(category_id, limit = 20, excludeId = null) {
     const pool = await getPool();
-    let query = `SELECT article_id, title, featured_img FROM articles WHERE category_id = ?`;
+    let query = `
+      SELECT 
+        a.article_id, 
+        a.title, 
+        a.content,
+        a.featured_img, 
+        a.created_at,
+        u.username,
+        c.name as category_name
+      FROM articles a
+      LEFT JOIN users u ON a.author_id = u.id
+      LEFT JOIN categories c ON a.category_id = c.category_id
+      WHERE a.category_id = ?
+    `;
+    
     const params = [category_id];
     
     if (excludeId) {
-      query += ` AND article_id != ?`;
+      query += ` AND a.article_id != ?`;
       params.push(excludeId);
     }
     
-    query += ` ORDER BY created_at DESC LIMIT ?`;
+    query += ` ORDER BY a.created_at DESC LIMIT ?`;
     params.push(limit);
     
     const [rows] = await pool.query(query, params);
