@@ -149,14 +149,14 @@
       // Display breaking news
       const displayBreakingNews = (article) => {
         if (article) {
-          breakingImg.style.backgroundImage = `url(${article.urlToImage || 'https://via.placeholder.com/800x450?text=No+Image'})`;
+          breakingImg.style.backgroundImage = `url(${article.urlToImage || '/assets/logo/InsideLimpopoLogoTransparent.png'})`;
           breakingTitle.textContent = article.title;
           breakingDesc.textContent = article.description || 'No description available';
           breakingSource.textContent = article.source?.name || 'Unknown source';
           breakingDate.textContent = formatDate(article.publishedAt);
           breakingLink.href = article.url;
         } else {
-          breakingImg.style.backgroundImage = 'url(https://via.placeholder.com/800x450?text=No+Breaking+News)';
+          breakingImg.style.backgroundImage = 'url(/assets/logo/InsideLimpopoLogoTransparent.png)';
           breakingTitle.textContent = 'No breaking news available';
           breakingDesc.textContent = 'Check back later for updates';
         }
@@ -206,7 +206,7 @@
         articles.slice(0, 4).forEach(article => {
           html += `
             <div class="news-card">
-              <div class="card-image" style="background-image: url(${article.urlToImage || 'https://via.placeholder.com/300x200?text=No+Image'})">
+              <div class="card-image" style="background-image: url(${article.urlToImage || '/assets/logo/InsideLimpopoLogoTransparent.png'})">
                 <div class="category-overlay">${container.id.replace('Grid', '')}</div>
               </div>
               <div class="card-content">
@@ -254,24 +254,7 @@
         }
       });
 
-      // Ticker animation
-      const tickerContent = document.querySelector('.ticker-content');
-      const tickerItems = document.querySelectorAll('.ticker-item');
-      const tickerWidth = tickerItems[0].offsetWidth;
-      let position = 0;
-
-      function animateTicker() {
-        position -= 1;
-        if (position < -tickerWidth) {
-          position = 0;
-          tickerContent.appendChild(tickerItems[0].cloneNode(true));
-          tickerContent.removeChild(tickerItems[0]);
-        }
-        tickerContent.style.transform = `translateX(${position}px)`;
-        requestAnimationFrame(animateTicker);
-      }
-
-      animateTicker();
+      // Ticker animation is now handled by breaking-news-ticker.js
     </script>
   </body>
 </html>

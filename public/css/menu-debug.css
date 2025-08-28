@@ -1,0 +1,76 @@
+/* Menu Debug Styles 
+ * These styles help diagnose and fix common menu issues
+ */
+
+@media (max-width: 991px) {
+  /* Force visibility */
+  .navbar-collapse {
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
+  
+  /* Debug outlines - make very obvious */
+  .navbar-nav {
+    border: 2px solid rgba(255, 255, 255, 0.5);
+    padding: 10px 0;
+    margin-bottom: 20px;
+    background-color: rgba(0, 0, 80, 0.8);
+  }
+  
+  /* Ensure nav items are visible with bright colors */
+  .navbar-nav .nav-item {
+    opacity: 1 !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+  
+  /* Make links very visible with brighter text */
+  .navbar-nav .nav-item .nav-link {
+    color: #ffffff !important;
+    font-weight: 700 !important;
+    padding: 15px !important;
+    background-color: rgba(255, 255, 255, 0.1);
+    margin: 5px 0 !important;
+    border-radius: 4px;
+    text-shadow: 1px 1px 1px rgba(0,0,0,0.5);
+  }
+  
+  /* Ensure we don't have conflicting transforms */
+  .navbar-collapse.show {
+    transform: translateX(0) !important;
+    right: 0 !important;
+    display: flex !important;
+  }
+  
+  /* Improve toggle button visibility */
+  .navbar-toggler {
+    border: 3px solid white !important;
+    padding: 10px !important;
+    background-color: rgba(0, 31, 77, 0.9) !important;
+  }
+  
+  .navbar-toggler:focus {
+    box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.7) !important;
+  }
+  
+  /* Fix for overlay */
+  .mobile-menu-overlay {
+    background-color: rgba(0, 0, 0, 0.7) !important;
+  }
+  
+  /* Handle menu close button */
+  .mobile-menu-close {
+    font-size: 2rem !important;
+    color: white !important;
+    top: 10px !important;
+    right: 10px !important;
+    background: rgba(255, 255, 255, 0.2) !important;
+    border-radius: 50% !important;
+    width: 40px !important;
+    height: 40px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+}

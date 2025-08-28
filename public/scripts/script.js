@@ -98,7 +98,7 @@ function displayNews(articles) {
     }
 
     // Determine the image URL
-    let imageUrl = article.urlToImage || article.image_url || article.featured_img || 'https://via.placeholder.com/400';
+    let imageUrl = article.urlToImage || article.image_url || article.featured_img || '/assets/logo/InsideLimpopoLogoTransparent.png';
     
     // Create the article HTML
     postCard.innerHTML = `
@@ -106,7 +106,7 @@ function displayNews(articles) {
         <img src="${imageUrl}" 
              class="post-thumbnail" 
              alt="${article.title || 'News image'}" 
-             onerror="this.src='https://via.placeholder.com/400?text=Image+Not+Available'">
+             onerror="this.src='/assets/logo/InsideLimpopoLogoTransparent.png'">
         ${article.source?.name ? `<span class="source-tag">${article.source.name}</span>` : ''}
       </div>
       <div class="post-content">

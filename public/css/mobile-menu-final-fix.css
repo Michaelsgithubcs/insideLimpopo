@@ -1,0 +1,75 @@
+/* Final fixes for mobile menu issues */
+
+/* Make sure all nav links are clickable */
+#navbarNav .nav-item,
+#navbarNav .nav-link {
+  pointer-events: auto !important;
+  cursor: pointer !important;
+}
+
+/* Fix z-index stacking */
+#navbarNav {
+  z-index: 1001 !important;
+}
+
+@media (max-width: 991px) {
+  /* Make sure menu is hidden initially but ready to slide in */
+  #navbarNav {
+    right: -100% !important;
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    transition: right 0.3s ease;
+  }
+  
+  /* When open, slide in */
+  #navbarNav.mobile-open {
+    right: 0 !important;
+  }
+  
+  /* Mobile search container inside navbar */
+  #navbarNav .search-container {
+    margin-top: 20px;
+    margin-bottom: 15px;
+  }
+  
+  /* Fix the overflow issue with navbar */
+  #navbarNav .navbar-nav {
+    margin-bottom: 30px; 
+    padding-bottom: 30px;
+  }
+  
+  /* Make items more prominent and ensure clickability */
+  #navbarNav .nav-item {
+    margin: 8px 0;
+    pointer-events: auto !important;
+  }
+  
+  /* Ensure all links are clickable */
+  #navbarNav .nav-link {
+    pointer-events: auto !important;
+  }
+  
+  /* Fix close button positioning */
+  #mobile-menu-close {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    z-index: 9999;
+  }
+  
+  /* Ensure proper spacing at the top */
+  #navbarNav {
+    padding-top: 60px !important;
+  }
+  
+  /* Hide bootstrap collapse transitions */
+  .collapsing {
+    transition: none !important;
+  }
+  
+  /* Fix search button */
+  #navbarNav .search-button {
+    height: 42px;
+  }
+}
