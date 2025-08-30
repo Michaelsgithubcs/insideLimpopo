@@ -58,6 +58,13 @@
     z-index: 9999;
   }
   
+  /* Hide close button in desktop view */
+  @media (min-width: 992px) {
+    #mobile-menu-close {
+      display: none !important;
+    }
+  }
+  
   /* Ensure proper spacing at the top */
   #navbarNav {
     padding-top: 60px !important;

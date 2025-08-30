@@ -20,26 +20,94 @@ document.addEventListener('DOMContentLoaded', function() {
   overlay.id = 'mobile-menu-overlay';
   document.body.appendChild(overlay);
   
-  // Create close button with ID
-  const closeButton = document.createElement('button');
-  closeButton.id = 'mobile-menu-close';
-  closeButton.innerHTML = '&times;';
-  closeButton.setAttribute('aria-label', 'Close menu');
-  navbarNav.prepend(closeButton);
+  // Create close button with ID - only in mobile view
+  let closeButton = document.getElementById('mobile-menu-close');
+  
+  // Only create the close button if it doesn't exist and we're in mobile view
+  if (!closeButton && window.innerWidth < 992) {
+    closeButton = document.createElement('button');
+    closeButton.id = 'mobile-menu-close';
+    closeButton.innerHTML = '&times;';
+    closeButton.setAttribute('aria-label', 'Close menu');
+    navbarNav.prepend(closeButton);
+  } else if (closeButton && window.innerWidth >= 992) {
+    // Remove the close button if we're in desktop view
+    closeButton.style.display = 'none';
+  }
   
   // Remove any Bootstrap data attributes
   navbarToggler.removeAttribute('data-bs-toggle');
   navbarToggler.removeAttribute('data-bs-target');
   
-  // Remove Bootstrap classes that might interfere
-  navbarNav.classList.remove('collapse', 'collapsing');
+  // Fix navbar structure and classes
+  let navbarNavItems = navbarNav.querySelector('.navbar-nav');
+  if (navbarNavItems) {
+    console.log('Found navbar items:', navbarNavItems.children.length);
+    
+    // Make sure items are visible
+    navbarNavItems.style.display = 'flex';
+    navbarNavItems.style.flexDirection = 'column';
+    navbarNavItems.style.width = '100%';
+    
+    // Force visibility of all items
+    Array.from(navbarNavItems.children).forEach((item, i) => {
+      item.style.display = 'block';
+      item.style.visibility = 'visible';
+      item.style.opacity = '1';
+      console.log(`Nav item ${i+1}:`, item.textContent.trim());
+    });
+  } else {
+    console.error('Navbar items not found! Creating a fallback...');
+    
+    // Create a backup navbar-nav if it doesn't exist
+    navbarNavItems = document.createElement('ul');
+    navbarNavItems.className = 'navbar-nav';
+    navbarNavItems.style.display = 'flex';
+    navbarNavItems.style.flexDirection = 'column';
+    navbarNavItems.style.width = '100%';
+    
+    // Try to find navigation links elsewhere
+    const allNavLinks = document.querySelectorAll('.nav-link');
+    if (allNavLinks.length > 0) {
+      console.log('Found nav links outside navbar, moving them...');
+      
+      // Create nav items from the links
+      allNavLinks.forEach((link, i) => {
+        // Skip if this is inside the mobile menu already
+        if (link.closest('#navbarNav')) return;
+        
+        const li = document.createElement('li');
+        li.className = 'nav-item';
+        const newLink = link.cloneNode(true);
+        li.appendChild(newLink);
+        navbarNavItems.appendChild(li);
+        console.log(`Created nav item ${i+1} from:`, link.textContent.trim());
+      });
+      
+      // Add to navbar
+      navbarNav.appendChild(navbarNavItems);
+    }
+  }
   
   // Track menu state
   let menuOpen = false;
   
   // Function to open the menu
   function openMenu() {
+    // Make sure all navbar elements are visible first
+    const navbarNavItems = navbarNav.querySelector('.navbar-nav');
+    if (navbarNavItems) {
+      navbarNavItems.style.display = 'flex';
+      navbarNavItems.style.visibility = 'visible';
+      
+      // Log all nav items to ensure they're there
+      const items = navbarNavItems.querySelectorAll('.nav-item');
+      console.log(`Found ${items.length} navigation items before opening menu`);
+    }
+    
+    // Add classes to show menu
     navbarNav.classList.add('mobile-open');
+    navbarNav.classList.add('show'); // Add Bootstrap show class too
     overlay.style.display = 'block';
     
     // Force reflow to trigger transition
@@ -59,7 +127,7 @@ document.addEventListener('DOMContentLoaded', function() {
       detail: { isOpen: true }
     }));
     
-    console.log('Menu opened');
+    console.log('Menu opened with visible items:', navbarNavItems ? 'YES' : 'NO');
   }
   
   // Function to close the menu
@@ -104,7 +172,9 @@ document.addEventListener('DOMContentLoaded', function() {
   
   // Event listeners
   navbarToggler.addEventListener('click', toggleMenu);
-  closeButton.addEventListener('click', closeMenu);
+  if (closeButton) {
+    closeButton.addEventListener('click', closeMenu);
+  }
   overlay.addEventListener('click', closeMenu);
   
   // Make sure nav links work by adding event listeners to them

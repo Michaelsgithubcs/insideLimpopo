@@ -1,0 +1,35 @@
+/* Desktop navigation fixes */
+
+/* Fix desktop navigation alignment */
+@media (min-width: 992px) {
+  /* Fix alignment of navbar items */
+  .navbar-nav {
+    align-items: center;
+  }
+
+  /* Space out nav items */
+  .navbar-nav .nav-item {
+    margin: 0 5px;
+  }
+  
+  /* Ensure text is fully visible */
+  .navbar-nav .nav-link {
+    padding: 0.5rem 0.75rem;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    max-width: 100%;
+    display: block;
+  }
+
+  /* Ensure mobile elements are hidden */
+  #mobile-menu-overlay,
+  #mobile-menu-close {
+    display: none !important;
+  }
+  
+  /* Fix desktop search container */
+  .search-container {
+    margin-left: 15px;
+  }
+}
