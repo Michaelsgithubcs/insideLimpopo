@@ -2,14 +2,18 @@
 
 /* Fix desktop navigation alignment */
 @media (min-width: 992px) {
-  /* Fix alignment of navbar items */
+  /* Fix alignment of navbar items - HORIZONTAL */
   .navbar-nav {
-    align-items: center;
+    flex-direction: row !important;
+    align-items: center !important;
+    justify-content: flex-start !important;
+    margin-top: 0 !important;
   }
 
   /* Space out nav items */
   .navbar-nav .nav-item {
-    margin: 0 5px;
+    margin: 0 5px !important;
+    width: auto !important;
   }
   
   /* Ensure text is fully visible */
@@ -20,6 +24,16 @@
     overflow: hidden;
     max-width: 100%;
     display: block;
+    background-color: transparent !important; /* Override mobile styles */
+    border-left: none !important; /* Override mobile styles */
+  }
+  
+  /* Reset any mobile-specific styling */
+  .navbar-nav .nav-item {
+    text-align: center !important;
+    background-color: transparent !important;
+    border: none !important;
+    padding: 0 !important;
   }
 
   /* Ensure mobile elements are hidden */

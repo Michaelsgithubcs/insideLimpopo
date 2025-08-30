@@ -1,0 +1,40 @@
+/* Desktop navbar overrides to ensure horizontal display */
+@media (min-width: 992px) {
+  /* Override any flex-direction setting from mobile styles */
+  .navbar-expand-lg .navbar-nav {
+    flex-direction: row !important;
+  }
+  
+  /* Reset mobile-specific styling for the navbar */
+  #navbarNav {
+    position: static !important;
+    height: auto !important;
+    width: auto !important;
+    background-color: transparent !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    overflow: visible !important;
+    display: flex !important;
+  }
+  
+  /* Fix spacing for each nav item */
+  .navbar-nav .nav-item {
+    display: inline-block !important;
+    margin-right: 5px !important;
+    width: auto !important;
+  }
+  
+  /* Clean up the nav links */
+  .navbar-nav .nav-link {
+    padding: 8px 15px !important;
+    border-radius: 0 !important;
+    border: none !important;
+    background-color: transparent !important;
+  }
+  
+  /* Ensure search container is positioned correctly */
+  .navbar > .container-fluid > .search-container {
+    display: flex !important;
+    margin-left: 15px !important;
+  }
+}

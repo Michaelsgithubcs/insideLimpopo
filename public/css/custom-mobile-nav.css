@@ -32,9 +32,15 @@
 
   /* Ensure navbar items stack vertically */
   #navbarNav .navbar-nav {
-    flex-direction: column;
-    width: 100%;
-    margin-top: 20px;
+    display: flex !important;
+    flex-direction: column !important;
+    width: 100% !important;
+    margin-top: 80px !important; /* Space for search box */
+    padding: 10px 0 !important;
+    position: relative !important;
+    z-index: 2 !important;
+    visibility: visible !important;
+    opacity: 1 !important;
   }
 
   /* Style each nav item */

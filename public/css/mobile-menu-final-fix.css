@@ -31,12 +31,20 @@
   #navbarNav .search-container {
     margin-top: 20px;
     margin-bottom: 15px;
+    order: -1 !important; /* Force to top */
+    position: relative !important;
+    z-index: 1 !important;
   }
   
   /* Fix the overflow issue with navbar */
   #navbarNav .navbar-nav {
     margin-bottom: 30px; 
     padding-bottom: 30px;
+    display: flex !important;
+    flex-direction: column !important;
+    width: 100% !important;
+    visibility: visible !important;
+    opacity: 1 !important;
   }
   
   /* Make items more prominent and ensure clickability */
