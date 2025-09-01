@@ -116,8 +116,9 @@ document.addEventListener('DOMContentLoaded', function() {
     overlay.classList.add('active');
     menuOpen = true;
     
-    // Prevent body scrolling
+    // Prevent body scrolling but allow menu to scroll
     document.body.style.overflow = 'hidden';
+    navbarNav.style.overflowY = 'scroll';
     
     // Update aria attributes
     navbarToggler.setAttribute('aria-expanded', 'true');
@@ -172,10 +173,24 @@ document.addEventListener('DOMContentLoaded', function() {
   
   // Event listeners
   navbarToggler.addEventListener('click', toggleMenu);
+  navbarToggler.addEventListener('touchend', function(e) {
+    e.preventDefault();
+    toggleMenu();
+  });
+  
   if (closeButton) {
     closeButton.addEventListener('click', closeMenu);
+    closeButton.addEventListener('touchend', function(e) {
+      e.preventDefault();
+      closeMenu();
+    });
   }
+  
   overlay.addEventListener('click', closeMenu);
+  overlay.addEventListener('touchend', function(e) {
+    e.preventDefault();
+    closeMenu();
+  });
   
   // Make sure nav links work by adding event listeners to them
   const navLinks = navbarNav.querySelectorAll('.nav-link');
@@ -186,6 +201,15 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Make sure the link works
     console.log('Added navigation link:', newLink.href);
+    
+    // Prevent scroll event propagation on nav links to allow proper scrolling
+    newLink.addEventListener('touchstart', function(e) {
+      e.stopPropagation();
+    });
+    
+    newLink.addEventListener('touchmove', function(e) {
+      e.stopPropagation();
+    });
   });
   
   // Close on ESC key

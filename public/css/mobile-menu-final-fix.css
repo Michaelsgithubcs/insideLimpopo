@@ -7,12 +7,12 @@
   cursor: pointer !important;
 }
 
-/* Fix z-index stacking */
+  /* Fix z-index stacking */
 #navbarNav {
   z-index: 1001 !important;
-}
-
-@media (max-width: 991px) {
+  -webkit-overflow-scrolling: touch !important; /* For smoother scrolling on iOS */
+  overflow-y: scroll !important; /* Force scroll instead of auto */
+}@media (max-width: 991px) {
   /* Make sure menu is hidden initially but ready to slide in */
   #navbarNav {
     right: -100% !important;
@@ -20,6 +20,9 @@
     visibility: visible !important;
     opacity: 1 !important;
     transition: right 0.3s ease;
+    max-height: 100vh !important; /* Ensure it doesn't exceed viewport height */
+    overflow-y: scroll !important; /* Force scroll behavior */
+    -webkit-overflow-scrolling: touch !important; /* Smooth scrolling on iOS */
   }
   
   /* When open, slide in */
