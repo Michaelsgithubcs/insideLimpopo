@@ -123,10 +123,22 @@
       const businessGrid = document.getElementById("businessGrid");
       const techGrid = document.getElementById("techGrid");
 
+      // Get current news source from global function
+      function getCurrentNewsSourceForAPI() {
+        // Use the global function if available, otherwise default to 'world'
+        return (typeof window.getCurrentNewsSource === 'function') 
+               ? window.getCurrentNewsSource() 
+               : 'world';
+      }
+
       // Fetch data from cached news API
       const fetchData = async (category, pageSize = 10) => {
         try {
-          const url = `/api/news/headlines?category=${category}&limit=${pageSize}`;
+          // Get current news source and use appropriate API endpoint
+          const currentSource = getCurrentNewsSourceForAPI();
+          const apiBase = currentSource === 'world' ? '/api/news' : '/api/sa-news';
+          const url = `${apiBase}/headlines?category=${category}&limit=${pageSize}`;
+          
           const response = await fetch(url);
           if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
@@ -223,8 +235,8 @@
         container.innerHTML = html || '<p>No news available in this category</p>';
       };
 
-      // Initialize page
-      window.addEventListener('load', async () => {
+      // Function to load all news sections
+      async function loadAllNews() {
         // Show loading states
         breakingTitle.textContent = 'Loading breaking news...';
         topHeadlines.innerHTML = '<p>Loading headlines...</p>';
@@ -252,6 +264,12 @@
           breakingTitle.textContent = 'Failed to load news';
           topHeadlines.innerHTML = '<p>Error loading headlines. Please refresh the page.</p>';
         }
+      }
+
+      // Initialize page
+      window.addEventListener('load', async () => {
+        // Load news immediately
+        loadAllNews();
       });
 
       // Ticker animation is now handled by breaking-news-ticker.js

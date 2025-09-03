@@ -109,7 +109,8 @@ app.use((req, res, next) => {
 });
 
 app.use('/api/articles', adminArticleRoutes); // ✅ After session
-app.use('/api/news', require('./routes/api/news')); // Cached news API
+app.use('/api/news', require('./routes/api/news')); // Cached world news API
+app.use('/api/sa-news', require('./routes/api/sa-news')); // Cached South African news API
 app.use('/api/categories', require('./routes/admin/categories')); // Category management API
 //app.use('/api/breaking-news',breaking);
 
@@ -213,11 +214,36 @@ app.use((req, res) => {
 });
 
 // Start the server
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`);
-  console.log(`Environment: ${process.env.NODE_ENV || 'development'}`);
-});
+const http = require('http');
+const DEFAULT_PORT = 3000;
+const ALTERNATE_PORTS = [3001, 3002, 3003, 3004, 3005];
+
+function startServer(port) {
+  const server = http.createServer(app);
+  
+  server.on('error', (error) => {
+    if (error.code === 'EADDRINUSE') {
+      console.log(`Port ${port} is already in use, trying another port...`);
+      if (ALTERNATE_PORTS.length > 0) {
+        startServer(ALTERNATE_PORTS.shift());
+      } else {
+        console.error('No available ports found');
+        process.exit(1);
+      }
+    } else {
+      console.error('Server error:', error);
+      process.exit(1);
+    }
+  });
+  
+  server.listen(port, () => {
+    console.log(`Server running on http://localhost:${port}`);
+    console.log(`Environment: ${process.env.NODE_ENV || 'development'}`);
+  });
+}
+
+const PORT = process.env.PORT || DEFAULT_PORT;
+startServer(PORT);
 
 // Handle unhandled promise rejections
 process.on('unhandledRejection', (err) => {
