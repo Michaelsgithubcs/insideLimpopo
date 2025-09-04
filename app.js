@@ -110,7 +110,7 @@ app.use((req, res, next) => {
 
 app.use('/api/articles', adminArticleRoutes); // ✅ After session
 app.use('/api/news', require('./routes/api/news')); // Cached world news API
-app.use('/api/sa-news', require('./routes/api/sa-news')); // Cached South African news API
+app.use('/api/sa-news', require('./routes/api/sa-news')); // Cached local news API
 app.use('/api/categories', require('./routes/admin/categories')); // Category management API
 //app.use('/api/breaking-news',breaking);
 

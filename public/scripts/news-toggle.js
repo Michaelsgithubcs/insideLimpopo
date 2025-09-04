@@ -1,11 +1,11 @@
 /**
  * News source toggle functionality
- * This script handles the toggle between World News and South African News
+ * This script handles the toggle between World News and Local News
  */
 
 document.addEventListener('DOMContentLoaded', function() {
-  // News source state - check localStorage or default to 'world'
-  let currentNewsSource = localStorage.getItem('newsSource') || 'world';
+  // News source state - check localStorage or default to 'sa' (local news)
+  let currentNewsSource = localStorage.getItem('newsSource') || 'sa';
   
   // Toggle buttons - find all instances in case there are multiple on the page
   const worldNewsBtns = document.querySelectorAll('#worldNewsBtn');

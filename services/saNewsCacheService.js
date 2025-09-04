@@ -1,18 +1,18 @@
 const axios = require('axios');
 const CachedNews = require('../models/CachedNews');
 
-class SouthAfricanNewsCacheService {
+class LocalNewsCacheService {
   constructor() {
     this.apiKey = 'pub_86fdef20b0fe446bb3f74cf412ebe2ba';
     this.baseUrl = 'https://newsdata.io/api/1';
     this.cacheRefreshHours = 2;
     this.country = 'za'; // South Africa
-    this.cacheCategoryPrefix = 'sa_'; // Prefix for SA news to distinguish from world news
+    this.cacheCategoryPrefix = 'sa_'; // Prefix for local news to distinguish from world news
   }
 
   async fetchAndCacheNews(category = 'general', pageSize = 20) {
     try {
-      console.log(`Fetching fresh South African news for category: ${category}`);
+      console.log(`Fetching fresh Local news for category: ${category}`);
       
       // Map newsapi.org categories to newsdata.io categories
       let newsdataCategory;
@@ -34,13 +34,13 @@ class SouthAfricanNewsCacheService {
       const articles = response.data.results || [];
 
       if (!articles || articles.length === 0) {
-        console.log(`No South African articles found for category: ${category}`);
+        console.log(`No Local articles found for category: ${category}`);
         return [];
       }
 
-      // Clear old cache for this category with SA prefix
-      const saCategory = `${this.cacheCategoryPrefix}${category}`;
-      await CachedNews.clearOldCache(saCategory);
+      // Clear old cache for this category with local prefix
+      const localCategory = `${this.cacheCategoryPrefix}${category}`;
+      await CachedNews.clearOldCache(localCategory);
 
       // Cache new articles
       const cachedArticles = [];
@@ -53,43 +53,43 @@ class SouthAfricanNewsCacheService {
               url: article.link,
               urlToImage: article.image_url,
               publishedAt: article.pubDate,
-              source: { name: article.source_id || article.source_name || 'South African News' },
-              category: saCategory
+              source: { name: article.source_id || article.source_name || 'Local News' },
+              category: localCategory
             });
             cachedArticles.push(article);
           } catch (error) {
-            console.error('Error caching SA article:', error.message);
+            console.error('Error caching Local article:', error.message);
           }
         }
       }
 
-      console.log(`Cached ${cachedArticles.length} South African articles for category: ${category}`);
+      console.log(`Cached ${cachedArticles.length} Local articles for category: ${category}`);
       return cachedArticles;
 
     } catch (error) {
-      console.error('Error fetching South African news from API:', error.message);
+      console.error('Error fetching Local news from API:', error.message);
       throw error;
     }
   }
 
   async getCachedNews(category = 'general', limit = 20) {
     try {
-      const saCategory = `${this.cacheCategoryPrefix}${category}`;
+      const localCategory = `${this.cacheCategoryPrefix}${category}`;
       
       // Always try to return existing cached data first
-      const existingCache = await CachedNews.getByCategory(saCategory, limit);
+      const existingCache = await CachedNews.getByCategory(localCategory, limit);
       
       // Check if cache needs refresh
-      const shouldRefresh = await CachedNews.shouldRefreshCache(saCategory, this.cacheRefreshHours);
+      const shouldRefresh = await CachedNews.shouldRefreshCache(localCategory, this.cacheRefreshHours);
       
       if (shouldRefresh) {
-        console.log(`Cache expired for SA category: ${category}, fetching fresh data`);
+        console.log(`Cache expired for Local category: ${category}, fetching fresh data`);
         try {
           await this.fetchAndCacheNews(category, limit);
           // Return fresh data if successful
-          return await CachedNews.getByCategory(saCategory, limit);
+          return await CachedNews.getByCategory(localCategory, limit);
         } catch (apiError) {
-          console.log(`API error (${apiError.message}), returning existing cache for ${saCategory}`);
+          console.log(`API error (${apiError.message}), returning existing cache for ${localCategory}`);
           // Return existing cache if API fails
           return existingCache;
         }
@@ -101,12 +101,12 @@ class SouthAfricanNewsCacheService {
       }
       
       // Only try API if no cache exists at all
-      console.log(`No cached news found for SA category: ${category}, fetching fresh data`);
+      console.log(`No cached news found for Local category: ${category}, fetching fresh data`);
       try {
         await this.fetchAndCacheNews(category, limit);
-        return await CachedNews.getByCategory(saCategory, limit);
+        return await CachedNews.getByCategory(localCategory, limit);
       } catch (apiError) {
-        console.log(`API error (${apiError.message}), no cache available for ${saCategory}`);
+        console.log(`API error (${apiError.message}), no cache available for ${localCategory}`);
         return [];
       }
       
@@ -188,4 +188,4 @@ class SouthAfricanNewsCacheService {
   }
 }
 
-module.exports = new SouthAfricanNewsCacheService();
+module.exports = new LocalNewsCacheService();

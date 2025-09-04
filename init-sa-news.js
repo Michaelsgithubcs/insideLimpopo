@@ -1,15 +1,15 @@
-// Script to initialize South African news cache
-const saNewsCacheService = require('./services/saNewsCacheService');
+// Script to initialize Local news cache
+const localNewsCacheService = require('./services/saNewsCacheService');
 
-async function initializeSANewsCache() {
-  console.log('Initializing South African news cache...');
+async function initializeLocalNewsCache() {
+  console.log('Initializing Local news cache...');
   try {
-    await saNewsCacheService.refreshAllCategories();
-    console.log('South African news cache initialized successfully!');
+    await localNewsCacheService.refreshAllCategories();
+    console.log('Local news cache initialized successfully!');
   } catch (error) {
-    console.error('Error initializing South African news cache:', error);
+    console.error('Error initializing Local news cache:', error);
   }
   process.exit(0);
 }
 
-initializeSANewsCache();
+initializeLocalNewsCache();

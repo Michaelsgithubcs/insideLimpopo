@@ -1,12 +1,12 @@
 const express = require('express');
 const router = express.Router();
-const saNewsCacheService = require('../../services/saNewsCacheService');
+const localNewsCacheService = require('../../services/saNewsCacheService');
 
-// Get South African news (cached)
+// Get Local news (cached)
 router.get('/headlines', async (req, res) => {
   try {
     const { category = 'general', limit = 20 } = req.query;
-    const cachedNews = await saNewsCacheService.getCachedNews(category, parseInt(limit));
+    const cachedNews = await localNewsCacheService.getCachedNews(category, parseInt(limit));
     
     // Format response to match NewsAPI structure for frontend compatibility
     const response = {
@@ -27,7 +27,7 @@ router.get('/headlines', async (req, res) => {
     res.json(response);
   } catch (error) {
     console.error('Error fetching cached SA headlines:', error.message);
-    res.status(500).json({ error: 'Failed to fetch South African news headlines' });
+    res.status(500).json({ error: 'Failed to fetch Local news headlines' });
   }
 });
 
@@ -87,38 +87,38 @@ router.get('/search', async (req, res) => {
     res.status(500).json({ 
       status: 'error',
       code: 'search_error',
-      message: 'Failed to search South African news',
+      message: 'Failed to search Local news',
       details: process.env.NODE_ENV === 'development' ? error.message : undefined
     });
   }
 });
 
-// Force refresh South African news cache (admin endpoint)
+// Force refresh Local news cache (admin endpoint)
 router.post('/refresh', async (req, res) => {
   try {
     const { category } = req.body;
     
     if (category) {
-      await saNewsCacheService.fetchAndCacheNews(category);
+      await localNewsCacheService.fetchAndCacheNews(category);
       res.json({ message: `SA news cache refreshed for category: ${category}` });
     } else {
-      await saNewsCacheService.refreshAllCategories();
+      await localNewsCacheService.refreshAllCategories();
       res.json({ message: 'SA news cache refreshed for all categories' });
     }
   } catch (error) {
     console.error('Error refreshing SA news cache:', error.message);
-    res.status(500).json({ error: 'Failed to refresh South African news cache' });
+    res.status(500).json({ error: 'Failed to refresh Local news cache' });
   }
 });
 
 // Get SA cache status (admin endpoint)
 router.get('/cache-status', async (req, res) => {
   try {
-    const status = await saNewsCacheService.getCacheStatus();
+    const status = await localNewsCacheService.getCacheStatus();
     res.json(status);
   } catch (error) {
     console.error('Error getting SA cache status:', error.message);
-    res.status(500).json({ error: 'Failed to get South African news cache status' });
+    res.status(500).json({ error: 'Failed to get Local news cache status' });
   }
 });
 
