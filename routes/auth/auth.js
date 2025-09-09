@@ -231,5 +231,100 @@ router.get("/dashboard", isAuthenticated, async (req, res) => {
     res.redirect("/login");
   }
 });
+// ================= DASHBOARD =================
+router.get("/dashboard", isAuthenticated, async (req, res) => {
+  try {
+    const pool = await getPool();
+
+    const [user] = await pool.query(
+      "SELECT username, email, role FROM users WHERE id = ?",
+      [req.session.userId]
+    );
+
+    const [[stories]] = await pool.query(
+      "SELECT COUNT(*) as count FROM stories WHERE author_id = ?",
+      [req.session.userId]
+    );
+
+    const [[articles]] = await pool.query(
+      "SELECT COUNT(*) as count FROM articles WHERE author_id = ?",
+      [req.session.userId]
+    );
+
+    const [[podcasts]] = await pool.query(
+      "SELECT COUNT(*) as count FROM podcasts WHERE author_id = ?",
+      [req.session.userId]
+    );
+
+    res.render("dashboard", {
+      title: "Dashboard",
+      user: {
+        ...user[0],
+        avatar: "/images/default-avatar.jpg",
+        storyCount: stories.count,
+        articleCount: articles.count,
+        podcastCount: podcasts.count,
+      },
+    });
+  } catch (err) {
+    console.error("Dashboard error:", err);
+    res.redirect("/login");
+  }
+});
+
+// ================= USER MANAGEMENT =================
+
+// Get all users
+router.get("/users", isAuthenticated, async (req, res) => {
+  try {
+    const pool = await getPool();
+    const [users] = await pool.query("SELECT id, username, email, role, created_at FROM users ORDER BY created_at DESC");
+    res.json(users);
+  } catch (err) {
+    console.error("Error fetching users:", err);
+    res.status(500).json({ error: "Failed to fetch users" });
+  }
+});
+
+// Get single user
+router.get("/users/:id", isAuthenticated, async (req, res) => {
+  try {
+    const pool = await getPool();
+    const [rows] = await pool.query("SELECT id, username, email, role, first_name, last_name FROM users WHERE id = ?", [req.params.id]);
+    if (rows.length === 0) return res.status(404).json({ error: "User not found" });
+    res.json(rows[0]);
+  } catch (err) {
+    console.error("Error fetching user:", err);
+    res.status(500).json({ error: "Failed to fetch user" });
+  }
+});
+
+// Update user
+router.put("/users/:id", isAuthenticated, async (req, res) => {
+  try {
+    const { username, email, role, first_name, last_name } = req.body;
+    const pool = await getPool();
+    await pool.query(
+      "UPDATE users SET username = ?, email = ?, role = ?, first_name = ?, last_name = ?, updated_at = NOW() WHERE id = ?",
+      [username, email, role, first_name, last_name, req.params.id]
+    );
+    res.json({ message: "User updated successfully" });
+  } catch (err) {
+    console.error("Error updating user:", err);
+    res.status(500).json({ error: "Failed to update user" });
+  }
+});
+
+// Delete user
+router.delete("/users/:id", isAuthenticated, async (req, res) => {
+  try {
+    const pool = await getPool();
+    await pool.query("DELETE FROM users WHERE id = ?", [req.params.id]);
+    res.json({ message: "User deleted successfully" });
+  } catch (err) {
+    console.error("Error deleting user:", err);
+    res.status(500).json({ error: "Failed to delete user" });
+  }
+});
 
 module.exports = router;

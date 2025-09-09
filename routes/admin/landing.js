@@ -1,33 +1,39 @@
 const express = require('express');
 const router = express.Router();
 const landingController = require('../../controllers/landingController');
-const { isAuthenticated } = require('../../middlewares/auth');
+const podcastController= require('../../controllers/podcastController');
+const { isAuthenticated ,isAdmin} = require('../../middlewares/auth');
 const getPool = require('../../config/db');
+const { format } = require('date-fns'); // ✅ Make sure date-fns is installed
 
 // Consolidated landing(dashboard) route
-router.get(['/landing', '/dashboard'], isAuthenticated, async (req, res) => {
+router.get(["/landing", "/dashboard"], isAuthenticated,isAdmin, async (req, res) => {
   try {
     const pool = await getPool();
-    // Get user data with a single query using JOINs for better performance
-    const [results] = await pool.query(`
-      SELECT 
-        u.*,
-        (SELECT COUNT(*) FROM stories WHERE email = u.email) AS storyCount,
-        (SELECT COUNT(*) FROM articles WHERE email = u.email) AS articleCount
+
+    // 1. Fetch user info (count stories, articles, podcasts separately)
+    const [results] = await pool.query(
+      `SELECT 
+        u.id, u.username, u.email, u.role, u.first_name, u.last_name, u.created_at,
+        (SELECT COUNT(*) FROM stories s WHERE s.author_id = u.id) AS storyCount,
+        (SELECT COUNT(*) FROM articles a WHERE a.author_id = u.id) AS articleCount,
+        (SELECT COUNT(*) FROM podcasts p WHERE p.author_id = u.id) AS podcastCount
       FROM users u
-      WHERE u.email = ?
-    `, [req.session.email]);
+      WHERE u.email = ?`,
+      [req.session.email]
+    );
 
     if (results.length === 0) {
-      req.flash('error', 'User not found');
-      return res.redirect('/login');
+      req.flash("error", "User not found");
+      return res.redirect("/login");
     }
 
     const userData = results[0];
-    // Fetch categories for the add-article form
-    const [categories] = await pool.query('SELECT category_id, name FROM categories');
-    
-    // Fetch recent articles for management
+
+    // 2. Fetch categories
+    const [categories] = await pool.query("SELECT category_id, name FROM categories");
+
+    // 3. Fetch recent articles
     const [recentArticles] = await pool.query(
       `SELECT a.*, c.name as category_name 
        FROM articles a 
@@ -36,36 +42,52 @@ router.get(['/landing', '/dashboard'], isAuthenticated, async (req, res) => {
        LIMIT 20`
     );
 
-    // Format dates for display
-    const { format } = require('date-fns');
     const formattedArticles = recentArticles.map(article => ({
       ...article,
-      formatted_date: format(new Date(article.created_at), 'MMM d, yyyy HH:mm'),
-      excerpt: article.content.substring(0, 150) + '...'
+      formatted_date: format(new Date(article.created_at), "MMM d, yyyy HH:mm"),
+      excerpt: article.content.substring(0, 150) + "..."
     }));
 
-    res.render('admin/landing', {
-      title: 'Dashboard',
+    // 4. Fetch recent users (with article + podcast counts)
+    const [recentUsers] = await pool.query(
+      `SELECT u.id, u.username, u.email, u.role, u.created_at,
+              (SELECT COUNT(*) FROM articles a WHERE a.author_id = u.id) AS articleCount,
+              (SELECT COUNT(*) FROM podcasts p WHERE p.author_id = u.id) AS podcastCount
+       FROM users u
+       ORDER BY u.created_at DESC
+       LIMIT 20`
+    );
+
+    const formattedUsers = recentUsers.map(u => ({
+      ...u,
+      joined: format(new Date(u.created_at), "MMM d, yyyy")
+    }));
+
+    // 5. Render page
+    res.render("admin/landing", {
+      title: "Dashboard",
       user: {
         username: userData.username,
         email: userData.email,
         firstName: userData.first_name,
         lastName: userData.last_name,
-        avatar: userData.avatar || '/images/default-avatar.jpg',
+        avatar: userData.avatar || "/images/default-avatar.jpg",
         storyCount: userData.storyCount || 0,
         articleCount: userData.articleCount || 0,
+        podcastCount: userData.podcastCount || 0,
         role: userData.role,
         joinDate: userData.created_at
       },
       currentUrl: req.originalUrl,
       categories,
-      recentArticles: formattedArticles
+      recentArticles: formattedArticles,
+      recentUsers: formattedUsers
     });
 
   } catch (err) {
-    console.error('Dashboard error:', err);
-    req.flash('error', 'Error loading dashboard');
-    res.redirect('/login');
+    console.error("Dashboard error:", err);
+    req.flash("error", "Error loading dashboard");
+    res.redirect("/login");
   }
 });
 

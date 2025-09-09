@@ -14,6 +14,7 @@ router.use('/', require('./main/about'));
 router.use('/', require('./auth/auth'));
 router.use('/', require('./admin/landing'));
 router.use('/api/articles', require('./admin/articles'));
+router.use('/api/podcasts',require('./admin/podcastRoute'))
 router.use('/added', require('./content/articles'));
 router.use('/', require('./error'));
 

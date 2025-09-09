@@ -47,12 +47,7 @@
               </div>
 
               <div class="input-container">
-                <input
-                  type="password"
-                  id="reg-password"
-                  name="password"
-                  required
-                />
+                <input type="password" id="reg-password" name="password" required />
                 <label for="reg-password">Password</label>
                 <button
                   class="show-password"
@@ -65,31 +60,8 @@
                 </button>
               </div>
 
-              <!-- <div class="password-requirements">
-                <p class="requirement hidden" id="length">
-                  Must be at least 8 characters
-                </p>
-                <p class="requirement hidden" id="lowercase">
-                  Must contain a lowercase letter
-                </p>
-                <p class="requirement hidden" id="uppercase">
-                  Must contain an uppercase letter
-                </p>
-                <p class="requirement hidden" id="number">
-                  Must contain a number
-                </p>
-                <p class="requirement hidden" id="characters">
-                  Must contain a special character (#.?!@$%^&*-)
-                </p>
-              </div> -->
-
               <div class="input-container">
-                <input
-                  type="password"
-                  id="repeat-password"
-                  name="repeat_password"
-                  required
-                />
+                <input type="password" id="repeat-password" name="repeat_password" required />
                 <label for="repeat-password">Repeat Password</label>
                 <button
                   class="show-password"
@@ -106,20 +78,12 @@
               <div class="terms-group">
                 <label class="terms-checkbox">
                   <input type="checkbox" id="terms" name="terms" required />
-                  <span
-                    >I agree to the <a href="#terms">Terms of Service</a> and
-                    <a href="#privacy">Privacy Policy</a></span
-                  >
+                  <span>I agree to the <a href="#terms">Terms of Service</a> and <a href="#privacy">Privacy Policy</a></span>
                 </label>
               </div>
 
               <div class="submit-container">
-                <input
-                  type="submit"
-                  value="Create Account"
-                  class="auth-button"
-                  id="register-submit"
-                />
+                <input type="submit" value="Create Account" class="auth-button" id="register-submit" disabled />
               </div>
 
               <p class="auth-footer">
@@ -136,8 +100,14 @@
     <%- include('../partials/footer.ejs') %>
 
     <script>
-      // Password toggle functionality (event delegation for reliability)
-      document.querySelector('.auth-form-content').addEventListener('click', function(e) {
+      const form = document.querySelector('.auth-form-content');
+      const password = document.getElementById("reg-password");
+      const confirmPassword = document.getElementById("repeat-password");
+      const errorMsg = document.getElementById("password-match-error");
+      const registerSubmit = document.getElementById("register-submit");
+
+      // Toggle password show/hide
+      form.addEventListener('click', function(e) {
         if (e.target.classList.contains('show-password')) {
           const input = e.target.parentElement.querySelector('input[type="password"], input[type="text"]');
           if (!input) return;
@@ -155,97 +125,32 @@
         }
       });
 
-      // Password validation
-      const password = document.getElementById("reg-password");
-      const confirmPassword = document.getElementById("repeat-password");
-      const errorMsg = document.getElementById("password-match-error");
-
-      function checkPasswordMatch() {
-        if (
-          password.value &&
-          confirmPassword.value &&
-          password.value !== confirmPassword.value
-        ) {
-          errorMsg.classList.remove("hidden");
-        } else {
-          errorMsg.classList.add("hidden");
-        }
-      }
-      if (password && confirmPassword) {
-        password.addEventListener("input", checkPasswordMatch);
-        confirmPassword.addEventListener("input", checkPasswordMatch);
-        errorMsg.classList.add("hidden");
-      }
-
-      const updateRequirement = (id, valid) => {
-        const requirement = document.getElementById(id);
-        requirement.classList.remove("hidden");
-        if (valid) {
-          requirement.classList.add("valid");
-          requirement.classList.remove("error");
-        } else {
-          requirement.classList.add("error");
-          requirement.classList.remove("valid");
-        }
-      };
-
-      if (password) {
-        password.addEventListener("input", (event) => {
-          const value = event.target.value;
-          updateRequirement("length", value.length >= 8);
-          updateRequirement("lowercase", /[a-z]/.test(value));
-          updateRequirement("uppercase", /[A-Z]/.test(value));
-          updateRequirement("number", /\d/.test(value));
-          updateRequirement("characters", /[#.?!@$%^&*-]/.test(value));
-          handleFormValidation();
-        });
-      }
-
-      const handleFormValidation = () => {
+      // Validate passwords
+      function handleFormValidation() {
         if (!password || !confirmPassword) return;
 
         const value = password.value;
         const confirmValue = confirmPassword.value;
 
-        if (
-          value.length >= 8 &&
-          /[a-z]/.test(value) &&
-          /[A-Z]/.test(value) &&
-          /\d/.test(value) &&
-          /[#.?!@$%^&*-]/.test(value) &&
-          value === confirmValue
-        ) {
-          registerSubmit.removeAttribute("disabled");
-          return true;
+        if (!value || !confirmValue) {
+          errorMsg.classList.add("hidden");
+          registerSubmit.setAttribute("disabled", true);
+          return;
         }
 
-        registerSubmit.setAttribute("disabled", true);
-        return false;
-      };
+        if (value !== confirmValue) {
+          errorMsg.classList.remove("hidden");
+          registerSubmit.setAttribute("disabled", true);
+          return;
+        }
 
-      // Initialize input labels
-      document.querySelectorAll(".input-container input").forEach((input) => {
-        input.addEventListener("blur", function () {
-          if (this.value) {
-            this.classList.add("is-valid");
-          } else {
-            this.classList.remove("is-valid");
-          }
-        });
-      });
+        // ✅ Passwords match
+        errorMsg.classList.add("hidden");
+        registerSubmit.removeAttribute("disabled");
+      }
 
-      // Initialize select labels
-      document
-        .querySelectorAll(".select-container select")
-        .forEach((select) => {
-          select.addEventListener("change", function () {
-            if (this.value) {
-              this.classList.add("is-valid");
-            } else {
-              this.classList.remove("is-valid");
-            }
-          });
-        });
+      password.addEventListener("input", handleFormValidation);
+      confirmPassword.addEventListener("input", handleFormValidation);
     </script>
   </body>
 </html>
