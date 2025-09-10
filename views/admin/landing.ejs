@@ -992,7 +992,7 @@ document.getElementById("edit-user-form")?.addEventListener("submit", async (e) 
   const role = document.getElementById("edit_role").value;
 
   try {
-    const res = await fetch(`/users/${id}`, {
+    const res = await fetch(`/api/users/${id}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ username, email, role })
@@ -1032,6 +1032,107 @@ async function deletePodcast(id) {
       alert("Network error while deleting podcast");
     }
   }
+
+// Delete User Function
+async function deleteUser(id) {
+  if (!confirm("Are you sure you want to delete this user? This action cannot be undone.")) return;
+
+  try {
+    const res = await fetch(`/api/users/${id}`, {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" }
+    });
+
+    const data = await res.json();
+    if (res.ok) {
+      alert("User deleted successfully!");
+      window.location.reload();
+    } else {
+      alert(data.error || "Failed to delete user");
+    }
+  } catch (err) {
+    console.error("Delete error:", err);
+    alert("Network error while deleting user");
+  }
+}
+
+// Add User Modal Controls
+document.getElementById("add-user-btn")?.addEventListener("click", () => {
+  const modal = document.getElementById("add-user-modal");
+  if (modal) {
+    modal.removeAttribute("hidden");
+    modal.style.display = "block";
+    document.body.style.overflow = "hidden";
+  }
+});
+
+// Close Add User Modal
+document.querySelectorAll("#add-user-modal .close-modal").forEach(btn => {
+  btn.addEventListener("click", () => {
+    const modal = document.getElementById("add-user-modal");
+    modal.setAttribute("hidden", "");
+    modal.style.display = "none";
+    document.body.style.overflow = "auto";
+    document.getElementById("add-user-form").reset();
+  });
+});
+
+// Password validation for add user form
+document.getElementById("repeat_password")?.addEventListener("input", function() {
+  const password = document.getElementById("password").value;
+  const repeatPassword = this.value;
+  const errorMsg = document.getElementById("password-match-error");
+  const submitBtn = document.getElementById("create-user-submit");
+
+  if (password !== repeatPassword) {
+    errorMsg.classList.remove("hidden");
+    submitBtn.disabled = true;
+  } else {
+    errorMsg.classList.add("hidden");
+    submitBtn.disabled = false;
+  }
+});
+
+// Handle Add User Form Submit
+document.getElementById("add-user-form")?.addEventListener("submit", async (e) => {
+  e.preventDefault();
+
+  const formData = new FormData(e.target);
+  const userData = {
+    first_name: formData.get("first_name"),
+    last_name: formData.get("last_name"),
+    username: formData.get("username"),
+    email: formData.get("email"),
+    role: formData.get("role"),
+    password: formData.get("password")
+  };
+
+  // Validate passwords match
+  if (userData.password !== formData.get("repeat_password")) {
+    alert("Passwords do not match");
+    return;
+  }
+
+  try {
+    const res = await fetch("/api/users", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(userData)
+    });
+
+    const data = await res.json();
+
+    if (res.ok) {
+      alert("User created successfully!");
+      window.location.reload();
+    } else {
+      alert(data.error || "Failed to create user");
+    }
+  } catch (err) {
+    console.error("Error creating user:", err);
+    alert("Network error while creating user");
+  }
+});
 
 
     </script>
