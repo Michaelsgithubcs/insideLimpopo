@@ -2,10 +2,10 @@ const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcrypt');
 const getPool = require('../../config/db');
-const { isAuthenticated } = require('../../middlewares/auth');
+const { isAuthenticated, isAdmin } = require('../../middlewares/auth');
 
-// Get all users
-router.get('/', isAuthenticated, async (req, res) => {
+// Get all users - Admin only
+router.get('/', isAuthenticated, isAdmin, async (req, res) => {
   try {
     const pool = await getPool();
     const [users] = await pool.query(
@@ -20,8 +20,8 @@ router.get('/', isAuthenticated, async (req, res) => {
   }
 });
 
-// Create new user
-router.post('/', isAuthenticated, async (req, res) => {
+// Create new user - Admin only
+router.post('/', isAuthenticated, isAdmin, async (req, res) => {
   try {
     const { first_name, last_name, username, email, role, password } = req.body;
 
@@ -74,8 +74,8 @@ router.post('/', isAuthenticated, async (req, res) => {
   }
 });
 
-// Update user
-router.put('/:id', isAuthenticated, async (req, res) => {
+// Update user - Admin only
+router.put('/:id', isAuthenticated, isAdmin, async (req, res) => {
   try {
     const { id } = req.params;
     const { username, email, role } = req.body;
@@ -125,8 +125,8 @@ router.put('/:id', isAuthenticated, async (req, res) => {
   }
 });
 
-// Delete user
-router.delete('/:id', isAuthenticated, async (req, res) => {
+// Delete user - Admin only
+router.delete('/:id', isAuthenticated, isAdmin, async (req, res) => {
   try {
     const { id } = req.params;
     const pool = await getPool();
