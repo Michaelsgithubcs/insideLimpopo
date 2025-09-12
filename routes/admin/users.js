@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const bcrypt = require('bcrypt');
+const argon2 = require('argon2');
 const getPool = require('../../config/db');
 const { isAuthenticated, isAdmin } = require('../../middlewares/auth');
 
@@ -53,9 +53,8 @@ router.post('/', isAuthenticated, isAdmin, async (req, res) => {
       return res.status(400).json({ error: 'Username or email already exists' });
     }
 
-    // Hash password
-    const saltRounds = 10;
-    const hashedPassword = await bcrypt.hash(password, saltRounds);
+    // Hash password using argon2 (consistent with registration system)
+    const hashedPassword = await argon2.hash(password);
 
     // Insert new user
     const [result] = await pool.query(

@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-// const bcrypt = require("bcrypt");
+const bcrypt = require("bcrypt");
 const argon2 = require("argon2");
 const { isNotAuthenticated, isAuthenticated } = require("../../middlewares/auth");
 const getPool = require("../../config/db");
@@ -42,14 +42,23 @@ router.post("/login", isNotAuthenticated, async (req, res) => {
     console.log('Entered password:', password);
     console.log('Stored hash:', user.password);
 
-    // 2. Compare hashed password
-    const isPasswordValid = await argon2.verify(user.password, password);
-    console.log('argon2.verify result:', isPasswordValid);
+    // 2. Compare hashed password - support both bcrypt and argon2
+    let isPasswordValid = false;
+    
+    // Check if password hash is bcrypt format (starts with $2a$, $2b$, $2x$, or $2y$)
+    if (user.password.startsWith('$2')) {
+      console.log('Using bcrypt verification');
+      isPasswordValid = await bcrypt.compare(password, user.password);
+      console.log('bcrypt.compare result:', isPasswordValid);
+    } else {
+      console.log('Using argon2 verification');
+      isPasswordValid = await argon2.verify(user.password, password);
+      console.log('argon2.verify result:', isPasswordValid);
+    }
+    
     if (!isPasswordValid) {
-      return res.render("login", { 
-        title: "Login", 
-        error: "Incorrect email or password" 
-      });
+      req.flash("error", "Invalid username or password");
+      return res.redirect("/login");
     }
 
     // 3. Create and save session
