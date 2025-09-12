@@ -61,6 +61,16 @@ exports.createArticle = async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 };
+exports.getAllArticles = async (req, res) => {
+  try {
+    // ✅ Use the admin-friendly query with authors
+    const articles = await Article.getAllWithAuthors();
+    res.json({ articles });
+  } catch (err) {
+    console.error('Error fetching articles:', err);
+    res.status(500).json({ error: 'Failed to fetch articles' });
+  }
+};
 
 exports.getArticle = async (req, res) => {
   try {

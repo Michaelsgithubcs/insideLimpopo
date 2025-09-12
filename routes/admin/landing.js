@@ -7,7 +7,7 @@ const getPool = require('../../config/db');
 const { format } = require('date-fns'); // ✅ Make sure date-fns is installed
 
 // Consolidated landing(dashboard) route
-router.get(["/landing", "/dashboard"], isAuthenticated,isAdmin, async (req, res) => {
+router.get(["/landing", "/dashboard"], isAuthenticated, async (req, res) => {
   try {
     const pool = await getPool();
 

@@ -94,6 +94,22 @@ class Article {
     );
     return rows;
   }
+  // ✅ READ many (detailed for Admin)
+  static async getAllWithAuthors(limit = 100) {
+    const pool = await getPool();
+    const [rows] = await pool.query(
+      `SELECT a.article_id, a.title, a.content, a.featured_img, a.created_at, a.updated_at,
+              u.id AS user_id, u.username, u.email, u.role, u.first_name, u.last_name, u.profile_picture,
+              c.category_id, c.name AS category_name
+         FROM articles a
+         LEFT JOIN users u ON a.author_id = u.id
+         LEFT JOIN categories c ON a.category_id = c.category_id
+       ORDER BY a.created_at DESC
+       LIMIT ?`,
+      [limit]
+    );
+    return rows;
+  }
 }
 
 module.exports = Article;

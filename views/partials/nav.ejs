@@ -1,54 +1,38 @@
-<!-- Menu styles - must be after Bootstrap CSS -->
-<link rel="stylesheet" href="/css/mobile-menu-fix.css">
-<link rel="stylesheet" href="/css/custom-mobile-nav.css">
-<link rel="stylesheet" href="/css/mobile-menu-final-fix.css">
-<link rel="stylesheet" href="/css/desktop-nav-fixes.css">
-<link rel="stylesheet" href="/css/desktop-nav-overrides.css">
-<link rel="stylesheet" href="/css/mobile-menu-scroll-fix.css">
-<link rel="stylesheet" href="/css/mobile-menu-debug.css">
-
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark" style="background-color: #001f4d !important;">
+<nav class="navbar navbar-expand-lg navbar-dark custom-navbar">
   <div class="container-fluid">
     <!-- Brand / Logo -->
-    <a class="navbar-brand fw-bold" href="/">
-      <img src="/assets/logo/InsideLimpopoLogoTransparent.png" alt="Logo" width="35" height="35" class="d-inline-block align-text-top">
+    <a class="navbar-brand fw-bold d-flex align-items-center" href="/">
+      <img src="/assets/logo/InsideLimpopoLogoTransparent.png" alt="Logo" width="40" height="40" class="me-2">
       Inside Limpopo
     </a>
 
-    <!-- Hamburger button for mobile -->
-    <button class="navbar-toggler" type="button" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+    <!-- Hamburger -->
+    <button class="navbar-toggler" type="button"
+      data-bs-toggle="collapse"
+      data-bs-target="#navbarNav"
+      aria-controls="navbarNav"
+      aria-expanded="false"
+      aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
 
-    <!-- Navbar items -->
+    <!-- Navbar content -->
     <div class="collapse navbar-collapse" id="navbarNav">
-      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-        <!-- Home link -->
-        <li class="nav-item">
-          <a class="nav-link" href="/">Home</a>
-        </li>
-
-        <!-- Dynamic categories -->
+      <!-- Nav items -->
+      <ul class="navbar-nav mx-auto mb-2 mb-lg-0 flex-wrap">
+        <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
         <% if (typeof visibleCategories !== 'undefined') { %>
-          <% visibleCategories.forEach(category => { %>
-            <% 
-              const excluded = ['sports', 'news', 'events', 'podcast', 'opinion', 'vacancies']; 
-              const catName = category.name.toLowerCase();
-            %>
-            <% if (excluded.includes(catName)) { %>
-              <!-- Main category -->
-              <li class="nav-item">
-                <a class="nav-link" href="/<%= catName %>"><%= category.name %></a>
-              </li>
-            <% } else { %>
-              <!-- Custom/added category -->
-              <li class="nav-item">
-                <a class="nav-link" href="/articles/added/<%= catName %>"><%= category.name %></a>
-              </li>
-            <% } %>
+          <% visibleCategories.forEach(category => { 
+            const excluded = ['sports','news','events','podcast','opinion','vacancies']; 
+            const catName = category.name.toLowerCase();
+          %>
+            <li class="nav-item">
+              <a class="nav-link" href="<%= excluded.includes(catName) ? '/' + catName : '/articles/added/' + catName %>">
+                <%= category.name %>
+              </a>
+            </li>
           <% }) %>
         <% } else { %>
-          <!-- Fallback static categories -->
           <li class="nav-item"><a class="nav-link" href="/events">Events</a></li>
           <li class="nav-item"><a class="nav-link" href="/sports">Sports</a></li>
           <li class="nav-item"><a class="nav-link" href="/opinion">Opinion</a></li>
@@ -56,6 +40,7 @@
           <li class="nav-item"><a class="nav-link" href="/vacancies">Vacancies</a></li>
         <% } %>
       </ul>
+
 
       <!-- News Source Toggle -->
       <div class="news-source-toggle-nav me-3">
