@@ -117,7 +117,7 @@
                   <div class="episode-details">
                     <div class="episode-header">
                       <h3 class="episode-title">
-                        <a href="<%= article.episode_link || ('#article-' + article.article_id) %>"><%= article.title %></a>
+                        <a href="<%= article.episode_link || ('#podcast-' + article.podcast_id) %>"><%= article.title %></a>
                       </h3>
                       <div class="episode-meta">
                         <span><i class="fas fa-calendar-alt"></i> <%= article.episode_date ? new Date(article.episode_date).toLocaleDateString() : new Date(article.created_at).toLocaleDateString() %></span>
@@ -128,7 +128,7 @@
                       </div>
                     </div>
                     <p class="episode-description">
-                      <%= article.content ? article.content.substring(0, 200) : 'No description available.' %>...
+                      <%= article.description ? article.description.substring(0, 200) : 'No description available.' %>...
                     </p>
                     <div class="episode-actions">
                       <% if (article.episode_link) { %>
@@ -159,7 +159,7 @@
                   <div class="episode-details">
                     <div class="episode-header">
                       <h3 class="episode-title">
-                        <a href="<%= article.episode_link || ('#article-' + article.article_id) %>"><%= article.title %></a>
+                        <a href="<%= article.episode_link || ('#podcast-' + article.podcast_id) %>"><%= article.title %></a>
                       </h3>
                       <div class="episode-meta">
                         <span><i class="fas fa-calendar-alt"></i> <%= article.episode_date ? new Date(article.episode_date).toLocaleDateString() : new Date(article.created_at).toLocaleDateString() %></span>
@@ -170,7 +170,7 @@
                       </div>
                     </div>
                     <p class="episode-description">
-                      <%= article.content ? article.content.substring(0, 200) : 'No description available.' %>...
+                      <%= article.description ? article.description.substring(0, 200) : 'No description available.' %>...
                     </p>
                     <div class="episode-actions">
                       <% if (article.episode_link) { %>
