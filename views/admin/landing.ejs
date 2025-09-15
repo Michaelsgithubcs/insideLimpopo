@@ -599,37 +599,68 @@
       // Removed client-side token authentication check. Server-side session handles auth.
 
       // Update the tab switching functionality
-      document.querySelectorAll(".tab-landing-btn").forEach((btn) => {
-        btn.addEventListener("click", (e) => {
-          e.preventDefault();
-          const tabId = btn.getAttribute("data-tab");
-          console.log('Tab clicked:', tabId);
-
-          // Update active tab button
-          document.querySelectorAll(".tab-landing-btn")
-            .forEach((b) => b.classList.remove("active"));
-          btn.classList.add("active");
-
-          // Hide all tab content
-          document.querySelectorAll(".content-landing-tab").forEach((tab) => {
-            tab.classList.remove("active");
-          });
-
-          // Show the selected tab
-          const selectedTab = document.getElementById(tabId);
-          if (selectedTab) {
-            selectedTab.classList.add("active");
-            console.log('Showing tab:', tabId);
-            
-            // Load categories when categories tab is clicked
-            if (tabId === 'categories') {
-              loadCategories();
-            }
-          } else {
-            console.error('Tab content not found for ID:', tabId);
-          }
+      function initializeTabs() {
+        const tabButtons = document.querySelectorAll(".tab-landing-btn");
+        console.log('Found tab buttons:', tabButtons.length);
+        
+        tabButtons.forEach((btn, index) => {
+          console.log(`Tab ${index}:`, btn.getAttribute("data-tab"), btn.textContent);
+          
+          // Remove any existing event listeners
+          btn.removeEventListener("click", handleTabClick);
+          
+          // Add new event listener
+          btn.addEventListener("click", handleTabClick);
+          
+          // Ensure cursor pointer
+          btn.style.cursor = "pointer";
         });
-      });
+      }
+
+      function handleTabClick(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        
+        const btn = e.currentTarget;
+        const tabId = btn.getAttribute("data-tab");
+        console.log('Tab clicked:', tabId, 'Button:', btn.textContent);
+
+        // Update active tab button
+        document.querySelectorAll(".tab-landing-btn")
+          .forEach((b) => b.classList.remove("active"));
+        btn.classList.add("active");
+
+        // Hide all tab content
+        document.querySelectorAll(".content-landing-tab").forEach((tab) => {
+          tab.classList.remove("active");
+          tab.style.display = "none";
+        });
+
+        // Show the selected tab
+        const selectedTab = document.getElementById(tabId);
+        if (selectedTab) {
+          selectedTab.classList.add("active");
+          selectedTab.style.display = "block";
+          console.log('Showing tab:', tabId);
+          
+          // Load categories when categories tab is clicked
+          if (tabId === 'categories') {
+            loadCategories();
+          }
+        } else {
+          console.error('Tab content not found for ID:', tabId);
+        }
+      }
+
+      // Initialize tabs when DOM is ready
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initializeTabs);
+      } else {
+        initializeTabs();
+      }
+
+      // Also initialize after a short delay to ensure all elements are rendered
+      setTimeout(initializeTabs, 500);
 
       // Image preview functionality
       document

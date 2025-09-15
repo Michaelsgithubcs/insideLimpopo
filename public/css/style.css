@@ -4479,6 +4479,14 @@ footer p {
   color: #666;
   cursor: pointer;
   position: relative;
+  pointer-events: auto;
+  user-select: none;
+  transition: all 0.2s ease;
+}
+
+.tab-landing-btn:hover {
+  color: #1976d2;
+  background-color: rgba(25, 118, 210, 0.05);
 }
 
 .tab-landing-btn.active {

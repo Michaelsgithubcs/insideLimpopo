@@ -356,7 +356,62 @@
             link.classList.add('active');
           }
         });
+
+        // Handle play overlay clicks
+        initializePlayOverlays();
       });
+
+      function initializePlayOverlays() {
+        const playOverlays = document.querySelectorAll('.play-overlay');
+        
+        playOverlays.forEach(overlay => {
+          overlay.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            // Find the associated link
+            let episodeLink = null;
+            
+            // Check if this is inside an episode container
+            const episodeContainer = overlay.closest('.podcast-episode');
+            if (episodeContainer) {
+              // Look for episode link in the episode actions
+              const playButton = episodeContainer.querySelector('.play-button');
+              if (playButton && playButton.href && playButton.href !== '#') {
+                episodeLink = playButton.href;
+              }
+            } else {
+              // Check if this is in the featured slider
+              const slideContainer = overlay.closest('.slide-content');
+              if (slideContainer) {
+                const playButton = slideContainer.querySelector('.play-button');
+                if (playButton && playButton.href && playButton.href !== '#') {
+                  episodeLink = playButton.href;
+                }
+                
+                // Also check the image link
+                const imgLink = slideContainer.querySelector('.podcast-img');
+                if (!episodeLink && imgLink && imgLink.href && imgLink.href !== '#') {
+                  episodeLink = imgLink.href;
+                }
+              }
+            }
+            
+            // Open the episode link
+            if (episodeLink) {
+              console.log('Opening episode:', episodeLink);
+              window.open(episodeLink, '_blank');
+            } else {
+              console.log('No episode link found for this play button');
+            }
+          });
+          
+          // Add pointer cursor
+          overlay.style.cursor = 'pointer';
+        });
+        
+        console.log('Initialized', playOverlays.length, 'play overlay buttons');
+      }
     </script>
   </body>
 </html>
