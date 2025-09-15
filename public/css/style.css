@@ -4469,6 +4469,8 @@ footer p {
   display: flex;
   border-bottom: 2px solid #eee;
   margin-bottom: 2rem;
+  position: relative;
+  z-index: 1;
 }
 
 .tab-landing-btn {

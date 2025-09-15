@@ -518,11 +518,138 @@
     </div>
 
     <script>
+        // Debug: Check if script is loading
+        console.log('=== ADMIN LANDING SCRIPT LOADED ===');
+        
         // User role for JavaScript access
         const userRole = '<%= user.role %>';
+        console.log('User role set to:', userRole);
         
-        const form = document.getElementById('addCategoryForm');
-  const message = document.getElementById('categoryMessage');
+        // Define debug functions immediately
+        window.debugTabs = function() {
+          console.log('=== TAB DEBUG INFO ===');
+          console.log('User role:', userRole);
+          console.log('Tab buttons:', document.querySelectorAll(".tab-landing-btn").length);
+          console.log('Content tabs:', document.querySelectorAll(".content-landing-tab").length);
+          
+          document.querySelectorAll(".tab-landing-btn").forEach((btn, i) => {
+            console.log(`Button ${i}:`, {
+              text: btn.textContent.trim(),
+              dataTab: btn.getAttribute("data-tab"),
+              hasClickListener: btn.onclick !== null
+            });
+          });
+          
+          document.querySelectorAll(".content-landing-tab").forEach((tab, i) => {
+            console.log(`Content ${i}:`, {
+              id: tab.id,
+              display: window.getComputedStyle(tab).display,
+              hasActiveClass: tab.classList.contains('active')
+            });
+          });
+        };
+        
+        window.testTabSwitch = function(tabId) {
+          console.log('=== TESTING TAB SWITCH TO:', tabId, '===');
+          
+          const tabButton = document.querySelector(`[data-tab="${tabId}"]`);
+          if (!tabButton) {
+            console.error('Tab button not found for:', tabId);
+            return false;
+          }
+          
+          const contentTab = document.getElementById(tabId);
+          if (!contentTab) {
+            console.error('Content tab not found for:', tabId);
+            return false;
+          }
+          
+          // Hide all tabs
+          document.querySelectorAll(".content-landing-tab").forEach(tab => {
+            tab.classList.remove("active");
+            tab.style.display = "none";
+          });
+          
+          // Show selected tab
+          contentTab.classList.add("active");
+          contentTab.style.display = "block";
+          
+          // Update button states
+          document.querySelectorAll(".tab-landing-btn").forEach(btn => btn.classList.remove("active"));
+          tabButton.classList.add("active");
+          
+          console.log('Tab switch completed successfully');
+          return true;
+        };
+        
+        console.log('Debug functions defined - you can now use debugTabs() and testTabSwitch()');
+        
+        // Define handleTabClick function before using it
+        function handleTabClick(e) {
+          console.log('=== TAB CLICK HANDLER CALLED ===');
+          e.preventDefault();
+          e.stopPropagation();
+          
+          const btn = e.currentTarget;
+          const tabId = btn.getAttribute("data-tab");
+          console.log('Tab clicked:', tabId, 'Button text:', btn.textContent.trim());
+
+          // Update active tab button
+          document.querySelectorAll(".tab-landing-btn").forEach((b) => {
+            b.classList.remove("active");
+          });
+          btn.classList.add("active");
+
+          // Hide all tab content
+          document.querySelectorAll(".content-landing-tab").forEach((tab) => {
+            tab.classList.remove("active");
+            tab.style.display = "none";
+          });
+
+          // Show the selected tab
+          const selectedTab = document.getElementById(tabId);
+          if (selectedTab) {
+            selectedTab.classList.add("active");
+            selectedTab.style.display = "block";
+            console.log('Successfully showing tab:', tabId);
+            
+            // Load categories when categories tab is clicked (admin only)
+            if (tabId === 'categories' && userRole === 'admin') {
+              loadCategories();
+            }
+          } else {
+            console.error('ERROR: Tab content not found for ID:', tabId);
+          }
+          
+          console.log('=== TAB CLICK HANDLER FINISHED ===');
+        }
+        
+        // Wait for DOM to be fully loaded
+        document.addEventListener('DOMContentLoaded', function() {
+          console.log('=== DOM CONTENT LOADED ===');
+          
+          // Initialize tabs immediately
+          console.log('Setting up tab click handlers...');
+          const tabButtons = document.querySelectorAll(".tab-landing-btn");
+          console.log('Found', tabButtons.length, 'tab buttons');
+          
+          tabButtons.forEach((btn, index) => {
+            const tabId = btn.getAttribute("data-tab");
+            console.log(`Setting up tab ${index}: ${tabId}`);
+            
+            // Clear any existing listeners
+            btn.onclick = null;
+            
+            // Add click event listener
+            btn.addEventListener("click", handleTabClick);
+            
+            // Make sure it's clickable
+            btn.style.cursor = "pointer";
+            btn.style.pointerEvents = "auto";
+          });
+          
+          const form = document.getElementById('addCategoryForm');
+          const message = document.getElementById('categoryMessage');
 
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
@@ -598,69 +725,9 @@
 
       // Removed client-side token authentication check. Server-side session handles auth.
 
-      // Update the tab switching functionality
-      function initializeTabs() {
-        const tabButtons = document.querySelectorAll(".tab-landing-btn");
-        console.log('Found tab buttons:', tabButtons.length);
-        
-        tabButtons.forEach((btn, index) => {
-          console.log(`Tab ${index}:`, btn.getAttribute("data-tab"), btn.textContent);
-          
-          // Remove any existing event listeners
-          btn.removeEventListener("click", handleTabClick);
-          
-          // Add new event listener
-          btn.addEventListener("click", handleTabClick);
-          
-          // Ensure cursor pointer
-          btn.style.cursor = "pointer";
-        });
-      }
-
-      function handleTabClick(e) {
-        e.preventDefault();
-        e.stopPropagation();
-        
-        const btn = e.currentTarget;
-        const tabId = btn.getAttribute("data-tab");
-        console.log('Tab clicked:', tabId, 'Button:', btn.textContent);
-
-        // Update active tab button
-        document.querySelectorAll(".tab-landing-btn")
-          .forEach((b) => b.classList.remove("active"));
-        btn.classList.add("active");
-
-        // Hide all tab content
-        document.querySelectorAll(".content-landing-tab").forEach((tab) => {
-          tab.classList.remove("active");
-          tab.style.display = "none";
-        });
-
-        // Show the selected tab
-        const selectedTab = document.getElementById(tabId);
-        if (selectedTab) {
-          selectedTab.classList.add("active");
-          selectedTab.style.display = "block";
-          console.log('Showing tab:', tabId);
-          
-          // Load categories when categories tab is clicked
-          if (tabId === 'categories') {
-            loadCategories();
-          }
-        } else {
-          console.error('Tab content not found for ID:', tabId);
-        }
-      }
-
-      // Initialize tabs when DOM is ready
-      if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', initializeTabs);
-      } else {
-        initializeTabs();
-      }
-
-      // Also initialize after a short delay to ensure all elements are rendered
-      setTimeout(initializeTabs, 500);
+      // Old initializeTabs function removed - tabs are now initialized directly in DOMContentLoaded
+      
+      // Debug functions are now defined at the top of the script
 
       // Image preview functionality
       document
@@ -1232,6 +1299,7 @@ document.getElementById("add-user-form")?.addEventListener("submit", async (e) =
   }
 });
 
+        }); // End of DOMContentLoaded event listener
 
     </script>
   </body>
