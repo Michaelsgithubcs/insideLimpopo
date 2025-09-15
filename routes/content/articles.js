@@ -63,6 +63,7 @@ router.get('/search', async (req, res) => {
 // Get single article
 const pool = require('../../config/db');
 const articleController = require('../../controllers/articleController');
+const Comment = require('../../models/Comment');
 
 router.get('/:id', async (req, res) => {
   try {
@@ -70,8 +71,18 @@ router.get('/:id', async (req, res) => {
     if (!article) {
       return res.status(404).render('error', { message: 'Article not found' });
     }
+    
+    // Get related articles and comments
     const relatedArticles = await Article.findByCategory(article.category_id, 3, article.article_id);
-    res.render('templates/articles-display', { article, relatedArticles });
+    const comments = await Comment.findByArticleId(req.params.id);
+    const commentCount = await Comment.getCountByArticleId(req.params.id);
+    
+    res.render('templates/articles-display', { 
+      article, 
+      relatedArticles, 
+      comments, 
+      commentCount 
+    });
   } catch (err) {
     console.error(err);
     res.status(500).send('Server Error');

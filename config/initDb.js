@@ -78,6 +78,20 @@ async function createDatabaseAndTables() {
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
   `);
 
+  // Comments
+  await pool.query(`
+    CREATE TABLE IF NOT EXISTS comments (
+      comment_id INT AUTO_INCREMENT PRIMARY KEY,
+      article_id INT NOT NULL,
+      name VARCHAR(255) NOT NULL,
+      comment TEXT NOT NULL,
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      FOREIGN KEY (article_id) REFERENCES articles(article_id) ON DELETE CASCADE,
+      INDEX idx_article_id (article_id),
+      INDEX idx_created_at (created_at)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+  `);
+
   // Podcasts (separate table)
   // NOTE: Using "description" to match your controller/model expectations.
   await pool.query(`

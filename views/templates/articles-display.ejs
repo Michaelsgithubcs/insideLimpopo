@@ -93,7 +93,7 @@
         <h4>You Might Also Like</h4>
         <div class="related-grid">
           <% relatedArticles.forEach(related => { %>
-            <a href="/articles/<%= article.article_id %>" class="related-article">
+            <a href="/articles/<%= related.article_id %>" class="related-article">
               <% if (related.featured_img) { %>
                 <img src="<%= related.featured_img %>" alt="<%= related.title %>">
               <% } %>
@@ -103,6 +103,51 @@
         </div>
       </div>
     <% } %>
+
+    <!-- Comments Section -->
+    <div class="comments-section" id="comments">
+      <h4 class="comments-title">Comments</h4>
+      
+      <!-- Comment Form -->
+      <div class="comment-form-container">
+        <h5>Leave a Comment</h5>
+        <form id="commentForm" class="comment-form">
+          <input type="hidden" id="articleId" value="<%= article.article_id %>">
+          
+          <div class="form-group">
+            <label for="commentName">Your Name <span class="required">*</span></label>
+            <input type="text" id="commentName" name="name" required maxlength="255" placeholder="Enter your name">
+          </div>
+          
+          <div class="form-group">
+            <label for="commentText">Comment <span class="required">*</span></label>
+            <textarea id="commentText" name="comment" rows="4" required maxlength="1000" placeholder="Write your comment here..."></textarea>
+            <div class="char-counter">
+              <span id="charCount">0</span>/1000 characters
+            </div>
+          </div>
+          
+          <button type="submit" id="submitComment" class="submit-comment-btn">
+            <i class="fas fa-comment"></i> Post Comment
+          </button>
+        </form>
+      </div>
+
+      <!-- Comments Display -->
+      <div class="comments-container" id="commentsContainer">
+        <div class="loading-comments" id="loadingComments" style="display: none;">
+          <i class="fas fa-spinner fa-spin"></i> Loading comments...
+        </div>
+        
+        <div class="comments-list" id="commentsList">
+          <!-- Comments will be loaded here dynamically -->
+        </div>
+        
+        <div class="no-comments" id="noComments" style="display: none;">
+          <p><i class="fas fa-comments"></i> No comments yet. Be the first to share your thoughts!</p>
+        </div>
+      </div>
+    </div>
   </article>
 </main>
 
@@ -132,5 +177,170 @@ document.querySelectorAll('[data-share]').forEach(button => {
     
     window.open(shareUrl, '_blank', 'width=600,height=400');
   });
+});
+
+// Comments functionality
+document.addEventListener('DOMContentLoaded', function() {
+  const articleId = document.getElementById('articleId').value;
+  const commentForm = document.getElementById('commentForm');
+  const commentsList = document.getElementById('commentsList');
+  const loadingComments = document.getElementById('loadingComments');
+  const noComments = document.getElementById('noComments');
+  const charCount = document.getElementById('charCount');
+  const commentText = document.getElementById('commentText');
+
+  // Character counter for comment textarea
+  commentText.addEventListener('input', function() {
+    const count = this.value.length;
+    charCount.textContent = count;
+    
+    if (count > 900) {
+      charCount.style.color = '#ff6b6b';
+    } else if (count > 700) {
+      charCount.style.color = '#ffa500';
+    } else {
+      charCount.style.color = '#666';
+    }
+  });
+
+  // Load existing comments
+  function loadComments() {
+    loadingComments.style.display = 'block';
+    commentsList.style.display = 'none';
+    noComments.style.display = 'none';
+
+    fetch(`/api/comments/${articleId}`)
+      .then(response => response.json())
+      .then(data => {
+        loadingComments.style.display = 'none';
+        
+        if (data.success && data.comments.length > 0) {
+          displayComments(data.comments);
+          commentsList.style.display = 'block';
+        } else {
+          noComments.style.display = 'block';
+        }
+      })
+      .catch(error => {
+        console.error('Error loading comments:', error);
+        loadingComments.style.display = 'none';
+        noComments.innerHTML = '<p><i class="fas fa-exclamation-triangle"></i> Error loading comments. Please try again later.</p>';
+        noComments.style.display = 'block';
+      });
+  }
+
+  // Display comments
+  function displayComments(comments) {
+    commentsList.innerHTML = '';
+    
+    comments.forEach(comment => {
+      const commentElement = document.createElement('div');
+      commentElement.className = 'comment-item';
+      commentElement.innerHTML = `
+        <div class="comment-header">
+          <div class="comment-author">
+            <i class="fas fa-user-circle"></i>
+            <strong>${escapeHtml(comment.name)}</strong>
+          </div>
+          <div class="comment-date">
+            ${new Date(comment.created_at).toLocaleDateString('en-US', {
+              year: 'numeric',
+              month: 'short',
+              day: 'numeric',
+              hour: '2-digit',
+              minute: '2-digit'
+            })}
+          </div>
+        </div>
+        <div class="comment-content">
+          ${escapeHtml(comment.comment).replace(/\n/g, '<br>')}
+        </div>
+      `;
+      
+      commentsList.appendChild(commentElement);
+    });
+  }
+
+  // Submit comment
+  commentForm.addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const name = document.getElementById('commentName').value.trim();
+    const comment = commentText.value.trim();
+    
+    if (!name || !comment) {
+      alert('Please fill in all required fields.');
+      return;
+    }
+    
+    if (name.length > 255) {
+      alert('Name must be 255 characters or less.');
+      return;
+    }
+    
+    if (comment.length > 1000) {
+      alert('Comment must be 1000 characters or less.');
+      return;
+    }
+
+    const submitBtn = document.getElementById('submitComment');
+    const originalText = submitBtn.innerHTML;
+    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Posting...';
+    submitBtn.disabled = true;
+
+    fetch('/api/comments', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        article_id: articleId,
+        name: name,
+        comment: comment
+      })
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.success) {
+        // Clear form
+        commentForm.reset();
+        charCount.textContent = '0';
+        charCount.style.color = '#666';
+        
+        // Reload comments
+        loadComments();
+        
+        // Show success message
+        const successMsg = document.createElement('div');
+        successMsg.className = 'success-message';
+        successMsg.innerHTML = '<i class="fas fa-check-circle"></i> Comment posted successfully!';
+        commentForm.appendChild(successMsg);
+        
+        setTimeout(() => {
+          successMsg.remove();
+        }, 3000);
+      } else {
+        alert(data.error || 'Failed to post comment. Please try again.');
+      }
+    })
+    .catch(error => {
+      console.error('Error posting comment:', error);
+      alert('Network error. Please check your connection and try again.');
+    })
+    .finally(() => {
+      submitBtn.innerHTML = originalText;
+      submitBtn.disabled = false;
+    });
+  });
+
+  // Utility function to escape HTML
+  function escapeHtml(text) {
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+  }
+
+  // Load comments on page load
+  loadComments();
 });
 </script>

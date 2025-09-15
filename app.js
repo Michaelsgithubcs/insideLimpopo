@@ -113,6 +113,7 @@ app.use('/api/news', require('./routes/api/news')); // Cached world news API
 app.use('/api/sa-news', require('./routes/api/sa-news')); // Cached local news API
 app.use('/api/categories', require('./routes/admin/categories')); // Category management API
 app.use('/api/users', require('./routes/admin/users')); // User management API
+app.use('/api', require('./routes/api/comments')); // Comments API
 //app.use('/api/breaking-news',breaking);
 
 // Static files
