@@ -1097,18 +1097,7 @@ body {
 /* Reply Functionality */
 .comment-reply {
   margin-left: 2rem;
-  border-left: 3px solid #086fb6;
   position: relative;
-}
-
-.comment-reply::before {
-  content: '';
-  position: absolute;
-  left: -3px;
-  top: 0;
-  bottom: 0;
-  width: 3px;
-  background: linear-gradient(to bottom, #086fb6, rgba(8, 111, 182, 0.3));
 }
 
 .reply-indicator {
@@ -1182,7 +1171,8 @@ body {
 
 .reply-form textarea {
   resize: vertical;
-  min-height: 80px;
+  min-height: 40px;
+  height: 40px;
 }
 
 .reply-actions {
