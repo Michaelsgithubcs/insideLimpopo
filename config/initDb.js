@@ -83,16 +83,61 @@ async function createDatabaseAndTables() {
     CREATE TABLE IF NOT EXISTS comments (
       comment_id INT AUTO_INCREMENT PRIMARY KEY,
       article_id INT NOT NULL,
+      parent_comment_id INT NULL,
       name VARCHAR(255) NOT NULL,
+      email VARCHAR(255) NOT NULL,
       comment TEXT NOT NULL,
       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
       FOREIGN KEY (article_id) REFERENCES articles(article_id) ON DELETE CASCADE,
+      FOREIGN KEY (parent_comment_id) REFERENCES comments(comment_id) ON DELETE CASCADE,
       INDEX idx_article_id (article_id),
+      INDEX idx_parent_comment_id (parent_comment_id),
       INDEX idx_created_at (created_at)
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
   `);
 
-  // Podcasts (separate table)
+  // Add email column to existing comments table if it doesn't exist
+  await pool.query(`
+    ALTER TABLE comments 
+    ADD COLUMN IF NOT EXISTS email VARCHAR(255) NOT NULL DEFAULT '' 
+    AFTER name;
+  `);
+
+  // Add parent_comment_id column to existing comments table if it doesn't exist
+  try {
+    await pool.query(`
+      ALTER TABLE comments 
+      ADD COLUMN IF NOT EXISTS parent_comment_id INT DEFAULT NULL 
+      AFTER comment_id;
+    `);
+  } catch (error) {
+    // Column already exists, ignore error
+    if (error.code !== 'ER_DUP_FIELDNAME') {
+      console.log('Note: parent_comment_id column may already exist');
+    }
+  }
+  
+  // Add foreign key constraint if it doesn't exist
+  try {
+    // Check if constraint already exists
+    const [constraints] = await pool.query(`
+      SELECT CONSTRAINT_NAME 
+      FROM information_schema.TABLE_CONSTRAINTS 
+      WHERE TABLE_SCHEMA = ? 
+      AND TABLE_NAME = 'comments' 
+      AND CONSTRAINT_NAME = 'fk_parent_comment'
+    `, [process.env.DB_NAME || 'insidelimpopo']);
+    
+    if (constraints.length === 0) {
+      await pool.query(`
+        ALTER TABLE comments 
+        ADD CONSTRAINT fk_parent_comment 
+        FOREIGN KEY (parent_comment_id) REFERENCES comments(comment_id) ON DELETE CASCADE;
+      `);
+    }
+  } catch (error) {
+    console.log('Note: Foreign key constraint may already exist or there was an issue adding it:', error.message);
+  }  // Podcasts (separate table)
   // NOTE: Using "description" to match your controller/model expectations.
   await pool.query(`
     CREATE TABLE IF NOT EXISTS podcasts (

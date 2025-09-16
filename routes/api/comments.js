@@ -3,15 +3,15 @@ const express = require('express');
 const router = express.Router();
 const Comment = require('../../models/Comment');
 
-// POST - Create a new comment
+// POST - Create a new comment or reply
 router.post('/comments', async (req, res) => {
   try {
-    const { article_id, name, comment } = req.body;
+    const { article_id, parent_comment_id, name, email, comment } = req.body;
 
     // Validation
-    if (!article_id || !name || !comment) {
+    if (!article_id || !name || !email || !comment) {
       return res.status(400).json({ 
-        error: 'Missing required fields: article_id, name, and comment are required' 
+        error: 'Missing required fields: article_id, name, email, and comment are required' 
       });
     }
 
@@ -21,9 +21,41 @@ router.post('/comments', async (req, res) => {
       return res.status(400).json({ error: 'Invalid article_id' });
     }
 
+    // Validate parent_comment_id if provided
+    let parentCommentId = null;
+    if (parent_comment_id) {
+      parentCommentId = parseInt(parent_comment_id, 10);
+      if (isNaN(parentCommentId)) {
+        return res.status(400).json({ error: 'Invalid parent_comment_id' });
+      }
+      
+      // Verify parent comment exists and belongs to the same article
+      const parentComment = await Comment.findById(parentCommentId);
+      if (!parentComment) {
+        return res.status(400).json({ error: 'Parent comment not found' });
+      }
+      if (parentComment.article_id !== articleId) {
+        return res.status(400).json({ error: 'Parent comment does not belong to this article' });
+      }
+      
+      // Prevent replies to replies (keep it simple - only 1 level deep)
+      if (parentComment.parent_comment_id !== null) {
+        return res.status(400).json({ error: 'Cannot reply to a reply. Please reply to the original comment.' });
+      }
+    }
+
     // Validate name length (max 255 characters)
     if (name.trim().length > 255 || name.trim().length < 1) {
       return res.status(400).json({ error: 'Name must be between 1 and 255 characters' });
+    }
+
+    // Validate email format and length
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email.trim())) {
+      return res.status(400).json({ error: 'Please enter a valid email address' });
+    }
+    if (email.trim().length > 255) {
+      return res.status(400).json({ error: 'Email must be 255 characters or less' });
     }
 
     // Validate comment length (max 1000 characters, min 1)
@@ -33,12 +65,15 @@ router.post('/comments', async (req, res) => {
 
     // Basic content filtering (optional - you can expand this)
     const sanitizedName = name.trim();
+    const sanitizedEmail = email.trim();
     const sanitizedComment = comment.trim();
 
-    // Create the comment
+    // Create the comment or reply
     const commentId = await Comment.create({
       article_id: articleId,
+      parent_comment_id: parentCommentId,
       name: sanitizedName,
+      email: sanitizedEmail,
       comment: sanitizedComment
     });
 
