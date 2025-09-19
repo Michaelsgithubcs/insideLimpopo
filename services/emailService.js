@@ -16,9 +16,6 @@ const transporter = nodemailer.createTransport({
 
 /**
  * Send a newsletter email to multiple recipients
- * @param {string[]} recipients - Array of subscriber emails
- * @param {string} subject - Email subject
- * @param {string} htmlContent - Email content in HTML
  */
 async function sendNewsletter(recipients, subject, htmlContent) {
   try {
@@ -43,4 +40,48 @@ async function sendNewsletter(recipients, subject, htmlContent) {
   }
 }
 
-module.exports = { sendNewsletter };
+/**
+ * Send custom styled emails to individual recipients
+ */
+async function sendCustomEmails(emails, subject, message) {
+  try {
+    const validEmails = (emails || []).filter(e => e && e.includes("@"));
+    if (validEmails.length === 0) {
+      console.warn("⚠️ No valid recipients for custom emails.");
+      return;
+    }
+
+    for (const email of validEmails) {
+      const mailOptions = {
+        from: process.env.MAIL_FROM || '"Inside Limpopo" <mosewadesmond919@gmail.com>',
+        to: email,
+        subject: subject || "Inside Limpopo Update",
+        html: `
+          <div style="font-family: Arial, sans-serif; background-color: #f4f6fa; padding: 20px; color: #333;">
+            <div style="max-width: 600px; margin: auto; background: #ffffff; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
+              <div style="background: #003366; color: #ffffff; padding: 20px; text-align: center;">
+                <h1 style="margin: 0; font-size: 22px;">${subject || "Inside Limpopo Update"}</h1>
+              </div>
+              <div style="padding: 20px;">
+                <p style="color: #555555; font-size: 16px; line-height: 1.5;">
+                  ${message || "Hello, here’s your update!"}
+                </p>
+              </div>
+              <div style="background: #003366; color: #ffffff; text-align: center; padding: 10px;">
+                <p style="margin: 0; font-size: 14px;">Thank you for subscribing to Inside Limpopo!</p>
+              </div>
+            </div>
+          </div>
+        `,
+      };
+
+      const info = await transporter.sendMail(mailOptions);
+      console.log(`✅ Custom email sent to ${email}. Message ID: ${info.messageId}`);
+    }
+  } catch (err) {
+    console.error("❌ Failed to send custom emails:", err.message);
+    throw err;
+  }
+}
+
+module.exports = { sendCustomEmails, sendNewsletter };
