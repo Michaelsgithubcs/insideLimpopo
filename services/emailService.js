@@ -57,22 +57,33 @@ async function sendCustomEmails(emails, subject, message) {
         to: email,
         subject: subject || "Inside Limpopo Update",
         html: `
-          <div style="font-family: Arial, sans-serif; background-color: #f4f6fa; padding: 20px; color: #333;">
-            <div style="max-width: 600px; margin: auto; background: #ffffff; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
-              <div style="background: #003366; color: #ffffff; padding: 20px; text-align: center;">
-                <h1 style="margin: 0; font-size: 22px;">${subject || "Inside Limpopo Update"}</h1>
-              </div>
-              <div style="padding: 20px;">
-                <p style="color: #555555; font-size: 16px; line-height: 1.5;">
-                  ${message || "Hello, here’s your update!"}
-                </p>
-              </div>
-              <div style="background: #003366; color: #ffffff; text-align: center; padding: 10px;">
-                <p style="margin: 0; font-size: 14px;">Thank you for subscribing to Inside Limpopo!</p>
-              </div>
+        <div style="font-family: Arial, sans-serif; background-color: #f4f6fa; padding: 20px; color: #333;">
+          <div style="max-width: 600px; margin: auto; background: #ffffff; border-radius: 10px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+            
+            <!-- Header -->
+            <div style="background: #003366; color: #ffffff; padding: 25px; text-align: center;">
+              <h1 style="margin: 0; font-size: 24px; font-weight: bold;">${subject || "Inside Limpopo Update"}</h1>
+            </div>
+            
+            <!-- Body -->
+            <div style="padding: 25px;">
+              <p style="color: #555555; font-size: 16px; line-height: 1.6; margin: 0;">
+                ${message || "Hello, here’s your update!"}
+              </p>
+            </div>
+            
+            <!-- Footer -->
+            <div style="background: #f1f1f1; text-align: center; padding: 15px; font-size: 13px; color: #666;">
+              <p style="margin: 0;">Thank you for subscribing to <strong>Inside Limpopo</strong>!</p>
+              <p style="margin: 8px 0;">
+                <a href="http://localhost:3000/subscribe/unsubscribe" style="color: #003366; text-decoration: none;">Unsubscribe</a>
+              </p>
+              <p style="margin: 0; font-size: 12px; color: #999;">&copy; ${new Date().getFullYear()} Inside Limpopo. All rights reserved.</p>
             </div>
           </div>
-        `,
+        </div>
+      `,
+
       };
 
       const info = await transporter.sendMail(mailOptions);
