@@ -67,8 +67,32 @@
   <% if (user.role === 'admin') { %>
   <button class="tab-landing-btn" data-tab="manage-users">Manage Users</button>
   <button class="tab-landing-btn" data-tab="categories">Manage Categories</button>
+  <button class="tab-landing-btn" data-tab="custom-emails">Send Custom Emails</button>
   <% } %>
 </div>
+
+
+<section id="custom-emails" class="content-landing-tab">
+  <div class="creation-landing-form">
+    <h2>Send Custom Email</h2>
+    <p>Send a custom message to all newsletter subscribers.</p>
+
+ <form id="custom-email-form" method="POST" action="/send-custom-email">
+  <div class="form-landing-group">
+    <label for="custom-subject">Subject</label>
+    <input type="text" id="custom-subject" name="subject" required>
+  </div>
+
+  <div class="form-landing-group">
+    <label for="custom-message">Message (plain text)</label>
+    <textarea id="custom-message" name="message" rows="8" required></textarea>
+  </div>
+
+  <button type="submit" class="btn btn-landing-primary">Send Email</button>
+  <p id="custom-email-status" style="margin-top:10px;"></p>
+</form>
+
+</section>
 
 
      <!-- Add Article Section -->
@@ -1300,6 +1324,49 @@ document.getElementById("add-user-form")?.addEventListener("submit", async (e) =
 });
 
         }); // End of DOMContentLoaded event listener
+// Handle Custom Email Form
+const customEmailForm = document.getElementById("custom-email-form");
+if (customEmailForm) {
+  customEmailForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const subject = document.getElementById("custom-subject").value.trim();
+    const message = document.getElementById("custom-message").value.trim(); // ✅ fixed
+    const statusMsg = document.getElementById("custom-email-status");
+
+    if (!subject || !message) { // ✅ fixed
+      statusMsg.textContent = "⚠️ Subject and message are required.";
+      statusMsg.style.color = "red";
+      return;
+    }
+
+    try {
+      statusMsg.textContent = "Sending emails...";
+      statusMsg.style.color = "blue";
+
+      const res = await fetch("/send-custom-email", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ subject, message }) // ✅ fixed
+      });
+
+      const data = await res.json();
+
+      if (res.ok) {
+        statusMsg.textContent = data.message || "✅ Emails sent successfully!";
+        statusMsg.style.color = "green";
+        customEmailForm.reset();
+      } else {
+        throw new Error(data.message || "Failed to send emails");
+      }
+    } catch (err) {
+      console.error("Email error:", err);
+      statusMsg.textContent = "❌ " + err.message;
+      statusMsg.style.color = "red";
+    }
+  });
+}
+
 
     </script>
   </body>

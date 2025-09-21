@@ -1,10 +1,12 @@
 const express = require('express');
 const router = express.Router();
+const { sendCustomEmails } = require('../../services/emailService');  
 const landingController = require('../../controllers/landingController');
 const podcastController= require('../../controllers/podcastController');
 const { isAuthenticated ,isAdmin} = require('../../middlewares/auth');
 const getPool = require('../../config/db');
 const { format } = require('date-fns'); // ✅ Make sure date-fns is installed
+
 
 // Consolidated landing(dashboard) route
 router.get(["/landing", "/dashboard"], isAuthenticated, async (req, res) => {
@@ -90,6 +92,41 @@ router.get(["/landing", "/dashboard"], isAuthenticated, async (req, res) => {
     res.redirect("/login");
   }
 });
+router.post("/send-custom-email", isAuthenticated, isAdmin, async (req, res) => {
+  try {
+    const pool = await getPool();
+    const [rows] = await pool.query("SELECT email FROM newsletter_subscribers");
+
+    // Extract only valid email strings
+    const subscribers = rows
+      .map(r => r.email)
+      .filter(email => typeof email === "string" && email.includes("@"));
+
+    if (subscribers.length === 0) {
+      console.warn("⚠️ No valid subscribers found.");
+      return res.status(400).json({
+        success: false,
+        message: "No subscribers found to send emails."
+      });
+    }
+
+    // ✅ send emails
+    await sendCustomEmails(subscribers, req.body.subject, req.body.message);
+
+    return res.json({
+      success: true,
+      message: `✅ Emails sent to ${subscribers.length} subscriber(s)`
+    });
+
+  } catch (err) {
+    console.error("Custom email error:", err);
+    return res.status(500).json({
+      success: false,
+      message: "❌ Failed to send custom emails"
+    });
+  }
+});
+
 
 // Profile routes
 router.get('/profile', isAuthenticated, landingController.getProfile);
