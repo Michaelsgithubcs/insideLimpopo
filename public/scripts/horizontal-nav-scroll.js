@@ -203,20 +203,26 @@ document.addEventListener('DOMContentLoaded', function() {
   
   // Auto-scroll to active navigation item on page load
   function scrollToActiveItem() {
-    const activeLink = scrollContainer.querySelector('.nav-link.active') || 
-                      scrollContainer.querySelector('.nav-link[aria-current="page"]');
+    const activeLink = scrollContainer.querySelector('.nav-link.active');
     
     if (activeLink) {
-      const linkRect = activeLink.getBoundingClientRect();
+      // Calculate position to center the active item
+      const activeRect = activeLink.getBoundingClientRect();
       const containerRect = scrollContainer.getBoundingClientRect();
+      const scrollLeft = scrollContainer.scrollLeft;
       
-      if (linkRect.left < containerRect.left || linkRect.right > containerRect.right) {
-        activeLink.scrollIntoView({
-          behavior: 'smooth',
-          block: 'nearest',
-          inline: 'center'
-        });
-      }
+      const activeCenter = activeRect.left - containerRect.left + scrollLeft + (activeRect.width / 2);
+      const containerCenter = scrollContainer.clientWidth / 2;
+      const targetScrollLeft = activeCenter - containerCenter;
+      
+      // Smooth scroll to center the active item
+      scrollContainer.scrollTo({
+        left: Math.max(0, targetScrollLeft),
+        behavior: 'smooth'
+      });
+      
+      // Update arrow states after scrolling
+      setTimeout(updateArrowStates, 300);
     }
   }
   

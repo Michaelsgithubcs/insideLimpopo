@@ -16,11 +16,39 @@ async function fetchVisibleCategories(req, res, next) {
       );
       res.locals.visibleCategories = categories;
     }
+    
+    // Detect current category based on URL
+    const currentPath = req.path;
+    let currentCategory = null;
+    
+    // Check for category routes
+    if (currentPath.includes('/articles/category/')) {
+      const categorySlug = currentPath.split('/articles/category/')[1];
+      currentCategory = categorySlug;
+    } else if (currentPath.includes('/articles/added/')) {
+      const categoryName = currentPath.split('/articles/added/')[1];
+      currentCategory = categoryName;
+    } else if (currentPath === '/sports') {
+      currentCategory = 'sports';
+    } else if (currentPath === '/opinion') {
+      currentCategory = 'opinion';
+    } else if (currentPath === '/events') {
+      currentCategory = 'events';
+    } else if (currentPath === '/podcast') {
+      currentCategory = 'podcast';
+    } else if (currentPath === '/vacancies') {
+      currentCategory = 'vacancies';
+    } else if (currentPath === '/') {
+      currentCategory = 'home';
+    }
+    
+    res.locals.currentCategory = currentCategory;
     next();
   } catch (error) {
     console.error('Error fetching visible categories:', error);
     // Continue without categories if there's an error
     res.locals.visibleCategories = [];
+    res.locals.currentCategory = null;
     next();
   }
 }

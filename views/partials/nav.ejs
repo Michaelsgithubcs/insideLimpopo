@@ -34,24 +34,37 @@
         <!-- Scrollable Navigation -->
         <div class="nav-scroll-container">
           <ul class="navbar-nav mb-2 mb-lg-0">
-            <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
+            <li class="nav-item">
+              <a class="nav-link <%= currentCategory === 'home' ? 'active' : '' %>" href="/">Home</a>
+            </li>
             <% if (typeof visibleCategories !== 'undefined') { %>
               <% visibleCategories.forEach(category => { 
                 const excluded = ['sports','news','events','podcast','opinion','vacancies']; 
                 const catName = category.name.toLowerCase(); 
+                const isActive = currentCategory === catName;
               %>
                 <li class="nav-item">
-                  <a class="nav-link" href="<%= excluded.includes(catName) ? '/' + catName : '/articles/added/' + catName %>">
+                  <a class="nav-link <%= isActive ? 'active' : '' %>" href="<%= excluded.includes(catName) ? '/' + catName : '/articles/added/' + catName %>">
                     <%= category.name %>
                   </a>
                 </li>
               <% }) %>
             <% } else { %>
-              <li class="nav-item"><a class="nav-link" href="/events">Events</a></li>
-              <li class="nav-item"><a class="nav-link" href="/sports">Sports</a></li>
-              <li class="nav-item"><a class="nav-link" href="/opinion">Opinion</a></li>
-              <li class="nav-item"><a class="nav-link" href="/podcast">Podcast</a></li>
-              <li class="nav-item"><a class="nav-link" href="/vacancies">Vacancies</a></li>
+              <li class="nav-item">
+                <a class="nav-link <%= currentCategory === 'events' ? 'active' : '' %>" href="/events">Events</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link <%= currentCategory === 'sports' ? 'active' : '' %>" href="/sports">Sports</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link <%= currentCategory === 'opinion' ? 'active' : '' %>" href="/opinion">Opinion</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link <%= currentCategory === 'podcast' ? 'active' : '' %>" href="/podcast">Podcast</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link <%= currentCategory === 'vacancies' ? 'active' : '' %>" href="/vacancies">Vacancies</a>
+              </li>
             <% } %>
           </ul>
         </div>
@@ -64,24 +77,37 @@
       
       <!-- Mobile Nav Items (original structure) -->
       <ul class="navbar-nav mx-auto mb-2 mb-lg-0 flex-wrap d-lg-none">
-        <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
+        <li class="nav-item">
+          <a class="nav-link <%= currentCategory === 'home' ? 'active' : '' %>" href="/">Home</a>
+        </li>
         <% if (typeof visibleCategories !== 'undefined') { %>
           <% visibleCategories.forEach(category => { 
             const excluded = ['sports','news','events','podcast','opinion','vacancies']; 
             const catName = category.name.toLowerCase(); 
+            const isActive = currentCategory === catName;
           %>
             <li class="nav-item">
-              <a class="nav-link" href="<%= excluded.includes(catName) ? '/' + catName : '/articles/added/' + catName %>">
+              <a class="nav-link <%= isActive ? 'active' : '' %>" href="<%= excluded.includes(catName) ? '/' + catName : '/articles/added/' + catName %>">
                 <%= category.name %>
               </a>
             </li>
           <% }) %>
         <% } else { %>
-          <li class="nav-item"><a class="nav-link" href="/events">Events</a></li>
-          <li class="nav-item"><a class="nav-link" href="/sports">Sports</a></li>
-          <li class="nav-item"><a class="nav-link" href="/opinion">Opinion</a></li>
-          <li class="nav-item"><a class="nav-link" href="/podcast">Podcast</a></li>
-          <li class="nav-item"><a class="nav-link" href="/vacancies">Vacancies</a></li>
+          <li class="nav-item">
+            <a class="nav-link <%= currentCategory === 'events' ? 'active' : '' %>" href="/events">Events</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link <%= currentCategory === 'sports' ? 'active' : '' %>" href="/sports">Sports</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link <%= currentCategory === 'opinion' ? 'active' : '' %>" href="/opinion">Opinion</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link <%= currentCategory === 'podcast' ? 'active' : '' %>" href="/podcast">Podcast</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link <%= currentCategory === 'vacancies' ? 'active' : '' %>" href="/vacancies">Vacancies</a>
+          </li>
         <% } %>
       </ul>
       
