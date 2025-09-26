@@ -62,6 +62,45 @@
       </div>
     <% } %>
   </section>
+  <!-- Cached News Section -->
+<section class="section-with-header">
+  <div class="section-sport-header">
+    <h2>Latest Cached News</h2>
+    <p class="section-sport-description">
+      Headlines and updates fetched from external sources
+    </p>
+  </div>
+
+  <% if (cachedNews && cachedNews.length > 0) { %>
+    <div class="sports-section">
+      <% cachedNews.forEach(news => { %>
+        <div class="sports-card event-card">
+          <div class="card-image-container">
+            <% if (news.url_to_image) { %>
+              <img src="<%= news.url_to_image %>" alt="<%= news.title %>">
+            <% } else { %>
+              <img src="/assets/logo/InsideLimpopoLogoTransparent.png" alt="No image available" />
+            <% } %>
+          </div>
+          <div class="card-content">
+            <span class="sport-tag news"><%= news.category %></span>
+            <h3><%= news.title %></h3>
+            <p class="event-time">
+              Posted on <%= new Date(news.published_at).toLocaleString() %> from <%= news.source.name %>
+            </p>
+            <p><%= news.description ? news.description.substring(0, 200) : '' %>...</p>
+            <a href="<%= news.url %>" target="_blank" class="read-button">
+              <i class="fas fa-book-open"></i> Read More
+            </a>
+          </div>
+        </div>
+      <% }) %>
+    </div>
+  <% } else { %>
+    <p>No cached news available.</p>
+  <% } %>
+</section>
+
 </main>
 
 <%- include('../partials/footer') %>

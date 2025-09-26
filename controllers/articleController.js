@@ -1,5 +1,6 @@
 const Article = require('../models/Article');
 const { upload } = require('../middlewares/uploadMiddleware');
+const CachedNews = require('../models/CachedNews');
 exports.createArticle = async (req, res) => {
   try {
     console.log('FULL REQ.BODY:', req.body);
@@ -144,10 +145,15 @@ exports.getArticleByCategory = async (req, res) => {
 
     // fetch category id from DB
     const pool = await require('../config/db')();
-    const [rows] = await pool.query("SELECT category_id FROM categories WHERE name = ?", [categoryName]);
+    const [rows] = await pool.query(
+      "SELECT category_id FROM categories WHERE name = ?",
+      [categoryName]
+    );
 
     if (rows.length === 0) {
-      return res.status(404).render('error', { message: `Category '${categoryName}' not found` });
+      return res
+        .status(404)
+        .render("error", { message: `Category '${categoryName}' not found` });
     }
 
     const categoryId = rows[0].category_id;
@@ -155,13 +161,20 @@ exports.getArticleByCategory = async (req, res) => {
     // fetch articles in that category
     const articles = await Article.findByCategory(categoryId, 20);
     console.log(`Fetched ${articles.length} articles for category '${categoryName}'`);
-    // render category page
-    res.render('main/show', { categoryName, articles });
+
+    // ✅ fetch ALL cached news, not just this category
+    const cachedNews = await CachedNews.getAll(20);
+    console.log(`Fetched ${cachedNews.length} cached news (all categories)`);
+
+    // render category page with both
+    res.render("main/show", { categoryName, articles, cachedNews });
   } catch (err) {
     console.error("Error fetching articles by category:", err);
-    res.status(500).render('error', { message: 'Internal server error' });
+    res.status(500).render("error", { message: "Internal server error" });
   }
 };
+
+
 
 
 exports.searchArticles = async (req, res) => {
