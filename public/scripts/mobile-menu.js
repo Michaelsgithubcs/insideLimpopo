@@ -29,6 +29,7 @@ document.addEventListener('DOMContentLoaded', function() {
     closeButton.id = 'mobile-menu-close';
     closeButton.innerHTML = '&times;';
     closeButton.setAttribute('aria-label', 'Close menu');
+    closeButton.style.display = 'none'; // Initially hidden
     navbarNav.prepend(closeButton);
   } else if (closeButton && window.innerWidth >= 992) {
     // Remove the close button if we're in desktop view
@@ -105,6 +106,11 @@ document.addEventListener('DOMContentLoaded', function() {
       console.log(`Found ${items.length} navigation items before opening menu`);
     }
     
+    // Show close button when menu opens
+    if (closeButton) {
+      closeButton.style.display = 'block';
+    }
+    
     // Add classes to show menu
     navbarNav.classList.add('mobile-open');
     navbarNav.classList.add('show'); // Add Bootstrap show class too
@@ -133,6 +139,11 @@ document.addEventListener('DOMContentLoaded', function() {
   
   // Function to close the menu
   function closeMenu() {
+    // Hide close button when menu closes
+    if (closeButton) {
+      closeButton.style.display = 'none';
+    }
+    
     navbarNav.classList.remove('mobile-open');
     overlay.classList.remove('active');
     

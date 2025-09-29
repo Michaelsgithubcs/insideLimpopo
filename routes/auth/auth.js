@@ -16,7 +16,8 @@ router.get("/login", isNotAuthenticated, (req, res) => {
 });
 
 // Login handler
-router.post("/login", isNotAuthenticated, async (req, res) => {
+router.post("/login", isNotAut
+  henticated, async (req, res) => {
   console.log('--- LOGIN HANDLER ---');
   console.log('Login req.body:', req.body);
   const { email, password } = req.body;

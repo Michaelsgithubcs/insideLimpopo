@@ -142,10 +142,37 @@
   scroll-behavior: smooth;
 }
 
-/* Responsive behavior - hide scroll wrapper on mobile */
+/* Desktop navigation centering */
+@media (min-width: 992px) {
+  .navbar-collapse {
+    justify-content: center !important;
+  }
+  
+  .container-fluid {
+    justify-content: center !important;
+    align-items: center !important;
+  }
+}
+
+/* Mobile navigation positioning */
 @media (max-width: 991.98px) {
   .nav-scroll-wrapper {
     display: none !important;
+  }
+  
+  .container-fluid {
+    justify-content: space-between !important;
+    align-items: center !important;
+  }
+  
+  .navbar-toggler {
+    position: relative;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    padding: 0.25rem 0.5rem;
+  }
+  
+  .navbar-toggler:focus {
+    box-shadow: 0 0 0 0.25rem rgba(255, 255, 255, 0.25);
   }
 }
 
