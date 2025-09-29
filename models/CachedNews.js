@@ -24,13 +24,14 @@ class CachedNews {
 
   static async getByCategory(category = 'general', limit = 20) {
     const pool = await getPool();
-    const [rows] = await pool.query(
-      `SELECT * FROM cached_news 
-       WHERE category = ? 
-       ORDER BY published_at DESC 
-       LIMIT ?`,
-      [category, limit]
-    );
+   const [rows] = await pool.query(
+    `SELECT * FROM cached_news 
+     WHERE SUBSTR(category, 4) = ? 
+     ORDER BY published_at DESC 
+     LIMIT ?`,
+    [category, limit]
+  );
+  
     
     // Parse the source JSON back to object
     return rows.map(row => ({

@@ -163,7 +163,7 @@ exports.getArticleByCategory = async (req, res) => {
     console.log(`Fetched ${articles.length} articles for category '${categoryName}'`);
 
     // ✅ fetch ALL cached news, not just this category
-    const cachedNews = await CachedNews.getAll(20);
+    const cachedNews = await CachedNews.getByCategory(categoryName,20);
     console.log(`Fetched ${cachedNews.length} cached news (all categories)`);
 
     // render category page with both
