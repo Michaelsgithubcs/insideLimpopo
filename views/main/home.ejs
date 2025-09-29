@@ -139,12 +139,17 @@
           const apiBase = currentSource === 'world' ? '/api/news' : '/api/sa-news';
           const url = `${apiBase}/headlines?category=${category}&limit=${pageSize}`;
           
+          console.log(`Fetching from: ${url} (source: ${currentSource})`);
+          
           const response = await fetch(url);
           if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
           }
           const data = await response.json();
-          return data.articles;
+          
+          console.log(`Received ${data.articles?.length || 0} articles for ${category} from ${currentSource}`);
+          
+          return data.articles || [];
         } catch (error) {
           console.error("Error fetching cached news:", error);
           return [];
@@ -237,6 +242,9 @@
 
       // Function to load all news sections
       async function loadAllNews() {
+        const currentSource = getCurrentNewsSourceForAPI();
+        console.log(`Loading all news with source: ${currentSource}`);
+        
         // Show loading states
         breakingTitle.textContent = 'Loading breaking news...';
         topHeadlines.innerHTML = '<p>Loading headlines...</p>';

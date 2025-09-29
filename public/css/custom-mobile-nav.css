@@ -224,3 +224,37 @@
     will-change: opacity;
   }
 }
+
+/* Ensure desktop view is not affected */
+@media (min-width: 992px) {
+  #navbarNav .news-source-toggle-nav {
+    width: auto !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+  
+  #navbarNav .news-source-toggle-nav .toggle-buttons {
+    width: auto !important;
+    display: inline-flex !important;
+  }
+  
+  /* Reset desktop search to original compact size */
+  #navbarNav .search-container {
+    width: auto !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+  
+  #navbarNav .search-input {
+    flex: none !important;
+    width: 200px !important; /* Original desktop search width */
+    height: 32px !important;
+    padding: 5px 10px !important;
+    font-size: 14px !important;
+  }
+  
+  #navbarNav .search-button {
+    height: 32px !important;
+    padding: 6px 12px !important;
+  }
+}
