@@ -116,6 +116,37 @@
     order: -2;
     margin-bottom: 20px;
   }
+  
+  /* Hide the desktop search in mobile view only */
+  #navbarNav .d-flex .search-container {
+    display: none !important;
+  }
+  
+  /* Make World/Local toggle match search width in mobile only */
+  #navbarNav .news-source-toggle-nav {
+    width: 100%;
+    margin: 10px 0;
+    padding: 0 10px;
+  }
+  
+  #navbarNav .news-source-toggle-nav .toggle-buttons {
+    width: 100%;
+    display: flex;
+  }
+}
+
+/* Ensure desktop view is not affected */
+@media (min-width: 992px) {
+  #navbarNav .news-source-toggle-nav {
+    width: auto !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+  
+  #navbarNav .news-source-toggle-nav .toggle-buttons {
+    width: auto !important;
+    display: inline-flex !important;
+  }
 
   /* Close button for mobile menu */
   #mobile-menu-close {
