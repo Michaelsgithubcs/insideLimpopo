@@ -111,6 +111,14 @@
         <% } %>
       </ul>
       
+      <!-- Mobile: Search box first (above toggle) -->
+      <div class="search-container d-lg-none" style="display: flex; flex-direction: row; align-items: stretch; height: 40px; flex-wrap: nowrap; margin: 15px 0;">
+        <input type="search" class="search-input" id="search-mobile" placeholder="Search news..." aria-label="Search news" style="padding: 8px 12px; border: 1px solid #ccc; border-radius: 6px 0 0 6px; outline: none; height: 40px; box-sizing: border-box; flex: 1; font-size: 16px;" />
+        <button class="search-button" type="button" aria-label="Search" style="background-color: #0056b3; color: #fff; border: none; padding: 8px 15px; border-radius: 0 6px 6px 0; cursor: pointer; height: 40px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+          <i class="fas fa-search"></i>
+        </button>
+      </div>
+      
       <!-- Right side controls -->
       <div class="d-flex align-items-center gap-3 justify-content-center">
         <!-- News Source Toggle -->
@@ -121,8 +129,8 @@
           </div>
         </div>
         
-        <!-- Search box -->
-        <div class="search-container" style="display: flex; flex-direction: row; align-items: stretch; height: 32px; flex-wrap: nowrap;">
+        <!-- Desktop Search box -->
+        <div class="search-container d-none d-lg-flex" style="display: flex; flex-direction: row; align-items: stretch; height: 32px; flex-wrap: nowrap;">
           <input type="search" class="search-input" id="search" placeholder="Search news..." aria-label="Search news" style="padding: 5px 10px; border: 1px solid #ccc; border-radius: 4px 0 0 4px; outline: none; height: 32px; box-sizing: border-box; flex-shrink: 0;" />
           <button class="search-button" type="button" aria-label="Search" style="background-color: #0056b3; color: #fff; border: none; padding: 6px 12px; border-radius: 0 4px 4px 0; cursor: pointer; height: 32px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
             <i class="fas fa-search"></i>
