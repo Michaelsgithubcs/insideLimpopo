@@ -1,0 +1,106 @@
+<%- include('../partials/head', { 
+  title: categoryName || 'Category Page',
+  meta: { description: `Articles for category ${categoryName}`, keywords: categoryName }
+}) %>
+
+<link rel="stylesheet" href="/css/category-styles.css" />
+
+<%- include('../partials/header') %>
+<%- include('../partials/nav') %>
+<%- include('../partials/BreakingNews') %>
+
+<main class="category-container">
+  <!-- Hero Section -->
+  <section class="category-hero">
+    <div class="hero-content">
+      <h1><%= categoryName %></h1>
+      <p class="subtitle">Stay informed with the latest <%= categoryName %> stories and updates from across Limpopo</p>
+    </div>
+  </section>
+
+  <!-- Articles Section -->
+  <section class="section-with-header">
+    <div class="section-sport-header">
+      <h2>Posted Articles</h2>
+      <p class="section-sport-description">
+        Browse all the latest <%= categoryName %> articles, news, and updates from Limpopo
+      </p>
+    </div>
+
+    <% if (articles && articles.length > 0) { %>
+      <div class="sports-section">
+        <% articles.forEach(article => { %>
+          <div class="sports-card event-card">
+            <div class="card-image-container">
+              <% if (article.featured_img) { %>
+                <img src="<%= article.featured_img %>" alt="<%= article.title %>">
+              <% } else { %>
+                <img src="/assets/logo/InsideLimpopoLogoTransparent.png" alt="No image available" />
+              <% } %>
+              <div class="event-date">
+                <span class="day"><%= new Date(article.created_at).getDate() %></span>
+                <span class="month"><%= new Date(article.created_at).toLocaleString('default', { month: 'short' }).toUpperCase() %></span>
+              </div>
+            </div>
+            <div class="card-content">
+              <span class="sport-tag football"><%= categoryName %></span>
+              <h3 style="color: #343a40;"><%= article.title %></h3>
+              <p class="event-time">Posted on <%= new Date(article.created_at).toLocaleString() %></p>
+              <p>
+                <%= article.content.substring(0, 200) %>...
+              </p>
+              <a href="/articles/<%= article.article_id %>" class="read-button">
+                <i class="fas fa-book-open"></i> Read More
+              </a>
+            </div>
+          </div>
+        <% }) %>
+      </div>
+    <% } else { %>
+      <div class="no-articles">
+        <p>No articles found in this category yet. Check back soon for updates!</p>
+      </div>
+    <% } %>
+  </section>
+  <!-- Cached News Section -->
+<section class="section-with-header">
+  <div class="section-sport-header">
+    <h2>Latest Cached News</h2>
+    <p class="section-sport-description">
+      Headlines and updates fetched from external sources
+    </p>
+  </div>
+
+  <% if (cachedNews && cachedNews.length > 0) { %>
+    <div class="sports-section">
+      <% cachedNews.forEach(news => { %>
+        <div class="sports-card event-card">
+          <div class="card-image-container">
+            <% if (news.url_to_image) { %>
+              <img src="<%= news.url_to_image %>" alt="<%= news.title %>">
+            <% } else { %>
+              <img src="/assets/logo/InsideLimpopoLogoTransparent.png" alt="No image available" />
+            <% } %>
+          </div>
+          <div class="card-content">
+            <span class="sport-tag news"><%= news.category %></span>
+            <h3><%= news.title %></h3>
+            <p class="event-time">
+              Posted on <%= new Date(news.published_at).toLocaleString() %> from <%= news.source.name %>
+            </p>
+            <p><%= news.description ? news.description.substring(0, 200) : '' %>...</p>
+            <a href="<%= news.url %>" target="_blank" class="read-button">
+              <i class="fas fa-book-open"></i> Read More
+            </a>
+          </div>
+        </div>
+      <% }) %>
+    </div>
+  <% } else { %>
+    <p>No cached news available.</p>
+  <% } %>
+</section>
+
+</main>
+
+<%- include('../partials/footer') %>

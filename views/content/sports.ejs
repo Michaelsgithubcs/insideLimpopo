@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+  <%- include('../partials/head.ejs') %>
+
+  <body class="sports-page">
+    <!-- Header Section -->
+    <%- include('../partials/header.ejs') %>
+    <%- include('../partials/nav.ejs') %>
+
+    <%- include('../partials/BreakingNews.ejs') %>
+    <!-- Main Content -->
+     
+    <main class="sports-container">
+      <!-- Hero Section -->
+      <section class="sports-hero">
+        <div class="hero-content">
+          <h1>Limpopo Sports Network</h1>
+          <p class="subtitle">Your premier source for local sports news, events, and team coverage</p>
+          <button class="cta-button">Subscribe for Updates</button>
+        </div>
+      </section>
+
+      <!-- Sports News Section -->
+      <!-- (Posted Articles section moved below) -->
+
+      <!-- Featured Sports Events Section -->
+      <section id="featured-events" class="section-with-header">
+        <div class="section-sport-header">
+          <h2>Featured Sports Events</h2>
+          <p class="section-sport-description">
+            Discover the top upcoming sports events and matches that you don't want to miss.
+          </p>
+        </div>
+
+        <!-- Sports Event Cards -->
+        <div class="sports-section">
+          <div class="sports-card event-card">
+            <div class="card-image-container">
+              <img src="./assets/sportsimages/football.jpeg" alt="Football Match" />
+              <div class="event-date">
+                <span class="day">15</span>
+                <span class="month">JUN</span>
+              </div>
+            </div>
+            <div class="card-content">
+              <span class="sport-tag football">Football</span>
+              <h3>Championship Final</h3>
+              <p class="event-time">Saturday, 3:00 PM | Peter Mokaba Stadium</p>
+              <p>
+                The grand final of the football championship featuring Magezi United vs. Limpopo Lions. Don't miss the action!
+              </p>
+              <button class="card-button">Get Tickets</button>
+            </div>
+          </div>
+
+          <div class="sports-card event-card">
+            <div class="card-image-container">
+              <img src="/assets/sportsimages/basketball.jpeg" alt="Basketball Game" />
+              <div class="event-date">
+                <span class="day">22</span>
+                <span class="month">JUN</span>
+              </div>
+            </div>
+            <div class="card-content">
+              <span class="sport-tag basketball">Basketball</span>
+              <h3>League Playoffs</h3>
+              <p class="event-time">Saturday, 7:30 PM | Polokwane Arena</p>
+              <p>
+                The league playoffs are heating up. Catch the live games and see which team will rise to the top.
+              </p>
+              <button class="card-button">Get Tickets</button>
+            </div>
+          </div>
+
+          <div class="sports-card event-card">
+            <div class="card-image-container">
+              <img src="./assets/sportsimages/tennis.jpeg" alt="Tennis Tournament" />
+              <div class="event-date">
+                <span class="day">30</span>
+                <span class="month">JUN</span>
+              </div>
+            </div>
+            <div class="card-content">
+              <span class="sport-tag tennis">Tennis</span>
+              <h3>International Tournament</h3>
+              <p class="event-time">Sunday, 10:00 AM | Limpopo Tennis Center</p>
+              <p>
+                Top tennis players from across Africa facing off in this exciting international tournament.
+              </p>
+              <button class="card-button">Get Tickets</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Featured Sports Teams Section -->
+      <section id="sports-teams" class="section-with-header">
+        <div class="section-sport-header">
+          <h2>Featured Sports Teams</h2>
+          <p class="section-sport-description">
+            Learn about the most popular and successful sports teams in Limpopo.
+          </p>
+        </div>
+
+        <div class="sports-section team-section">
+          <div class="sports-card team-card">
+            <div class="team-logo">
+              <img src="./assets/sportsimages/footballteam.jpeg" alt="Football Team" />
+              <div class="team-stats">
+                <span>15 Wins</span>
+                <span>2 Losses</span>
+              </div>
+            </div>
+            <div class="card-content">
+              <h3>Magezi United</h3>
+              <div class="team-meta">
+                <span>Football</span>
+                <span>Founded: 1985</span>
+              </div>
+              <p>
+                One of the most successful football clubs in Limpopo, with 8 regional championships and 3 national titles.
+              </p>
+              <div class="team-social">
+                <a href="#"><i class="fab fa-facebook"></i></a>
+                <a href="#"><i class="fab fa-twitter"></i></a>
+                <a href="#"><i class="fab fa-instagram"></i></a>
+              </div>
+            </div>
+          </div>
+
+          <div class="sports-card team-card">
+            <div class="team-logo">
+              <img src="./assets/sportsimages/basketballteam.jpeg" alt="Basketball Team" />
+              <div class="team-stats">
+                <span>12 Wins</span>
+                <span>3 Losses</span>
+              </div>
+            </div>
+            <div class="card-content">
+              <h3>Mojapelo's Riders</h3>
+              <div class="team-meta">
+                <span>Basketball</span>
+                <span>Founded: 1998</span>
+              </div>
+              <p>
+                Known for their fast-paced play and legendary performances, the Riders continue to dominate the league.
+              </p>
+              <div class="team-social">
+                <a href="#"><i class="fab fa-facebook"></i></a>
+                <a href="#"><i class="fab fa-twitter"></i></a>
+                <a href="#"><i class="fab fa-instagram"></i></a>
+              </div>
+            </div>
+          </div>
+
+          <div class="sports-card team-card">
+            <div class="team-logo">
+              <img src="./assets/sportsimages/tennisteam.jpeg" alt="Tennis Team" />
+              <div class="team-stats">
+                <span>18 Wins</span>
+                <span>1 Loss</span>
+              </div>
+            </div>
+            <div class="card-content">
+              <h3>Mogano's Hot-Flurs</h3>
+              <div class="team-meta">
+                <span>Tennis</span>
+                <span>Founded: 2005</span>
+              </div>
+              <p>
+                A powerhouse in African tennis, with numerous tournament titles and representing Limpopo in international competitions.
+              </p>
+              <div class="team-social">
+                <a href="#"><i class="fab fa-facebook"></i></a>
+                <a href="#"><i class="fab fa-twitter"></i></a>
+                <a href="#"><i class="fab fa-instagram"></i></a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Posted Articles Section (bottom, after teams) -->
+      <section class="section-with-header">
+        <div class="section-sport-header">
+          <h2>Posted Articles</h2>
+          <p class="section-sport-description">
+            Browse all the latest posted articles, news, and updates from Limpopo.
+          </p>
+        </div>
+        <div class="sports-section">
+          <% if (sportsArticles.length === 0) { %>
+            <p>No posted articles found.</p>
+          <% } else { %>
+            <% sportsArticles.forEach(article => { %>
+              <div class="sports-card event-card">
+                <div class="card-image-container">
+                  <% if (article.featured_img) { %>
+                    <img src="<%= article.featured_img %>" alt="Featured image" />
+                  <% } else { %>
+                    <img src="/assets/sportsimages/logo.jpg" alt="No image available" />
+                  <% } %>
+                  <div class="event-date">
+                    <span class="day"><%= new Date(article.created_at).getDate() %></span>
+                    <span class="month"><%= new Date(article.created_at).toLocaleString('default', { month: 'short' }).toUpperCase() %></span>
+                  </div>
+                </div>
+                <div class="card-content">
+                  <span class="sport-tag football">Sports</span>
+                  <h3 style="color: #343a40;"><%= article.title %></h3>
+
+                  <p class="event-time">Posted on <%= new Date(article.created_at).toLocaleString() %></p>
+                  <p>
+                    <%= article.content.substring(0, 200) %>...
+                  </p>
+                  <a href="/articles/<%= article.article_id %>" class="read-button">
+                    <i class="fas fa-book-open"></i> Read More
+                  </a>
+                </div>
+              </div>
+            <% }) %>
+          <% } %>
+        </div>
+      </section>
+
+           <!-- Newsletter Section -->
+
+<section class="newsletter-section">
+  <div class="newsletter-container">
+    <div class="newsletter-content">
+      <h2>Never Miss a Game</h2>
+      <p>Subscribe to our newsletter for weekly updates on your favorite teams and events</p>
+      <form class="newsletter-form" id="newsletterForm">
+        <input type="email" name="email" placeholder="Your email address" required>
+        <button type="submit">Subscribe</button>
+      </form>
+      <p id="responseMessage"></p>
+    </div>
+  </div>
+</section>
+    </main>
+
+    <!-- Footer Section -->
+    <%- include('../partials/footer.ejs') %>
+
+    <script src="/public/scrips/scipt.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/scripts/script.js"></script>
+  </body>
+</html>
+
+<script>
+         document.getElementById('newsletterForm').addEventListener('submit', async function(e) {
+  e.preventDefault();
+  const email = this.email.value;
+  const responseMessage = document.getElementById('responseMessage');
+  
+  try {
+    const res = await fetch('/subscribe', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email })
+    });
+
+    const data = await res.json();
+    responseMessage.textContent = data.message;
+    responseMessage.style.color = res.ok ? 'green' : 'red';
+    if (res.ok) this.reset();
+  } catch (error) {
+    responseMessage.textContent = 'Network error, please try again.';
+    responseMessage.style.color = 'red';
+  }
+});
+
+    </script>
+  </body>
+</html>

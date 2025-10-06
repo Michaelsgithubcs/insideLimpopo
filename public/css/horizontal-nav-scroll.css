@@ -1,0 +1,249 @@
+/* =============================================== */
+/*           HORIZONTAL NAVIGATION SCROLL        */
+/* =============================================== */
+
+/* Main wrapper for desktop horizontal scrolling */
+.nav-scroll-wrapper {
+  flex: 0 0 auto; /* Don't grow, don't shrink, use content size */
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  width: calc(5 * 120px + 80px); /* Width for 5 items plus arrow space */
+  margin-right: 2rem;
+}
+
+/* Scrollable container */
+.nav-scroll-container {
+  overflow-x: auto;
+  overflow-y: hidden;
+  flex: 1;
+  scroll-behavior: smooth;
+  max-width: calc(5 * 120px); /* Show exactly 5 navigation items */
+  
+  /* Hide scrollbars while maintaining functionality */
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* Internet Explorer 10+ */
+}
+
+.nav-scroll-container::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
+}
+
+/* Navigation list inside scroll container */
+.nav-scroll-container .navbar-nav {
+  display: flex;
+  flex-wrap: nowrap;
+  white-space: nowrap;
+  min-width: max-content;
+  margin: 0;
+}
+
+/* Navigation items */
+.nav-scroll-container .nav-item {
+  flex-shrink: 0;
+  min-width: 100px; /* Consistent minimum width for items */
+  max-width: 120px; /* Maximum width to ensure 6 items are visible */
+}
+
+.nav-scroll-container .nav-link {
+  padding: 0.5rem 1rem;
+  color: white;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: all 0.3s ease;
+  border-radius: 4px;
+  display: block;
+  text-align: center;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.nav-scroll-container .nav-link:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+}
+
+/* Active navigation link styling */
+.nav-scroll-container .nav-link.active {
+  background-color: rgba(255, 255, 255, 0.2);
+  color: #ffffff;
+  font-weight: 600;
+  position: relative;
+}
+
+.nav-scroll-container .nav-link.active::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80%;
+  height: 3px;
+  background-color: #ffffff;
+  border-radius: 2px;
+}
+
+/* Mobile active link styling */
+@media (max-width: 991.98px) {
+  .navbar-nav .nav-link.active {
+    background-color: rgba(255, 255, 255, 0.15);
+    color: #ffffff;
+    font-weight: 600;
+    border-left: 3px solid #ffffff;
+    padding-left: 1.5rem;
+  }
+}
+
+/* Arrow buttons */
+.nav-scroll-arrow {
+  background-color: #011131;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: white;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 14px;
+  z-index: 10;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.nav-scroll-arrow:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.4);
+  transform: scale(1.05);
+}
+
+.nav-scroll-arrow:focus {
+  outline: 2px solid #007bff;
+  outline-offset: 2px;
+}
+
+.nav-scroll-arrow:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.nav-scroll-left {
+  margin-right: 8px;
+}
+
+.nav-scroll-right {
+  margin-left: 8px;
+}
+
+/* Smooth scrolling enhancement */
+.nav-scroll-container.scrolling {
+  scroll-behavior: smooth;
+}
+
+/* Responsive behavior - hide scroll wrapper on mobile */
+@media (max-width: 991.98px) {
+  .nav-scroll-wrapper {
+    display: none !important;
+  }
+}
+
+/* Adjust wrapper size for smaller desktop screens */
+@media (max-width: 1200px) {
+  .nav-scroll-wrapper {
+    width: calc(4 * 110px + 80px); /* Show 4 items on medium screens */
+  }
+  
+  .nav-scroll-container {
+    max-width: calc(4 * 110px);
+  }
+  
+  .nav-scroll-container .nav-item {
+    min-width: 90px;
+    max-width: 110px;
+  }
+}
+
+@media (max-width: 1000px) {
+  .nav-scroll-wrapper {
+    width: calc(3 * 100px + 80px); /* Show 3 items on smaller screens */
+  }
+  
+  .nav-scroll-container {
+    max-width: calc(3 * 100px);
+  }
+  
+  .nav-scroll-container .nav-item {
+    min-width: 80px;
+    max-width: 100px;
+  }
+}
+
+/* Ensure no interference with existing mobile styles */
+@media (min-width: 992px) {
+  /* Hide the mobile navigation in desktop view */
+  .navbar-nav.flex-wrap.d-lg-none {
+    display: none !important;
+  }
+  
+  /* Ensure our scroll wrapper is visible */
+  .nav-scroll-wrapper.d-none.d-lg-flex {
+    display: flex !important;
+  }
+}
+
+/* Fade effects to indicate more content */
+.nav-scroll-container::before,
+.nav-scroll-container::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 15px;
+  pointer-events: none;
+  z-index: 5;
+  transition: opacity 0.3s ease;
+}
+
+.nav-scroll-container::before {
+  left: 0;
+  background: linear-gradient(to right, #011131, transparent);
+  opacity: 0;
+}
+
+.nav-scroll-container::after {
+  right: 0;
+  background: linear-gradient(to left, #011131, transparent);
+  opacity: 0;
+}
+
+/* Show fade effects when content overflows */
+.nav-scroll-container.has-scroll::after {
+  opacity: 1;
+}
+
+.nav-scroll-container.has-scroll.scrolled::before {
+  opacity: 1;
+}
+
+/* Position the scroll container relatively for pseudo-elements */
+.nav-scroll-container {
+  position: relative;
+}
+
+/* Animation for smooth arrow appearance */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.nav-scroll-arrow {
+  animation: fadeIn 0.3s ease-out;
+}

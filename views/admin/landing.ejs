@@ -1,0 +1,1373 @@
+<!DOCTYPE html>
+<html lang="en">
+  <%- include('../partials/head.ejs') %>
+  <link rel="stylesheet" href="/css/image-options.css">
+  <link rel="stylesheet" href="/css/admin-styles.css">
+
+  <body>
+    <!-- Main Section -->
+    <main class="dashboard-landing-container">
+      <!-- User Profile Section -->
+      <section class="profile-landing-section">
+        <div class="profile-landing-card">
+          <div class="profile-landing-header">
+            <div class="avatar-landing">
+              <img
+                src="<%= user.avatar || '/images/default-avatar.jpg' %>"
+                alt="<%= user.username %>'s Profile Picture"
+                class="profile-avatar"
+                id="profile-avatar"
+              />
+              <form id="avatar-upload-form" style="display: none">
+                <input
+                  type="file"
+                  id="avatar-upload"
+                  name="avatar"
+                  accept="image/*"
+                />
+              </form>
+            </div>
+            <div class="profile-landing-info">
+              <h2 id="profile-username"><%= user.username %></h2>
+              <p class="email-landing"><%= user.email %></p>
+              <div class="stats-landing">
+                <div class="stat-landing-item">
+                  <span class="stat-landing-number"
+                    ><%= user.storyCount %></span
+                  >
+                  <span class="stat-landing-label">Stories</span>
+                </div>
+                <div class="stat-landing-item">
+                  <span class="stat-landing-number"
+                    ><%= user.articleCount %></span
+                  >
+                  <span class="stat-landing-label">Articles</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="profile-landing-actions">
+            <button class="btn btn-landing-edit" id="edit-profile-btn">
+              Edit Profile
+            </button>
+            <form action="/logout" method="POST" style="display: inline">
+              <button type="submit" class="btn btn-landing-logout">
+                Logout
+              </button>
+            </form>
+          </div>
+        </div>
+      </section>
+
+      <!-- Content Creation Tabs -->
+        <div class="creation-landing-tabs">
+  <button class="tab-landing-btn active" data-tab="article">Add Article</button>
+  <button class="tab-landing-btn" data-tab="podcast">Add Podcast</button>
+  <button class="tab-landing-btn" data-tab="manage-articles">Manage Articles</button>
+  <% if (user.role === 'admin') { %>
+  <button class="tab-landing-btn" data-tab="manage-users">Manage Users</button>
+  <button class="tab-landing-btn" data-tab="categories">Manage Categories</button>
+  <button class="tab-landing-btn" data-tab="custom-emails">Send Custom Emails</button>
+  <% } %>
+</div>
+
+
+<section id="custom-emails" class="content-landing-tab">
+  <div class="creation-landing-form">
+    <h2>Send Custom Email</h2>
+    <p>Send a custom message to all newsletter subscribers.</p>
+
+ <form id="custom-email-form" method="POST" action="/send-custom-email">
+  <div class="form-landing-group">
+    <label for="custom-subject">Subject</label>
+    <input type="text" id="custom-subject" name="subject" required>
+  </div>
+
+  <div class="form-landing-group">
+    <label for="custom-message">Message (plain text)</label>
+    <textarea id="custom-message" name="message" rows="8" required></textarea>
+  </div>
+
+  <button type="submit" class="btn btn-landing-primary">Send Email</button>
+  <p id="custom-email-status" style="margin-top:10px;"></p>
+</form>
+
+</section>
+
+
+     <!-- Add Article Section -->
+      <section id="article" class="content-landing-tab active">
+  <form 
+    action="/api/articles" 
+    method="POST" 
+    enctype="multipart/form-data" 
+    id="article-form" 
+    class="creation-landing-form"
+  >
+    <h2>Create Article</h2>
+
+    <div class="form-landing-group">
+      <label for="article-title">Title</label>
+      <input type="text" id="article-title" name="title" required>
+    </div>
+
+    <div class="form-landing-group">
+      <label for="article-category">Category</label>
+      <select id="article-category" name="category_id" required>
+        <option value="">Select Category</option>
+        <% categories.forEach(c => { %>
+          <option value="<%= c.category_id %>"><%= c.name %></option>
+        <% }) %>
+      </select>
+    </div>
+
+    <div class="form-landing-group">
+      <label for="article-lead">Lead Paragraph</label>
+      <textarea id="article-lead" name="lead" rows="3" required></textarea>
+    </div>
+
+    <div class="form-landing-group">
+      <label for="article-content">Content</label>
+      <textarea id="article-content" name="content" rows="10" required></textarea>
+    </div>
+
+    <!-- ✅ Featured Image with choice -->
+    <div class="form-landing-group">
+      <label>Featured Image</label>
+
+      <!-- Radio buttons for type -->
+      <div>
+        <label>
+          <input type="radio" name="image_type" value="url" checked>
+          Use URL
+        </label>
+        <input type="url" id="article-image-url" name="image_url" placeholder="https://example.com/image.jpg">
+      </div>
+
+      <div>
+        <label>
+          <input type="radio" name="image_type" value="upload">
+          Upload File
+        </label>
+        <input type="file" id="article-image-file" name="featured_img" accept="image/*">
+      </div>
+
+      <div id="article-image-preview"></div>
+    </div>
+
+    <!-- ✅ Fixed button with id -->
+    <button 
+      type="submit" 
+      id="article-submit-btn" 
+      class="btn btn-landing-primary">
+      Submit Article
+    </button>
+  </form>
+</section>
+
+
+        </form>
+      </section>
+       <!-- Add Podcast Section -->
+<section id="podcast" class="content-landing-tab"> 
+  <!-- Create Podcast -->
+  <form 
+    action="/api/podcasts" 
+    method="POST" 
+    id="podcast-form" 
+    class="creation-landing-form"
+  >
+    <h2>Create Podcast</h2>
+
+    <!-- Title -->
+    <div class="form-landing-group">
+      <label for="podcast-title">Podcast Title</label>
+      <input type="text" id="podcast-title" name="title" required>
+    </div>
+
+    <!-- Description -->
+    <div class="form-landing-group">
+      <label for="podcast-description">Description</label>
+      <textarea 
+        id="podcast-description" 
+        name="description" 
+        rows="4" 
+        placeholder="Enter a short description of the podcast" 
+        required>
+      </textarea>
+    </div>
+
+    <!-- Episode Link -->
+    <div class="form-landing-group">
+      <label for="episode-link">Episode Link</label>
+      <input 
+        type="url" 
+        id="episode-link" 
+        name="episode_link" 
+        placeholder="https://youtu.be/..." 
+        required
+      >
+    </div>
+
+    <!-- Date -->
+    <div class="form-landing-group">
+      <label for="episode-date">Date</label>
+      <input type="date" id="episode-date" name="episode_date" required>
+    </div>
+
+    <!-- Duration -->
+    <div class="form-landing-group">
+      <label for="episode-duration">Duration</label>
+      <input 
+        type="text" 
+        id="episode-duration" 
+        name="episode_duration" 
+        placeholder="42 min" 
+        required
+      >
+    </div>
+
+    <button type="submit" class="btn btn-landing-primary">
+      Submit Podcast
+    </button>
+  </form>
+
+  <!-- Manage Podcasts -->
+<div class="creation-landing-form" style="margin-top:2rem;">
+  <h2>Manage Podcasts</h2>
+
+  <% const _podcasts = (typeof podcasts !== 'undefined' && podcasts) ? podcasts : []; %>
+
+  <% if (_podcasts.length > 0) { %>
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Title</th>
+          <th>Description</th>
+          <th>Link</th>
+          <th>Date</th>
+          <th>Duration</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% _podcasts.forEach(p => { %>
+          <tr>
+            <td><%= p.title %></td>
+            <td><%= p.description ? p.description.substring(0, 50) + '...' : '' %></td>
+            <td>
+              <% if (p.episode_link) { %>
+                <a href="<%= p.episode_link %>" target="_blank">Play</a>
+              <% } else { %>
+                <span>No link</span>
+              <% } %>
+            </td>
+            <td><%= p.episode_date_str || '' %></td>
+            <td><%= p.episode_duration || '' %></td>
+            <td>
+              <a href="/api/podcasts/<%= p.podcast_id %>" class="btn btn-sm btn-view">View</a>
+              <a href="/api/podcasts/edit/<%= p.podcast_id %>" class="btn btn-sm btn-edit">Edit</a>
+              <button 
+                type="button" 
+                class="btn btn-sm btn-delete" 
+                onclick="deletePodcast('<%= p.podcast_id %>')"
+              >
+                Delete
+              </button>
+            </td>
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  <% } else { %>
+    <p>No podcasts found. Create one above.</p>
+  <% } %>
+</div>
+</section>
+
+
+
+      <!-- Manage Users Section -->
+<% if (user.role === 'admin') { %>
+<section id="manage-users" class="content-landing-tab">
+  <div class="creation-landing-form">
+    <div class="d-flex align-items-center justify-content-between mb-3">
+      <h2>Manage Users</h2>
+      <button class="btn btn-landing-primary" id="add-user-btn">＋ Add User</button>
+    </div>
+
+    <% if (recentUsers && recentUsers.length > 0) { %>
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Username</th>
+            <th>Email</th>
+            <th>Role</th>
+            <th>Articles</th>
+            <th>Podcasts</th>
+            <th>Joined</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% recentUsers.forEach(u => { %>
+            <tr>
+              <td><%= u.username %></td>
+              <td><%= u.email %></td>
+              <td><span class="badge bg-dark"><%= u.role %></span></td>
+              <td><%= u.articleCount || 0 %></td>
+              <td><%= u.podcastCount || 0 %></td>
+              <td><%= u.joined %></td>
+              <td>
+                <button class="btn btn-sm btn-edit" onclick="openEditUser('<%= u.id %>', '<%= u.username %>', '<%= u.email %>', '<%= u.role %>')">Edit</button>
+                <button class="btn btn-sm btn-delete" onclick="deleteUser('<%= u.id %>')">Delete</button>
+              </td>
+            </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    <% } else { %>
+      <p>No users found.</p>
+    <% } %>
+  </div>
+</section>
+<% } %>
+
+<!-- Add User Modal -->
+<% if (user.role === 'admin') { %>
+<div class="modal" id="add-user-modal" hidden>
+  <div class="modal-content auth-card">
+    <span class="close-modal">&times;</span>
+    <div class="auth-header">
+      <h2>Create User</h2>
+      <p>Add a new account</p>
+    </div>
+    <form id="add-user-form" class="auth-form-content">
+      <div class="name-fields">
+        <div class="input-container">
+          <input type="text" id="first_name" name="first_name" placeholder=" " required />
+          <label for="first_name">First Name</label>
+        </div>
+        <div class="input-container">
+          <input type="text" id="last_name" name="last_name" placeholder=" " required />
+          <label for="last_name">Last Name</label>
+        </div>
+      </div>
+
+      <div class="input-container">
+        <input type="text" id="username" name="username" placeholder=" " required />
+        <label for="username">Username</label>
+      </div>
+
+      <div class="input-container">
+        <input type="email" id="email" name="email" placeholder=" " required />
+        <label for="email">Email</label>
+      </div>
+
+      <div class="input-container select-container">
+        <select id="role" name="role" required>
+          <option value="" disabled hidden>Select Role</option>
+          <option value="user">User</option>
+          <option value="admin">Admin</option>
+        </select>
+        <label for="role">Role</label>
+      </div>
+
+      <div class="input-container">
+        <input type="password" id="password" name="password" required />
+        <label for="password">Password</label>
+      </div>
+
+      <div class="input-container">
+        <input type="password" id="repeat_password" name="repeat_password" required />
+        <label for="repeat_password">Repeat Password</label>
+      </div>
+      <p id="password-match-error" class="requirement error hidden">Passwords do not match</p>
+
+      <div class="submit-container">
+        <input type="submit" value="Create User" class="auth-button" id="create-user-submit" disabled />
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Edit User Modal -->
+<div class="modal" id="edit-user-modal" hidden>
+  <div class="modal-content auth-card">
+    <span class="close-modal">&times;</span>
+    <div class="auth-header">
+      <h2>Edit User</h2>
+    </div>
+    <form id="edit-user-form" class="auth-form-content">
+      <input type="hidden" id="edit_user_id" name="id" />
+      <div class="input-container">
+        <input type="text" id="edit_username" name="username" placeholder=" " required />
+        <label for="edit_username">Username</label>
+      </div>
+
+      <div class="input-container">
+        <input type="email" id="edit_email" name="email" placeholder=" " required />
+        <label for="edit_email">Email</label>
+      </div>
+
+      <div class="input-container select-container">
+        <select id="edit_role" name="role" required>
+          <option value="user">User</option>
+          <option value="admin">Admin</option>
+        </select>
+        <label for="edit_role">Role</label>
+      </div>
+
+      <div class="submit-container">
+        <input type="submit" value="Save Changes" class="auth-button" />
+      </div>
+    </form>
+  </div>
+</div>
+<% } %>
+      </section>
+      <!-- Manage Articles Section -->
+      <section id="manage-articles" class="content-landing-tab">
+        <div class="creation-landing-form">
+          <h2>Recent Articles</h2>
+          <div class="articles-list">
+            <% if (recentArticles && recentArticles.length > 0) { %>
+              <% recentArticles.forEach(article => { %>
+                <div class="article-item">
+                  <div class="article-header">
+                    <h3><%= article.title %></h3>
+                    <span class="article-meta">
+                      <%= article.formatted_date %> • 
+                      <span class="category-tag"><%= article.category_name || 'Uncategorized' %></span>
+                    </span>
+                  </div>
+                  <p class="article-excerpt"><%= article.excerpt %></p>
+                  <div class="article-actions">
+                    <a href="/api/articles/edit/<%= article.article_id %>" class="btn btn-edit">Edit</a>
+                    <button class="btn btn-delete" onclick="deleteArticle('<%= article.article_id %>')">Delete</button>
+                    <a href="/articles/<%= article.article_id %>" target="_blank" class="btn btn-view">View</a>
+                  </div>
+                </div>
+              <% }); %>
+            <% } else { %>
+              <p>No articles found. Create your first article using the 'Add Article' tab.</p>
+            <% } %>
+          </div>
+        </div>
+      </section>
+
+      <!-- Manage Categories Section -->
+      <% if (user.role === 'admin') { %>
+      <section id="categories" class="content-landing-tab">
+        <div class="creation-landing-form">
+          <h3 style="margin-bottom: 1.5rem; color: #333;">Category Visibility Settings</h3>
+          <p style="margin-bottom: 2rem; color: #666;">Hide categories that you don't want to show in navigation and footer. Hidden categories won't appear to users.</p>
+          
+          <div id="categories-list">
+            <!-- Categories will be loaded here -->
+          </div>
+          
+          <div class="form-landing-actions">
+            <button type="button" class="btn-landing btn-landing-primary" id="save-categories">
+              Save Changes
+            </button>
+          </div>
+        <div class="categoriesMenu">
+          <h3>Add New Category</h3>
+          <form id="addCategoryForm">
+            <div class="form-group">
+              <label for="categoryName">Category Name</label>
+              <input
+                type="text"
+                id="categoryName"
+                name="name"
+                placeholder="Enter category name"
+                required
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="categoryVisible">
+                <input type="checkbox" id="categoryVisible" name="visible" checked />
+                Visible
+              </label>
+            </div>
+
+            <button type="submit">Add Category</button>
+            <p id="categoryMessage"></p>
+          </form>
+        </div>
+          </div>
+        </div>
+      </section>
+      <% } %>
+    </main>
+
+    <!-- Footer Section -->
+    <%- include('../partials/footer.ejs') %>
+
+    <!-- Edit Profile Modal (hidden by default) -->
+    <div class="modal" id="edit-profile-modal" hidden>
+      <div class="modal-content">
+        <span class="close-modal">&times;</span>
+        <h2>Edit Profile</h2>
+        <form id="profile-edit-form">
+          <div class="form-group">
+            <label for="edit-username">Username</label>
+            <input
+              type="text"
+              id="edit-username"
+              name="username"
+              value="<%= user.username %>"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label for="edit-email">Email</label>
+            <input
+              type="email"
+              id="edit-email"
+              name="email"
+              value="<%= user.email %>"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label for="edit-bio">Bio</label>
+            <textarea id="edit-bio" name="bio" rows="3"></textarea>
+          </div>
+          <button type="submit" class="btn btn-primary">Save Changes</button>
+        </form>
+      </div>
+    </div>
+
+    <script>
+        // Debug: Check if script is loading
+        console.log('=== ADMIN LANDING SCRIPT LOADED ===');
+        
+        // User role for JavaScript access
+        const userRole = '<%= user.role %>';
+        console.log('User role set to:', userRole);
+        
+        // Define debug functions immediately
+        window.debugTabs = function() {
+          console.log('=== TAB DEBUG INFO ===');
+          console.log('User role:', userRole);
+          console.log('Tab buttons:', document.querySelectorAll(".tab-landing-btn").length);
+          console.log('Content tabs:', document.querySelectorAll(".content-landing-tab").length);
+          
+          document.querySelectorAll(".tab-landing-btn").forEach((btn, i) => {
+            console.log(`Button ${i}:`, {
+              text: btn.textContent.trim(),
+              dataTab: btn.getAttribute("data-tab"),
+              hasClickListener: btn.onclick !== null
+            });
+          });
+          
+          document.querySelectorAll(".content-landing-tab").forEach((tab, i) => {
+            console.log(`Content ${i}:`, {
+              id: tab.id,
+              display: window.getComputedStyle(tab).display,
+              hasActiveClass: tab.classList.contains('active')
+            });
+          });
+        };
+        
+        window.testTabSwitch = function(tabId) {
+          console.log('=== TESTING TAB SWITCH TO:', tabId, '===');
+          
+          const tabButton = document.querySelector(`[data-tab="${tabId}"]`);
+          if (!tabButton) {
+            console.error('Tab button not found for:', tabId);
+            return false;
+          }
+          
+          const contentTab = document.getElementById(tabId);
+          if (!contentTab) {
+            console.error('Content tab not found for:', tabId);
+            return false;
+          }
+          
+          // Hide all tabs
+          document.querySelectorAll(".content-landing-tab").forEach(tab => {
+            tab.classList.remove("active");
+            tab.style.display = "none";
+          });
+          
+          // Show selected tab
+          contentTab.classList.add("active");
+          contentTab.style.display = "block";
+          
+          // Update button states
+          document.querySelectorAll(".tab-landing-btn").forEach(btn => btn.classList.remove("active"));
+          tabButton.classList.add("active");
+          
+          console.log('Tab switch completed successfully');
+          return true;
+        };
+        
+        console.log('Debug functions defined - you can now use debugTabs() and testTabSwitch()');
+        
+        // Define handleTabClick function before using it
+        function handleTabClick(e) {
+          console.log('=== TAB CLICK HANDLER CALLED ===');
+          e.preventDefault();
+          e.stopPropagation();
+          
+          const btn = e.currentTarget;
+          const tabId = btn.getAttribute("data-tab");
+          console.log('Tab clicked:', tabId, 'Button text:', btn.textContent.trim());
+
+          // Update active tab button
+          document.querySelectorAll(".tab-landing-btn").forEach((b) => {
+            b.classList.remove("active");
+          });
+          btn.classList.add("active");
+
+          // Hide all tab content
+          document.querySelectorAll(".content-landing-tab").forEach((tab) => {
+            tab.classList.remove("active");
+            tab.style.display = "none";
+          });
+
+          // Show the selected tab
+          const selectedTab = document.getElementById(tabId);
+          if (selectedTab) {
+            selectedTab.classList.add("active");
+            selectedTab.style.display = "block";
+            console.log('Successfully showing tab:', tabId);
+            
+            // Load categories when categories tab is clicked (admin only)
+            if (tabId === 'categories' && userRole === 'admin') {
+              loadCategories();
+            }
+          } else {
+            console.error('ERROR: Tab content not found for ID:', tabId);
+          }
+          
+          console.log('=== TAB CLICK HANDLER FINISHED ===');
+        }
+        
+        // Wait for DOM to be fully loaded
+        document.addEventListener('DOMContentLoaded', function() {
+          console.log('=== DOM CONTENT LOADED ===');
+          
+          // Initialize tabs immediately
+          console.log('Setting up tab click handlers...');
+          const tabButtons = document.querySelectorAll(".tab-landing-btn");
+          console.log('Found', tabButtons.length, 'tab buttons');
+          
+          tabButtons.forEach((btn, index) => {
+            const tabId = btn.getAttribute("data-tab");
+            console.log(`Setting up tab ${index}: ${tabId}`);
+            
+            // Clear any existing listeners
+            btn.onclick = null;
+            
+            // Add click event listener
+            btn.addEventListener("click", handleTabClick);
+            
+            // Make sure it's clickable
+            btn.style.cursor = "pointer";
+            btn.style.pointerEvents = "auto";
+          });
+          
+          const form = document.getElementById('addCategoryForm');
+          const message = document.getElementById('categoryMessage');
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const name = document.getElementById('categoryName').value.trim();
+    const visible = document.getElementById('categoryVisible').checked;
+
+    if (!name) {
+      message.textContent = "Please enter a category name.";
+      message.style.color = 'red';
+      return;
+    }
+
+    try {
+      const res = await fetch('/api/categories', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, visible })
+      });
+
+      const data = await res.json();
+
+      if (res.ok) {
+        message.textContent = data.message;
+        message.style.color = 'green';
+        form.reset();
+      } else {
+        message.textContent = data.error || 'Failed to add category';
+        message.style.color = 'red';
+      }
+    } catch (err) {
+      console.error(err);
+      message.textContent = 'Network error. Try again.';
+      message.style.color = 'red';
+    }
+  });
+      // Delete article function
+      async function deleteArticle(articleId) {
+        if (!confirm('Are you sure you want to delete this article? This action cannot be undone.')) {
+          return;
+        }
+        
+        try {
+          console.log('Deleting article with ID:', articleId);
+          const response = await fetch(`/api/articles/${articleId}`, {
+            method: 'DELETE',
+            headers: {
+              'Content-Type': 'application/json',
+              'X-Requested-With': 'XMLHttpRequest'
+            },
+            credentials: 'same-origin'
+          });
+          
+          if (!response.ok) {
+            const errorData = await response.json().catch(() => ({}));
+            throw new Error(errorData.error || 'Failed to delete article');
+          }
+          
+          const result = await response.json();
+          
+          if (response.ok) {
+            alert('Article deleted successfully');
+            // Refresh the articles list
+            window.location.reload();
+          } else {
+            throw new Error(result.message || 'Failed to delete article');
+          }
+        } catch (error) {
+          console.error('Error deleting article:', error);
+          alert('Error deleting article: ' + error.message);
+        }
+      }
+
+      // Removed client-side token authentication check. Server-side session handles auth.
+
+      // Old initializeTabs function removed - tabs are now initialized directly in DOMContentLoaded
+      
+      // Debug functions are now defined at the top of the script
+
+      // Image preview functionality
+      document
+        .getElementById("image")
+        ?.addEventListener("change", function (e) {
+          const preview = document.getElementById("story-image-preview");
+          preview.innerHTML = "";
+          if (this.files && this.files[0]) {
+            const reader = new FileReader();
+            reader.onload = function (e) {
+              const img = document.createElement("img");
+              img.src = e.target.result;
+              img.style.maxWidth = "200px";
+              img.style.maxHeight = "200px";
+              preview.appendChild(img);
+            };
+            reader.readAsDataURL(this.files[0]);
+          }
+        });
+
+      // Category change handler for podcast fields
+      document.getElementById('article-category')?.addEventListener('change', function() {
+        const podcastFields = document.querySelectorAll('.podcast-field');
+        const isPodcast = this.options[this.selectedIndex].text.toLowerCase().includes('podcast');
+        
+        podcastFields.forEach(field => {
+          field.style.display = isPodcast ? 'block' : 'none';
+          const input = field.querySelector('input');
+          if (input) {
+            input.required = isPodcast;
+          }
+        });
+      });
+
+      // Image input type switching
+      document.querySelectorAll('input[name="image_type"]').forEach(radio => {
+        radio.addEventListener('change', function() {
+          const urlSection = document.getElementById('url-input');
+          const uploadSection = document.getElementById('upload-input');
+          const preview = document.getElementById('article-image-preview');
+          
+          if (this.value === 'url') {
+            urlSection.style.display = 'block';
+            uploadSection.style.display = 'none';
+            document.getElementById('article-image-file').value = '';
+            document.getElementById('article-image-file').removeAttribute('name');
+            document.getElementById('article-image-url').setAttribute('name', 'image_url');
+          } else {
+            urlSection.style.display = 'none';
+            uploadSection.style.display = 'block';
+            document.getElementById('article-image-url').value = '';
+            document.getElementById('article-image-url').removeAttribute('name');
+            document.getElementById('article-image-file').setAttribute('name', 'featured_img');
+          }
+          preview.innerHTML = '';
+        });
+      });
+
+      // URL image preview
+      document
+        .getElementById("article-image-url")
+        ?.addEventListener("blur", function () {
+          const preview = document.getElementById("article-image-preview");
+          preview.innerHTML = "";
+          if (this.value) {
+            const img = document.createElement("img");
+            img.src = this.value;
+            img.style.maxWidth = "200px";
+            img.style.maxHeight = "200px";
+            img.onerror = () => {
+              preview.innerHTML = '<p class="error">Could not load image</p>';
+            };
+            preview.appendChild(img);
+          }
+        });
+
+      // File upload image preview
+      document
+        .getElementById("article-image-file")
+        ?.addEventListener("change", function () {
+          const preview = document.getElementById("article-image-preview");
+          preview.innerHTML = "";
+          if (this.files && this.files[0]) {
+            const reader = new FileReader();
+            reader.onload = function (e) {
+              const img = document.createElement("img");
+              img.src = e.target.result;
+              img.style.maxWidth = "200px";
+              img.style.maxHeight = "200px";
+              preview.appendChild(img);
+            };
+            reader.readAsDataURL(this.files[0]);
+          }
+        });
+
+      // Editing Profile Modal
+      const editProfileModal = document.getElementById("edit-profile-modal");
+      const editProfileBtn = document.getElementById("edit-profile-btn");
+      const closeModalBtn = document.querySelector(".close-modal");
+
+      if (editProfileBtn && editProfileModal) {
+        editProfileBtn.addEventListener("click", () => {
+          editProfileModal.style.display = "block";
+          document.body.style.overflow = "hidden";
+        });
+
+        closeModalBtn.addEventListener("click", () => {
+          editProfileModal.style.display = "none";
+          document.body.style.overflow = "auto";
+        });
+
+        // Close modal when clicking outside
+        window.addEventListener("click", (e) => {
+          if (e.target === editProfileModal) {
+            editProfileModal.style.display = "none";
+            document.body.style.overflow = "auto";
+          }
+        });
+      }
+
+      // Profile Edit Form Submission
+      const profileEditForm = document.getElementById("profile-edit-form");
+      if (profileEditForm) {
+        profileEditForm.addEventListener("submit", async (e) => {
+          e.preventDefault();
+
+          const formData = {
+            username: document.getElementById("edit-username").value,
+            email: document.getElementById("edit-email").value,
+            bio: document.getElementById("edit-bio").value,
+          };
+
+          try {
+            const response = await fetch("/api/profile", {
+              method: "PUT",
+              headers: {
+                "Content-Type": "application/json"
+              },
+              body: JSON.stringify(formData),
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+              // Update the profile display
+              document.getElementById("profile-username").textContent =
+                data.username;
+              document.querySelector(".email-landing").textContent = data.email;
+
+              // Close the modal
+              editProfileModal.style.display = "none";
+              document.body.style.overflow = "auto";
+
+              // Show success message
+              alert("Profile updated successfully!");
+            } else {
+              throw new Error(data.message || "Failed to update profile");
+            }
+          } catch (error) {
+            console.error("Error updating profile:", error);
+            alert("Error updating profile: " + error.message);
+          }
+        });
+      }
+
+      // Avatar upload
+      document
+        .getElementById("profile-avatar")
+        ?.addEventListener("click", () => {
+          document.getElementById("avatar-upload").click();
+        });
+
+      document
+        .getElementById("avatar-upload")
+        ?.addEventListener("change", function () {
+          if (this.files && this.files[0]) {
+            const formData = new FormData();
+            formData.append("avatar", this.files[0]);
+
+            fetch("/upload-avatar", {
+              method: "POST",
+              body: formData,
+            })
+              .then((response) => response.json())
+              .then((data) => {
+                if (data.success) {
+                  document.getElementById("profile-avatar").src =
+                    data.avatarUrl;
+                } else {
+                  throw new Error(data.message || "Failed to upload avatar");
+                }
+              })
+              .catch(error => {
+                console.error("Avatar upload error:", error);
+                alert("Error uploading avatar: " + error.message);
+              });
+          }
+        });
+
+      // Form validation
+      document
+        .querySelectorAll("input, textarea, select")
+        .forEach((element) => {
+          element.addEventListener("blur", validateField);
+        });
+
+      function validateField(e) {
+        const field = e.target;
+        let isValid = true;
+        let errorMessage = "";
+
+        // Required field validation
+        if (field.required && !field.value.trim()) {
+          isValid = false;
+          errorMessage = "This field is required";
+        }
+
+        // Field-specific validation
+        if (field.id === "story-title" || field.id === "article-title") {
+          if (field.value.length < 5) {
+            isValid = false;
+            errorMessage = "Title must be at least 5 characters";
+          }
+        }
+
+        // Update error display
+        const errorElement = document.getElementById(`${field.id}-error`);
+        if (errorElement) {
+          errorElement.textContent = isValid ? "" : errorMessage;
+          field.classList.toggle("invalid", !isValid);
+        }
+
+        return isValid;
+      }
+
+      // Form submission
+      document
+        .getElementById("story-form")
+        ?.addEventListener("submit", function (e) {
+          if (!validateForm(this)) {
+            e.preventDefault();
+          }
+        });
+
+      function validateForm(form) {
+        let isValid = true;
+        form.querySelectorAll("input, textarea, select").forEach((field) => {
+          const event = { target: field };
+          if (!validateField(event)) {
+            isValid = false;
+          }
+        });
+        return isValid;
+      }
+
+      // Article Form Submission (no token check)
+      const articleForm = document.getElementById("article-form");
+      if (articleForm) {
+        articleForm.addEventListener("submit", async (e) => {
+          e.preventDefault();
+
+          // Validate form first
+          if (!validateForm(articleForm)) {
+            return;
+          }
+
+          const submitBtn = articleForm.querySelector('#article-submit-btn');
+          const originalBtnText = submitBtn.textContent;
+          try {
+            // Show loading state
+            submitBtn.disabled = true;
+            submitBtn.textContent = "Submitting...";
+
+            const formData = new FormData(articleForm);
+            const response = await fetch("/api/articles", {
+              method: "POST",
+              body: formData,
+              credentials: "include"
+            });
+
+            const data = await response.json();
+            
+            if (!response.ok) {
+              throw new Error(data.error || "Failed to create article");
+            }
+
+            // Success case
+            alert("Article created successfully!");
+            articleForm.reset();
+            document.getElementById("article-image-preview").innerHTML = "";
+            
+          } catch (error) {
+            console.error("Submission error:", error);
+            alert(`Error: ${error.message}`);
+          } finally {
+            submitBtn.disabled = false;
+            submitBtn.textContent = originalBtnText;
+          }
+        });
+      }
+
+      // Load categories for management
+      async function loadCategories() {
+        try {
+          const response = await fetch('/api/categories');
+          const categories = await response.json();
+          
+          const categoriesList = document.getElementById('categories-list');
+          if (!categoriesList) {
+            return;
+          }
+          
+          if (!categories || categories.length === 0) {
+            categoriesList.innerHTML = '<p>No categories found</p>';
+            return;
+          }
+          
+          categoriesList.innerHTML = categories.map(cat => `
+            <div style="display: flex; align-items: center; justify-content: space-between; padding: 1rem; border: 1px solid #ddd; border-radius: 6px; margin-bottom: 1rem;">
+              <div>
+                <strong>${cat.name}</strong>
+                <p style="margin: 0; color: #666; font-size: 0.9rem;">${cat.description || 'No description'}</p>
+              </div>
+              <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+                <input type="checkbox" ${cat.visible ? 'checked' : ''} data-category-id="${cat.category_id}" style="transform: scale(1.2);">
+                <span style="color: ${cat.visible ? '#28a745' : '#dc3545'}; font-weight: 600;">
+                  ${cat.visible ? 'Visible' : 'Hidden'}
+                </span>
+              </label>
+            </div>
+          `).join('');
+          
+          // Add change listeners
+          document.querySelectorAll('#categories-list input[type="checkbox"]').forEach(checkbox => {
+            checkbox.addEventListener('change', function() {
+              const label = this.nextElementSibling;
+              label.textContent = this.checked ? 'Visible' : 'Hidden';
+              label.style.color = this.checked ? '#28a745' : '#dc3545';
+            });
+          });
+        } catch (error) {
+          console.error('Error loading categories:', error);
+          const categoriesList = document.getElementById('categories-list');
+          if (categoriesList) {
+            categoriesList.innerHTML = '<p style="color: red;">Error loading categories: ' + error.message + '</p>';
+          }
+        }
+      }
+      
+      // Save category visibility
+      document.getElementById('save-categories')?.addEventListener('click', async function() {
+        const checkboxes = document.querySelectorAll('#categories-list input[type="checkbox"]');
+        const updates = Array.from(checkboxes).map(cb => ({
+          category_id: cb.dataset.categoryId,
+          visible: cb.checked
+        }));
+        
+        try {
+          const response = await fetch('/api/categories/visibility', {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ categories: updates })
+          });
+          
+          if (response.ok) {
+            alert('Category visibility updated successfully!');
+          } else {
+            throw new Error('Failed to update categories');
+          }
+        } catch (error) {
+          console.error('Error saving categories:', error);
+          alert('Error updating categories: ' + error.message);
+        }
+      });
+
+// Open Edit User Modal
+function openEditUser(id, username, email, role) {
+  const modal = document.getElementById("edit-user-modal");
+  if (!modal) return;
+
+  // Populate form fields
+  document.getElementById("edit_user_id").value = id;
+  document.getElementById("edit_username").value = username;
+  document.getElementById("edit_email").value = email;
+  document.getElementById("edit_role").value = role;
+
+  modal.removeAttribute("hidden");
+  modal.style.display = "block";
+  document.body.style.overflow = "hidden";
+}
+
+// Close Edit User Modal
+document.querySelectorAll("#edit-user-modal .close-modal").forEach(btn => {
+  btn.addEventListener("click", () => {
+    const modal = document.getElementById("edit-user-modal");
+    modal.setAttribute("hidden", "");
+    modal.style.display = "none";
+    document.body.style.overflow = "auto";
+  });
+});
+
+// Handle Edit User Form Submit
+document.getElementById("edit-user-form")?.addEventListener("submit", async (e) => {
+  e.preventDefault();
+
+  const id = document.getElementById("edit_user_id").value;
+  const username = document.getElementById("edit_username").value;
+  const email = document.getElementById("edit_email").value;
+  const role = document.getElementById("edit_role").value;
+
+  try {
+    const res = await fetch(`/api/users/${id}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ username, email, role })
+    });
+
+    const data = await res.json();
+
+    if (res.ok) {
+      alert("User updated successfully!");
+      window.location.reload(); // refresh list
+    } else {
+      alert(data.error || "Failed to update user");
+    }
+  } catch (err) {
+    console.error("Error updating user:", err);
+    alert("Network error while updating user");
+  }
+});
+async function deletePodcast(id) {
+    if (!confirm("Are you sure you want to delete this podcast?")) return;
+
+    try {
+      const res = await fetch(`/api/podcasts/${id}`, {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" }
+      });
+
+      const data = await res.json();
+      if (res.ok) {
+        alert("Podcast deleted successfully!");
+        window.location.reload();
+      } else {
+        alert(data.error || "Failed to delete podcast");
+      }
+    } catch (err) {
+      console.error("Delete error:", err);
+      alert("Network error while deleting podcast");
+    }
+  }
+
+// Delete User Function
+async function deleteUser(id) {
+  if (userRole !== 'admin') {
+    alert('Access denied. Admin privileges required.');
+    return;
+  }
+  
+  if (!confirm("Are you sure you want to delete this user? This action cannot be undone.")) return;
+
+  try {
+    const res = await fetch(`/api/users/${id}`, {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" }
+    });
+
+    const data = await res.json();
+    if (res.ok) {
+      alert("User deleted successfully!");
+      window.location.reload();
+    } else {
+      alert(data.error || "Failed to delete user");
+    }
+  } catch (err) {
+    console.error("Delete error:", err);
+    alert("Network error while deleting user");
+  }
+}
+
+// Add User Modal Controls
+document.getElementById("add-user-btn")?.addEventListener("click", () => {
+  if (userRole !== 'admin') {
+    alert('Access denied. Admin privileges required.');
+    return;
+  }
+  
+  const modal = document.getElementById("add-user-modal");
+  if (modal) {
+    modal.removeAttribute("hidden");
+    modal.style.display = "block";
+    document.body.style.overflow = "hidden";
+  }
+});
+
+// Close Add User Modal
+document.querySelectorAll("#add-user-modal .close-modal").forEach(btn => {
+  btn.addEventListener("click", () => {
+    const modal = document.getElementById("add-user-modal");
+    if (modal) {
+      modal.setAttribute("hidden", "");
+      modal.style.display = "none";
+      document.body.style.overflow = "auto";
+      const form = document.getElementById("add-user-form");
+      if (form) form.reset();
+    }
+  });
+});
+
+// Password validation for add user form
+document.getElementById("repeat_password")?.addEventListener("input", function() {
+  const password = document.getElementById("password")?.value || '';
+  const repeatPassword = this.value;
+  const errorMsg = document.getElementById("password-match-error");
+  const submitBtn = document.getElementById("create-user-submit");
+
+  if (password !== repeatPassword) {
+    if (errorMsg) errorMsg.classList.remove("hidden");
+    if (submitBtn) submitBtn.disabled = true;
+  } else {
+    if (errorMsg) errorMsg.classList.add("hidden");
+    if (submitBtn) submitBtn.disabled = false;
+  }
+});
+
+// Handle Add User Form Submit
+document.getElementById("add-user-form")?.addEventListener("submit", async (e) => {
+  e.preventDefault();
+
+  if (userRole !== 'admin') {
+    alert('Access denied. Admin privileges required.');
+    return;
+  }
+
+  const formData = new FormData(e.target);
+  const userData = {
+    first_name: formData.get("first_name"),
+    last_name: formData.get("last_name"),
+    username: formData.get("username"),
+    email: formData.get("email"),
+    role: formData.get("role"),
+    password: formData.get("password")
+  };
+
+  // Validate passwords match
+  if (userData.password !== formData.get("repeat_password")) {
+    alert("Passwords do not match");
+    return;
+  }
+
+  try {
+    const res = await fetch("/api/users", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(userData)
+    });
+
+    const data = await res.json();
+
+    if (res.ok) {
+      alert("User created successfully!");
+      window.location.reload();
+    } else {
+      alert(data.error || "Failed to create user");
+    }
+  } catch (err) {
+    console.error("Error creating user:", err);
+    alert("Network error while creating user");
+  }
+});
+
+        }); // End of DOMContentLoaded event listener
+// Handle Custom Email Form
+const customEmailForm = document.getElementById("custom-email-form");
+if (customEmailForm) {
+  customEmailForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const subject = document.getElementById("custom-subject").value.trim();
+    const message = document.getElementById("custom-message").value.trim(); // ✅ fixed
+    const statusMsg = document.getElementById("custom-email-status");
+
+    if (!subject || !message) { // ✅ fixed
+      statusMsg.textContent = "⚠️ Subject and message are required.";
+      statusMsg.style.color = "red";
+      return;
+    }
+
+    try {
+      statusMsg.textContent = "Sending emails...";
+      statusMsg.style.color = "blue";
+
+      const res = await fetch("/send-custom-email", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ subject, message }) // ✅ fixed
+      });
+
+      const data = await res.json();
+
+      if (res.ok) {
+        statusMsg.textContent = data.message || "✅ Emails sent successfully!";
+        statusMsg.style.color = "green";
+        customEmailForm.reset();
+      } else {
+        throw new Error(data.message || "Failed to send emails");
+      }
+    } catch (err) {
+      console.error("Email error:", err);
+      statusMsg.textContent = "❌ " + err.message;
+      statusMsg.style.color = "red";
+    }
+  });
+}
+
+
+    </script>
+  </body>
+</html>

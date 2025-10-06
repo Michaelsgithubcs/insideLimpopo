@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Edit Article - Inside Limpopo</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="/css/style.css" />
+    <link rel="stylesheet" href="/css/admin-styles.css">
+    <link rel="stylesheet" href="/css/image-options.css">
+  </head>
+  <body class="admin-page">
+    <%- include('../partials/admin-header', { currentPath: '/api/articles/edit/' + article.article_id }) %>
+
+    <main class="main-content">
+      <div class="container">
+        <div class="page-header">
+          <h1>Edit Article</h1>
+          <p class="page-description">Update your article details below</p>
+        </div>
+        
+        <div class="card">
+          <div class="card-body">
+        
+        <% if (typeof errors !== 'undefined' && errors.length) { %>
+          <div class="alert alert-error">
+            <ul>
+              <% errors.forEach(error => { %>
+                <li><%= error.msg %></li>
+              <% }); %>
+            </ul>
+          </div>
+        <% } %>
+        
+        <% if (success) { %>
+          <div class="alert alert-success">
+            <%= success %>
+          </div>
+        <% } %>
+        
+        <form action="/api/articles/<%= article.article_id %>" method="POST" enctype="multipart/form-data" class="article-form">
+          <div class="form-landing-group full-width">
+            <label for="title">Article Title</label>
+            <input 
+              type="text" 
+              id="title" 
+              name="title" 
+              value="<%= article.title %>" 
+              required
+              minlength="5"
+              maxlength="200">
+          </div>
+
+          <div class="form-landing-group">
+            <label for="category_id">Category</label>
+            <select id="category_id" name="category_id" required>
+              <option value="">Select Category</option>
+              <% categories.forEach(category => { %>
+                <option value="<%= category.category_id %>" <%= category.category_id == article.category_id ? 'selected' : '' %>>
+                  <%= category.name %>
+                </option>
+              <% }); %>
+            </select>
+          </div>
+
+          <div class="form-landing-group full-width">
+            <label>Featured Image</label>
+            <div class="image-input-options">
+              <div class="image-option">
+                <input type="radio" id="use-url" name="image_type" value="url" <%= !article.featured_img || article.featured_img.startsWith('http') ? 'checked' : '' %>>
+                <label for="use-url">Use Image URL</label>
+              </div>
+              <div class="image-option">
+                <input type="radio" id="use-upload" name="image_type" value="upload" <%= article.featured_img && !article.featured_img.startsWith('http') ? 'checked' : '' %>>
+                <label for="use-upload">Upload Image</label>
+              </div>
+            </div>
+            
+            <div id="url-input" class="image-input-section <%= article.featured_img && article.featured_img.startsWith('http') ? 'visible' : 'hidden' %>">
+              <input type="url" id="image_url" name="image_url" 
+                     class="form-landing-input"
+                     placeholder="https://example.com/image.jpg" 
+                     value="<%= article.featured_img && article.featured_img.startsWith('http') ? article.featured_img : '' %>">
+            </div>
+            
+            <div id="upload-input" class="image-input-section <%= article.featured_img && !article.featured_img.startsWith('http') ? 'visible' : 'hidden' %>">
+              <input type="file" id="featured_img" name="featured_img" class="form-landing-input" accept="image/*">
+              <% if (article.featured_img && !article.featured_img.startsWith('http')) { %>
+                <p style="margin-top: 10px;">Current image: <a href="<%= article.featured_img %>" target="_blank">View</a></p>
+              <% } %>
+            </div>
+            
+            <div class="image-preview" id="image-preview" style="margin-top: 10px;">
+              <% if (article.featured_img) { %>
+                <img src="<%= article.featured_img.startsWith('http') ? article.featured_img : article.featured_img %>" 
+                     alt="Current featured image" style="max-width: 200px; max-height: 200px; display: block; margin-top: 10px;">
+              <% } %>
+            </div>
+            <input type="hidden" name="current_image" value="<%= article.featured_img || '' %>">
+          </div>
+
+          <div class="form-landing-group full-width">
+            <label for="content">Article Content</label>
+            <textarea 
+              id="content" 
+              name="content" 
+              rows="15" 
+              required
+              minlength="100"><%= article.content %></textarea>
+          </div>
+
+          <div class="btn-group">
+            <button type="submit" class="btn btn-primary">
+              <i class="fas fa-save mr-2"></i> Update Article
+            </button>
+            <a href="/landing" class="btn btn-outline">
+              <i class="fas fa-times mr-2"></i> Cancel
+            </a>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</main>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+      // Toggle between URL and file upload
+      document.querySelectorAll('input[name="image_type"]').forEach(radio => {
+        radio.addEventListener('change', function() {
+          const urlSection = document.getElementById('url-input');
+          const uploadSection = document.getElementById('upload-input');
+          
+          if (this.value === 'url') {
+            urlSection.style.display = 'block';
+            uploadSection.style.display = 'none';
+          } else {
+            urlSection.style.display = 'none';
+            uploadSection.style.display = 'block';
+          }
+        });
+      });
+
+      // Image preview for file upload
+      document.getElementById('featured_img')?.addEventListener('change', function(e) {
+        const preview = document.getElementById('image-preview');
+        preview.innerHTML = '';
+        
+        if (this.files && this.files[0]) {
+          const reader = new FileReader();
+          reader.onload = function(e) {
+            const img = document.createElement('img');
+            img.src = e.target.result;
+            img.style.maxWidth = '200px';
+            img.style.maxHeight = '200px';
+            preview.appendChild(img);
+          };
+          reader.readAsDataURL(this.files[0]);
+        }
+      });
+      // Initialize any necessary JavaScript here
+      $(document).ready(function() {
+        // Show success message if present
+        if (window.location.search.includes('success=true')) {
+          alert('Article updated successfully!');
+          // Remove the success parameter from URL
+          const url = new URL(window.location);
+          url.searchParams.delete('success');
+          window.history.replaceState({}, '', url);
+        }
+      });
+    </script>
+  </body>
+</html>

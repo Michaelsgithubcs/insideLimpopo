@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+  <%- include('../partials/head.ejs') %>
+  <body class="auth-page">
+    <main class="auth-main">
+      <section class="auth-container">
+        <div class="auth-card">
+          <!-- Register Form -->
+          <div class="auth-form" id="register-form">
+            <div class="auth-header">
+              <h2>Create Account</h2>
+              <p>Join our community today</p>
+            </div>
+
+            <form action="/register" method="POST" class="auth-form-content">
+              <!-- Name Fields -->
+              <div class="name-fields">
+                <div class="input-container">
+                  <input type="text" id="first_name" name="first_name" placeholder=" " required />
+                  <label for="first_name">First Name</label>
+                </div>
+
+                <div class="input-container">
+                  <input type="text" id="last_name" name="last_name" placeholder=" " required />
+                  <label for="last_name">Last Name</label>
+                </div>
+              </div>
+
+              <div class="input-container">
+                <input type="text" id="username" name="username" placeholder=" " required />
+                <label for="username">Username</label>
+              </div>
+
+              <div class="input-container">
+                <input type="email" id="email" name="email" placeholder=" " required />
+                <label for="email">Email Address</label>
+              </div>
+
+              <!-- Role Selection -->
+              <div class="input-container select-container">
+                <select id="role" name="role" required>
+                  <option value="" disabled hidden>Select your role</option>
+                  <option value="user">User</option>
+                  <option value="admin">Admin</option>
+                </select>
+                <label for="role">Account Type</label>
+              </div>
+
+              <div class="input-container">
+                <input type="password" id="reg-password" name="password" required />
+                <label for="reg-password">Password</label>
+                <button
+                  class="show-password"
+                  type="button"
+                  role="switch"
+                  aria-label="Show password"
+                  aria-checked="false"
+                >
+                  Show
+                </button>
+              </div>
+
+              <div class="input-container">
+                <input type="password" id="repeat-password" name="repeat_password" required />
+                <label for="repeat-password">Repeat Password</label>
+                <button
+                  class="show-password"
+                  type="button"
+                  role="switch"
+                  aria-label="Show password"
+                  aria-checked="false"
+                >
+                  Show
+                </button>
+              </div>
+              <p id="password-match-error" class="requirement error hidden" style="margin-top: -1rem; margin-bottom: 1rem; font-size: 0.9em;">Passwords do not match</p>
+
+              <div class="terms-group">
+                <label class="terms-checkbox">
+                  <input type="checkbox" id="terms" name="terms" required />
+                  <span>I agree to the <a href="#terms">Terms of Service</a> and <a href="#privacy">Privacy Policy</a></span>
+                </label>
+              </div>
+
+              <div class="submit-container">
+                <input type="submit" value="Create Account" class="auth-button" id="register-submit" disabled />
+              </div>
+
+              <p class="auth-footer">
+                Already have an account?
+                <a href="http://localhost:3000/login" id="switch-to-login">Sign in</a>
+              </p>
+            </form>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Footer Section -->
+    <%- include('../partials/footer.ejs') %>
+
+    <script>
+      const form = document.querySelector('.auth-form-content');
+      const password = document.getElementById("reg-password");
+      const confirmPassword = document.getElementById("repeat-password");
+      const errorMsg = document.getElementById("password-match-error");
+      const registerSubmit = document.getElementById("register-submit");
+
+      // Toggle password show/hide
+      form.addEventListener('click', function(e) {
+        if (e.target.classList.contains('show-password')) {
+          const input = e.target.parentElement.querySelector('input[type="password"], input[type="text"]');
+          if (!input) return;
+          if (input.type === "password") {
+            input.type = "text";
+            e.target.innerText = "Hide";
+            e.target.setAttribute("aria-label", "Hide password");
+            e.target.setAttribute("aria-checked", "true");
+          } else {
+            input.type = "password";
+            e.target.innerText = "Show";
+            e.target.setAttribute("aria-label", "Show password");
+            e.target.setAttribute("aria-checked", "false");
+          }
+        }
+      });
+
+      // Validate passwords
+      function handleFormValidation() {
+        if (!password || !confirmPassword) return;
+
+        const value = password.value;
+        const confirmValue = confirmPassword.value;
+
+        if (!value || !confirmValue) {
+          errorMsg.classList.add("hidden");
+          registerSubmit.setAttribute("disabled", true);
+          return;
+        }
+
+        if (value !== confirmValue) {
+          errorMsg.classList.remove("hidden");
+          registerSubmit.setAttribute("disabled", true);
+          return;
+        }
+
+        // ✅ Passwords match
+        errorMsg.classList.add("hidden");
+        registerSubmit.removeAttribute("disabled");
+      }
+
+      password.addEventListener("input", handleFormValidation);
+      confirmPassword.addEventListener("input", handleFormValidation);
+    </script>
+  </body>
+</html>

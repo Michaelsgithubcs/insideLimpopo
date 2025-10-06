@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en">
+  <%- include('../partials/head.ejs') %>
+  <body class="podcast-page">
+    <!-- Header Section -->
+    <%- include('../partials/header.ejs') %>
+    <%- include('../partials/nav.ejs') %>
+
+    <!-- Main Section -->
+     
+      <%- include('../partials/BreakingNews.ejs') %>
+    <main class="podcast-main">
+      <!-- Featured Podcast Slider -->
+      <section class="featured-podcasts">
+        <div class="slideshow-container">
+          <div class="mySlides fade active">
+            <div class="slide-content">
+              <a href="https://youtu.be/POnQrArfy4g?si=zGec_AIZ5ncj84aw" class="podcast-img">
+                <img src="/assets/podcast/hop.jpg" alt="Hope Revolution Episode 9 cover">
+                <div class="play-overlay">
+                  <i class="fas fa-play"></i>
+                </div>
+              </a>
+              <div class="podcast-info">
+                <span class="featured-badge">Featured</span>
+                <h3 class="podcast-title">HOPE REVOLUTION EPISODE 9: A Mother's Story</h3>
+                <div class="podcast-meta">
+                  <span><i class="fas fa-calendar-alt"></i> June 15, 2024</span>
+                  <span><i class="fas fa-clock"></i> 48 min</span>
+                </div>
+                <a href="https://youtu.be/POnQrArfy4g?si=zGec_AIZ5ncj84aw" class="play-button">
+                  <i class="fas fa-play"></i> Play Now
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <div class="mySlides fade">
+            <div class="slide-content">
+              <a href="https://youtu.be/rH7NOuOGJzA?si=9KNVJtnDKNyPuGpf" class="podcast-img">
+                <img src="/assets/podcast/sddefault.jpg" alt="MBUYISENI NDLOZI interview cover">
+                <div class="play-overlay">
+                  <i class="fas fa-play"></i>
+                </div>
+              </a>
+              <div class="podcast-info">
+                <span class="featured-badge">Featured</span>
+                <h3 class="podcast-title">MBUYISENI NDLOZI on EFF, GNU, VBS BANK</h3>
+                <div class="podcast-meta">
+                  <span><i class="fas fa-calendar-alt"></i> June 8, 2024</span>
+                  <span><i class="fas fa-clock"></i> 62 min</span>
+                </div>
+                <a href="https://youtu.be/rH7NOuOGJzA?si=9KNVJtnDKNyPuGpf" class="play-button">
+                  <i class="fas fa-play"></i> Play Now
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <div class="mySlides fade">
+            <div class="slide-content">
+              <a href="https://youtu.be/0_VigIWitfs?si=52S83ZIvFzZCcAoT" class="podcast-img">
+                <img src="/assets/podcast/konvo.jpg" alt="The Konvo Show cover">
+                <div class="play-overlay">
+                  <i class="fas fa-play"></i>
+                </div>
+              </a>
+              <div class="podcast-info">
+                <span class="featured-badge">Featured</span>
+                <h3 class="podcast-title">The Konvo Show: Penuel In Conversation</h3>
+                <div class="podcast-meta">
+                  <span><i class="fas fa-calendar-alt"></i> May 28, 2024</span>
+                  <span><i class="fas fa-clock"></i> 55 min</span>
+                </div>
+                <a href="https://youtu.be/0_VigIWitfs?si=52S83ZIvFzZCcAoT" class="play-button">
+                  <i class="fas fa-play"></i> Play Now
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <a class="prev" onclick="plusSlides(-1)">❮</a>
+          <a class="next" onclick="plusSlides(1)">❯</a>
+        </div>
+        
+        <div class="dots-container">
+          <span class="dot active" onclick="currentSlide(1)"></span>
+          <span class="dot" onclick="currentSlide(2)"></span>
+          <span class="dot" onclick="currentSlide(3)"></span>
+        </div>
+      </section>
+
+      <!-- Podcast Content -->
+      <div class="podcast-content">
+        <!-- Main Podcast List -->
+        <div class="podcast-list">
+          <div class="section-podcast-header">
+            <h2 class="section-podcast-title">Latest Episodes</h2>
+            <div class="view-options">
+              <span class="view-label">View:</span>
+              <button class="view-option active" onclick="changeView('list')"><i class="fas fa-list"></i></button>
+              <button class="view-option" onclick="changeView('grid')"><i class="fas fa-th-large"></i></button>
+            </div>
+          </div>
+          
+          <div class="episodes-container list-view">
+            <!-- Posted Podcast Articles (Dynamic from Database) -->
+            <% if (postedArticles && postedArticles.length > 0) { %>
+              <% postedArticles.slice(0, 4).forEach(article => { %>
+                <div class="podcast-episode">
+                  <div class="episode-image">
+                    <img src="<%= article.featured_img || '/assets/logo/InsideLimpopoLogoTransparent.png' %>" alt="<%= article.title %>">
+                    <div class="play-overlay">
+                      <i class="fas fa-play"></i>
+                    </div>
+                  </div>
+                  <div class="episode-details">
+                    <div class="episode-header">
+                      <h3 class="episode-title">
+                        <a href="<%= article.episode_link || ('#podcast-' + article.podcast_id) %>"><%= article.title %></a>
+                      </h3>
+                      <div class="episode-meta">
+                        <span><i class="fas fa-calendar-alt"></i> <%= article.episode_date ? new Date(article.episode_date).toLocaleDateString() : new Date(article.created_at).toLocaleDateString() %></span>
+                        <span><i class="fas fa-tag"></i> <%= article.episode_tag || 'Podcast' %></span>
+                        <% if (article.episode_duration) { %>
+                          <span><i class="fas fa-clock"></i> <%= article.episode_duration %></span>
+                        <% } %>
+                      </div>
+                    </div>
+                    <p class="episode-description">
+                      <%= article.description ? article.description.substring(0, 200) : 'No description available.' %>...
+                    </p>
+                    <div class="episode-actions">
+                      <% if (article.episode_link) { %>
+                        <a href="<%= article.episode_link %>" class="play-button" target="_blank">
+                          <i class="fas fa-play"></i> Play Episode
+                        </a>
+                      <% } %>
+                      <a href="#" class="save-button">
+                        <i class="far fa-bookmark"></i> Save
+                      </a>
+                      <a href="#" class="share-button">
+                        <i class="fas fa-share-alt"></i> Share
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              <% }) %>
+              
+              <!-- Hidden episodes for See All functionality -->
+              <% postedArticles.slice(4).forEach(article => { %>
+                <div class="podcast-episode hidden-episode" style="display: none;">
+                  <div class="episode-image">
+                    <img src="<%= article.featured_img || '/assets/logo/InsideLimpopoLogoTransparent.png' %>" alt="<%= article.title %>">
+                    <div class="play-overlay">
+                      <i class="fas fa-play"></i>
+                    </div>
+                  </div>
+                  <div class="episode-details">
+                    <div class="episode-header">
+                      <h3 class="episode-title">
+                        <a href="<%= article.episode_link || ('#podcast-' + article.podcast_id) %>"><%= article.title %></a>
+                      </h3>
+                      <div class="episode-meta">
+                        <span><i class="fas fa-calendar-alt"></i> <%= article.episode_date ? new Date(article.episode_date).toLocaleDateString() : new Date(article.created_at).toLocaleDateString() %></span>
+                        <span><i class="fas fa-tag"></i> <%= article.episode_tag || 'Podcast' %></span>
+                        <% if (article.episode_duration) { %>
+                          <span><i class="fas fa-clock"></i> <%= article.episode_duration %></span>
+                        <% } %>
+                      </div>
+                    </div>
+                    <p class="episode-description">
+                      <%= article.description ? article.description.substring(0, 200) : 'No description available.' %>...
+                    </p>
+                    <div class="episode-actions">
+                      <% if (article.episode_link) { %>
+                        <a href="<%= article.episode_link %>" class="play-button" target="_blank">
+                          <i class="fas fa-play"></i> Play Episode
+                        </a>
+                      <% } %>
+                      <a href="#" class="save-button">
+                        <i class="far fa-bookmark"></i> Save
+                      </a>
+                      <a href="#" class="share-button">
+                        <i class="fas fa-share-alt"></i> Share
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              <% }) %>
+            <% } %>
+          </div>
+          
+          <!-- See All Button -->
+          <% if (postedArticles && postedArticles.length > 4) { %>
+            <div style="text-align: center; margin: 2rem 0;">
+              <button id="seeAllBtn" class="play-button" onclick="showAllEpisodes()" style="background: #086fb6; color: white; border: none; padding: 0.7rem 1.5rem; border-radius: 30px; font-weight: 600; cursor: pointer;">
+                <i class="fas fa-chevron-down"></i> See All Episodes (<%= postedArticles.length %>)
+              </button>
+              <button id="showLessBtn" class="play-button" onclick="showLessEpisodes()" style="display: none; background: #086fb6; color: white; border: none; padding: 0.7rem 1.5rem; border-radius: 30px; font-weight: 600; cursor: pointer;">
+                <i class="fas fa-chevron-up"></i> Show Less
+              </button>
+            </div>
+          <% } %>
+        </div>
+
+        <!-- Sidebar -->
+        <aside class="podcast-sidebar" style="align-self: flex-start;">
+          <div class="sidebar-section">
+            <h3 class="sidebar-title">Categories</h3>
+            <ul class="category-list">
+              <li><a href="#"><i class="fas fa-microphone"></i> All Episodes</a></li>
+              <li><a href="#"><i class="fas fa-child"></i> Kids & Family</a></li>
+              <li><a href="#"><i class="fas fa-chart-line"></i> Business</a></li>
+              <li><a href="#"><i class="fas fa-heartbeat"></i> Health</a></li>
+              <li><a href="#"><i class="fas fa-graduation-cap"></i> Education</a></li>
+              <li><a href="#"><i class="fas fa-futbol"></i> Sports</a></li>
+            </ul>
+          </div>
+
+          <div class="sidebar-section">
+            <h3 class="sidebar-title">Subscribe</h3>
+            <p>Get new episodes delivered to your inbox</p>
+            <form class="subscribe-form" id="newsletterForm">
+              <input name="email" type="email" placeholder="Your email address" required>
+              <button type="submit">
+                <i class="fas fa-paper-plane"></i> Subscribe
+              </button>
+            </form>
+            <p id="responseMessage" style="margin-top: 0.5rem; font-size: 0.9rem;"></p>
+            <div class="subscribe-options">
+              <p>Or subscribe via:</p>
+              <div class="podcast-platforms">
+                <a href="#" class="platform-button apple">
+                  <i class="fab fa-apple"></i> Apple Podcasts
+                </a>
+                <a href="#" class="platform-button spotify">
+                  <i class="fab fa-spotify"></i> Spotify
+                </a>
+                <a href="#" class="platform-button google">
+                  <i class="fab fa-google-play"></i> Google Podcasts
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <div class="sidebar-section">
+            
+      </div>
+
+     
+
+    </main>
+
+    <!-- Footer Section -->
+    <%- include('../partials/footer.ejs') %>
+
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    <script>
+         document.getElementById('newsletterForm').addEventListener('submit', async function(e) {
+  e.preventDefault();
+  const email = this.email.value;
+  const responseMessage = document.getElementById('responseMessage');
+  
+  try {
+    const res = await fetch('/subscribe', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email })
+    });
+
+    const data = await res.json();
+    responseMessage.textContent = data.message;
+    responseMessage.style.color = res.ok ? 'green' : 'red';
+    if (res.ok) this.reset();
+  } catch (error) {
+    responseMessage.textContent = 'Network error, please try again.';
+    responseMessage.style.color = 'red';
+  }
+});
+
+      // Podcast Slider Functionality
+      let slideIndex = 1;
+      showSlides(slideIndex);
+
+      function plusSlides(n) {
+        showSlides(slideIndex += n);
+      }
+
+      function currentSlide(n) {
+        showSlides(slideIndex = n);
+      }
+
+      function showSlides(n) {
+        let i;
+        let slides = document.getElementsByClassName("mySlides");
+        let dots = document.getElementsByClassName("dot");
+        
+        if (n > slides.length) { slideIndex = 1 }
+        if (n < 1) { slideIndex = slides.length }
+        
+        for (i = 0; i < slides.length; i++) {
+          slides[i].classList.remove("active");
+        }
+        
+        for (i = 0; i < dots.length; i++) {
+          dots[i].classList.remove("active");
+        }
+        
+        slides[slideIndex-1].classList.add("active");
+        dots[slideIndex-1].classList.add("active");
+      }
+
+      // Auto-advance slides every 5 seconds
+      setInterval(() => {
+        plusSlides(1);
+      }, 5000);
+
+      // View toggle functionality
+      function changeView(viewType) {
+        const episodesContainer = document.querySelector('.episodes-container');
+        const viewButtons = document.querySelectorAll('.view-option');
+        
+        viewButtons.forEach(btn => btn.classList.remove('active'));
+        document.querySelector(`.view-option[onclick="changeView('${viewType}')"]`).classList.add('active');
+        
+        episodesContainer.className = 'episodes-container ' + viewType + '-view';
+      }
+
+      // Show/Hide episodes functionality
+      function showAllEpisodes() {
+        const hiddenEpisodes = document.querySelectorAll('.hidden-episode');
+        hiddenEpisodes.forEach(episode => {
+          episode.style.display = 'block';
+        });
+        document.getElementById('seeAllBtn').style.display = 'none';
+        document.getElementById('showLessBtn').style.display = 'inline-block';
+      }
+      
+      function showLessEpisodes() {
+        const hiddenEpisodes = document.querySelectorAll('.hidden-episode');
+        hiddenEpisodes.forEach(episode => {
+          episode.style.display = 'none';
+        });
+        document.getElementById('seeAllBtn').style.display = 'inline-block';
+        document.getElementById('showLessBtn').style.display = 'none';
+      }
+
+      // Add active class to current page in navigation
+      document.addEventListener('DOMContentLoaded', function() {
+        const currentPage = window.location.pathname.split('/').pop() || 'index.html';
+        const navLinks = document.querySelectorAll('nav a');
+        
+        navLinks.forEach(link => {
+          if (link.getAttribute('href') === currentPage) {
+            link.classList.add('active');
+          }
+        });
+
+        // Handle play overlay clicks
+        initializePlayOverlays();
+      });
+
+      function initializePlayOverlays() {
+        const playOverlays = document.querySelectorAll('.play-overlay');
+        
+        playOverlays.forEach(overlay => {
+          overlay.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            // Find the associated link
+            let episodeLink = null;
+            
+            // Check if this is inside an episode container
+            const episodeContainer = overlay.closest('.podcast-episode');
+            if (episodeContainer) {
+              // Look for episode link in the episode actions
+              const playButton = episodeContainer.querySelector('.play-button');
+              if (playButton && playButton.href && playButton.href !== '#') {
+                episodeLink = playButton.href;
+              }
+            } else {
+              // Check if this is in the featured slider
+              const slideContainer = overlay.closest('.slide-content');
+              if (slideContainer) {
+                const playButton = slideContainer.querySelector('.play-button');
+                if (playButton && playButton.href && playButton.href !== '#') {
+                  episodeLink = playButton.href;
+                }
+                
+                // Also check the image link
+                const imgLink = slideContainer.querySelector('.podcast-img');
+                if (!episodeLink && imgLink && imgLink.href && imgLink.href !== '#') {
+                  episodeLink = imgLink.href;
+                }
+              }
+            }
+            
+            // Open the episode link
+            if (episodeLink) {
+              console.log('Opening episode:', episodeLink);
+              window.open(episodeLink, '_blank');
+            } else {
+              console.log('No episode link found for this play button');
+            }
+          });
+          
+          // Add pointer cursor
+          overlay.style.cursor = 'pointer';
+        });
+        
+        console.log('Initialized', playOverlays.length, 'play overlay buttons');
+      }
+    </script>
+  </body>
+</html>
