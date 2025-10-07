@@ -166,8 +166,20 @@ exports.getArticleByCategory = async (req, res) => {
     const cachedNews = await CachedNews.getAll(20);
     console.log(`Fetched ${cachedNews.length} cached news (all categories)`);
 
-    // render category page with both
-    res.render("main/show", { categoryName, articles, cachedNews });
+    // Combine and mix articles with cached news
+    const combinedNews = [...articles, ...cachedNews];
+    
+    // Sort by date (newest first) - handle both article and cached news date formats
+    combinedNews.sort((a, b) => {
+      const dateA = new Date(a.created_at || a.published_at);
+      const dateB = new Date(b.created_at || b.published_at);
+      return dateB - dateA;
+    });
+
+    console.log(`Combined ${combinedNews.length} total items (${articles.length} articles + ${cachedNews.length} cached news)`);
+
+    // render category page with combined news
+    res.render("main/show", { categoryName, articles: combinedNews, cachedNews: [] });
   } catch (err) {
     console.error("Error fetching articles by category:", err);
     res.status(500).render("error", { message: "Internal server error" });

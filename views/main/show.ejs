@@ -21,37 +21,65 @@
   <!-- Articles Section -->
   <section class="section-with-header">
     <div class="section-sport-header">
-      <h2>Posted Articles</h2>
+      <h2>Latest News & Articles</h2>
       <p class="section-sport-description">
-        Browse all the latest <%= categoryName %> articles, news, and updates from Limpopo
+        Browse all the latest <%= categoryName %> articles, news, and updates from Limpopo and external sources
       </p>
     </div>
 
+    <!-- Debug: Show what data we have -->
+    <!-- Total articles: <%= articles ? articles.length : 0 %> -->
+    
     <% if (articles && articles.length > 0) { %>
       <div class="sports-section">
         <% articles.forEach(article => { %>
           <div class="sports-card event-card">
             <div class="card-image-container">
               <% if (article.featured_img) { %>
+                <!-- Regular article image -->
                 <img src="<%= article.featured_img %>" alt="<%= article.title %>">
+              <% } else if (article.url_to_image) { %>
+                <!-- Cached news image -->
+                <img src="<%= article.url_to_image %>" alt="<%= article.title %>">
               <% } else { %>
+                <!-- Fallback image -->
                 <img src="/assets/logo/InsideLimpopoLogoTransparent.png" alt="No image available" />
               <% } %>
-              <div class="event-date">
-                <span class="day"><%= new Date(article.created_at).getDate() %></span>
-                <span class="month"><%= new Date(article.created_at).toLocaleString('default', { month: 'short' }).toUpperCase() %></span>
-              </div>
+              
+              <% if (article.created_at) { %>
+                <!-- Regular article date display -->
+                <div class="event-date">
+                  <span class="day"><%= new Date(article.created_at).getDate() %></span>
+                  <span class="month"><%= new Date(article.created_at).toLocaleString('default', { month: 'short' }).toUpperCase() %></span>
+                </div>
+              <% } %>
             </div>
             <div class="card-content">
-              <span class="sport-tag football"><%= categoryName %></span>
-              <h3 style="color: #343a40;"><%= article.title %></h3>
-              <p class="event-time">Posted on <%= new Date(article.created_at).toLocaleString() %></p>
-              <p>
-                <%= article.content.substring(0, 200) %>...
-              </p>
-              <a href="/articles/<%= article.article_id %>" class="read-button">
-                <i class="fas fa-book-open"></i> Read More
-              </a>
+              <% if (article.url) { %>
+                <!-- This is cached news -->
+                <span class="sport-tag news"><%= article.category || 'News' %></span>
+                <h3 style="color: #343a40;"><%= article.title %></h3>
+                <p class="event-time">
+                  Posted on <%= new Date(article.published_at).toLocaleString() %> from <%= article.source ? article.source.name : 'External Source' %>
+                </p>
+                <p>
+                  <%= article.description ? article.description.substring(0, 200) : '' %>...
+                </p>
+                <a href="<%= article.url %>" target="_blank" class="read-button">
+                  <i class="fas fa-book-open"></i> Read More
+                </a>
+              <% } else { %>
+                <!-- This is a regular article -->
+                <span class="sport-tag football"><%= categoryName %></span>
+                <h3 style="color: #343a40;"><%= article.title %></h3>
+                <p class="event-time">Posted on <%= new Date(article.created_at).toLocaleString() %></p>
+                <p>
+                  <%= article.content.substring(0, 200) %>...
+                </p>
+                <a href="/articles/<%= article.article_id %>" class="read-button">
+                  <i class="fas fa-book-open"></i> Read More
+                </a>
+              <% } %>
             </div>
           </div>
         <% }) %>
@@ -62,44 +90,6 @@
       </div>
     <% } %>
   </section>
-  <!-- Cached News Section -->
-<section class="section-with-header">
-  <div class="section-sport-header">
-    <h2>Latest Cached News</h2>
-    <p class="section-sport-description">
-      Headlines and updates fetched from external sources
-    </p>
-  </div>
-
-  <% if (cachedNews && cachedNews.length > 0) { %>
-    <div class="sports-section">
-      <% cachedNews.forEach(news => { %>
-        <div class="sports-card event-card">
-          <div class="card-image-container">
-            <% if (news.url_to_image) { %>
-              <img src="<%= news.url_to_image %>" alt="<%= news.title %>">
-            <% } else { %>
-              <img src="/assets/logo/InsideLimpopoLogoTransparent.png" alt="No image available" />
-            <% } %>
-          </div>
-          <div class="card-content">
-            <span class="sport-tag news"><%= news.category %></span>
-            <h3><%= news.title %></h3>
-            <p class="event-time">
-              Posted on <%= new Date(news.published_at).toLocaleString() %> from <%= news.source.name %>
-            </p>
-            <p><%= news.description ? news.description.substring(0, 200) : '' %>...</p>
-            <a href="<%= news.url %>" target="_blank" class="read-button">
-              <i class="fas fa-book-open"></i> Read More
-            </a>
-          </div>
-        </div>
-      <% }) %>
-    </div>
-  <% } else { %>
-    <p>No cached news available.</p>
-  <% } %>
-</section>
 
 </main>
 
