@@ -162,9 +162,37 @@ exports.getArticleByCategory = async (req, res) => {
     const articles = await Article.findByCategory(categoryId, 20);
     console.log(`Fetched ${articles.length} articles for category '${categoryName}'`);
 
-    // ✅ fetch ALL cached news, not just this category
-    const cachedNews = await CachedNews.getAll(20);
-    console.log(`Fetched ${cachedNews.length} cached news (all categories)`);
+    // ✅ fetch cached news filtered by category (exclude sports)
+    let cachedNews = [];
+    if (categoryName.toLowerCase() !== 'sports') {
+      // ONLY business and technology get cached news - all other categories get no cached news
+      const categoryMapping = {
+        'business': 'business',
+        'technology': 'technology',
+        'tech': 'technology'
+      };
+      
+      const cacheCategory = categoryMapping[categoryName.toLowerCase()];
+      
+      // Only proceed if this category is in our allowed list
+      if (cacheCategory) {
+        try {
+          cachedNews = await CachedNews.getByCategory(cacheCategory, 20);
+          console.log(`Fetched ${cachedNews.length} cached news for category '${cacheCategory}' (from '${categoryName}')`);
+          
+          if (cachedNews.length === 0) {
+            console.log(`No cached news found for category '${cacheCategory}'`);
+          }
+        } catch (error) {
+          console.error(`Error fetching cached news for category '${cacheCategory}':`, error);
+          cachedNews = []; // Ensure we have an empty array on error
+        }
+      } else {
+        console.log(`Category '${categoryName}' does not get cached news - showing only regular articles`);
+      }
+    } else {
+      console.log(`Skipping cached news for sports category`);
+    }
 
     // Combine and mix articles with cached news
     const combinedNews = [...articles, ...cachedNews];
