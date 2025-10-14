@@ -55,7 +55,7 @@ class SportsApiService {
         source: { name: 'AllSportsAPI Football' },
         category: 'sports',
         sport: 'Football',
-        isExternal: true,
+        isExternal: false,
         match_status: match.event_final_result || match.event_status || 'Scheduled'
       }));
 
@@ -96,7 +96,7 @@ class SportsApiService {
           source: { name: 'AllSportsAPI - Basketball' },
           category: 'sports',
           sport: 'Basketball',
-          isExternal: true
+          isExternal: false
         }));
 
         return basketballNews;
@@ -122,7 +122,7 @@ class SportsApiService {
         url: '#soweto-derby',
         source: { name: 'PSL Official' },
         category: 'sports',
-        isExternal: true,
+        isExternal: false,
         match_status: 'Upcoming',
         sport: 'Football'
       },
@@ -136,7 +136,7 @@ class SportsApiService {
         url: '#sundowns-victory',
         source: { name: 'SuperSport' },
         category: 'sports',
-        isExternal: true,
+        isExternal: false,
         match_status: 'Final: 3-0',
         sport: 'Football'
       },
@@ -150,7 +150,7 @@ class SportsApiService {
         url: '#springboks-squad',
         source: { name: 'SA Rugby' },
         category: 'sports',
-        isExternal: true,
+        isExternal: false,
         match_status: 'Squad News',
         sport: 'Rugby'
       },
@@ -164,7 +164,7 @@ class SportsApiService {
         url: '#proteas-australia',
         source: { name: 'Cricket SA' },
         category: 'sports',
-        isExternal: true,
+        isExternal: false,
         match_status: 'Tour Preparation',
         sport: 'Cricket'
       },
@@ -178,7 +178,7 @@ class SportsApiService {
         url: '#city-signing',
         source: { name: 'CTCFC Media' },
         category: 'sports',
-        isExternal: true,
+        isExternal: false,
         match_status: 'Transfer News',
         sport: 'Football'
       },
@@ -192,7 +192,7 @@ class SportsApiService {
         url: '#limpopo-basketball',
         source: { name: 'Limpopo Sports' },
         category: 'sports',
-        isExternal: true,
+        isExternal: false,
         match_status: 'Tournament Starts',
         sport: 'Basketball'
       },
@@ -206,7 +206,7 @@ class SportsApiService {
         url: '#junior-tennis',
         source: { name: 'Tennis SA' },
         category: 'sports',
-        isExternal: true,
+        isExternal: false,
         match_status: 'Day 2 in Progress',
         sport: 'Tennis'
       },
@@ -220,7 +220,7 @@ class SportsApiService {
         url: '#athletics-champs',
         source: { name: 'Athletics SA' },
         category: 'sports',
-        isExternal: true,
+        isExternal: false,
         match_status: 'This Weekend',
         sport: 'Athletics'
       },
@@ -234,7 +234,7 @@ class SportsApiService {
         url: '#sundowns-ladies',
         source: { name: 'SAFA Women' },
         category: 'sports',
-        isExternal: true,
+        isExternal: false,
         match_status: 'Final: 4-1',
         sport: 'Football'
       },
@@ -248,7 +248,7 @@ class SportsApiService {
         url: '#swimming-return',
         source: { name: 'Limpopo Aquatics' },
         category: 'sports',
-        isExternal: true,
+        isExternal: false,
         match_status: 'Next Month',
         sport: 'Swimming'
       },
@@ -262,7 +262,7 @@ class SportsApiService {
         url: '#pirates-continental',
         source: { name: 'CAF Media' },
         category: 'sports',
-        isExternal: true,
+        isExternal: false,
         match_status: 'Squad Building',
         sport: 'Football'
       },
@@ -276,7 +276,7 @@ class SportsApiService {
         url: '#golf-proam',
         source: { name: 'Limpopo Golf' },
         category: 'sports',
-        isExternal: true,
+        isExternal: false,
         match_status: 'Tournament Complete',
         sport: 'Golf'
       }

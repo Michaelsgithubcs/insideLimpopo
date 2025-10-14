@@ -43,12 +43,12 @@ class NewsCacheService {
       // Cache new articles
       const cachedArticles = [];
       for (const article of articles) {
-        if (article.title && (article.url || article.isExternal)) {
+        if (article.title && (article.url || category === 'sports')) {
           try {
             let articleData;
             
-            if (category === 'sports' && article.isExternal) {
-              // Handle sports API articles with different structure
+            if (category === 'sports') {
+              // Handle sports articles (now marked as local)
               articleData = {
                 title: article.title,
                 description: article.description || article.content,
@@ -59,7 +59,7 @@ class NewsCacheService {
                 category: category,
                 sport: article.sport,
                 matchStatus: article.match_status,
-                isExternal: true
+                isExternal: false // All sports articles are now local
               };
             } else {
               // Handle regular NewsAPI articles
