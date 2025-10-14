@@ -1,6 +1,7 @@
 const Article = require('../models/Article');
 const { upload } = require('../middlewares/uploadMiddleware');
 const CachedNews = require('../models/CachedNews');
+const sportsApiService = require('../services/sportsApiService');
 exports.createArticle = async (req, res) => {
   try {
     console.log('FULL REQ.BODY:', req.body);
@@ -162,9 +163,20 @@ exports.getArticleByCategory = async (req, res) => {
     const articles = await Article.findByCategory(categoryId, 20);
     console.log(`Fetched ${articles.length} articles for category '${categoryName}'`);
 
-    // ✅ fetch cached news filtered by category (exclude sports)
+    // ✅ fetch cached news filtered by category OR sports API data
     let cachedNews = [];
-    if (categoryName.toLowerCase() !== 'sports') {
+    
+    if (categoryName.toLowerCase() === 'sports') {
+      // Use cached sports data from newsCacheService
+      try {
+        console.log('Fetching cached sports data...');
+        cachedNews = await CachedNews.getByCategory('sports', 15);
+        console.log(`Fetched ${cachedNews.length} cached sports news`);
+      } catch (error) {
+        console.error('Error fetching cached sports data:', error);
+        cachedNews = []; // Ensure we have an empty array on error
+      }
+    } else {
       // ONLY business and technology get cached news - all other categories get no cached news
       const categoryMapping = {
         'business': 'business',
@@ -190,8 +202,6 @@ exports.getArticleByCategory = async (req, res) => {
       } else {
         console.log(`Category '${categoryName}' does not get cached news - showing only regular articles`);
       }
-    } else {
-      console.log(`Skipping cached news for sports category`);
     }
 
     // Combine and mix articles with cached news

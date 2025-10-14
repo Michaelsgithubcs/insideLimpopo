@@ -58,19 +58,32 @@
               <% } %>
             </div>
             <div class="card-content">
-              <% if (article.url) { %>
-                <!-- This is cached news -->
-                <span class="sport-tag news"><%= article.category || 'News' %></span>
+              <% if (article.url && !article.article_id) { %>
+                <!-- This is cached news or sports API data -->
+                <% if (article.isExternal) { %>
+                  <span class="sport-tag sports">🏈 Sports API</span>
+                <% } else { %>
+                  <span class="sport-tag news"><%= article.category || 'News' %></span>
+                <% } %>
                 <h3 style="color: #343a40;"><%= article.title %></h3>
                 <p class="event-time">
+                  <% if (article.match_status) { %>
+                    Status: <%= article.match_status %> | 
+                  <% } %>
                   Posted on <%= new Date(article.published_at).toLocaleString() %> from <%= article.source ? article.source.name : 'External Source' %>
                 </p>
                 <p>
-                  <%= article.description ? article.description.substring(0, 200) : '' %>...
+                  <%= article.description ? article.description.substring(0, 200) : (article.content ? article.content.substring(0, 200) : '') %>...
                 </p>
-                <a href="<%= article.url %>" target="_blank" class="read-button">
-                  <i class="fas fa-book-open"></i> Read More
-                </a>
+                <% if (article.url.startsWith('#')) { %>
+                  <button class="read-button" onclick="alert('Match details will be available soon!')">
+                    <i class="fas fa-info-circle"></i> Match Info
+                  </button>
+                <% } else { %>
+                  <a href="<%= article.url %>" target="_blank" class="read-button">
+                    <i class="fas fa-external-link-alt"></i> Read More
+                  </a>
+                <% } %>
               <% } else { %>
                 <!-- This is a regular article -->
                 <span class="sport-tag football"><%= categoryName %></span>

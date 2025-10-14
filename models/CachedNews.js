@@ -1,7 +1,7 @@
 const getPool = require('../config/db');
 
 class CachedNews {
-  static async create({ title, description, url, urlToImage, publishedAt, source, category = 'general' }) {
+  static async create({ title, description, url, urlToImage, publishedAt, source, category = 'general', sport = null, matchStatus = null, isExternal = false }) {
     const pool = await getPool();
     
     // Convert ISO datetime to MySQL datetime format
@@ -15,9 +15,9 @@ class CachedNews {
     
     const [result] = await pool.query(
       `INSERT INTO cached_news 
-       (title, description, url, url_to_image, published_at, source, category, cached_at) 
-       VALUES (?, ?, ?, ?, ?, ?, ?, NOW())`,
-      [title, description, url, urlToImage, mysqlDateTime, JSON.stringify(source), category]
+       (title, description, url, url_to_image, published_at, source, category, sport, match_status, is_external, cached_at) 
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW())`,
+      [title, description, url, urlToImage, mysqlDateTime, JSON.stringify(source), category, sport, matchStatus, isExternal ? 1 : 0]
     );
     return result.insertId;
   }
@@ -32,10 +32,12 @@ class CachedNews {
       [category, limit]
     );
     
-    // Parse the source JSON back to object
+    // Parse the source JSON back to object and convert is_external to boolean
     return rows.map(row => ({
       ...row,
-      source: JSON.parse(row.source)
+      source: JSON.parse(row.source || '{}'),
+      isExternal: Boolean(row.is_external),
+      match_status: row.match_status
     }));
   }
 

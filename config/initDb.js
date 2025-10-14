@@ -187,11 +187,28 @@ async function createDatabaseAndTables() {
       published_at DATETIME,
       source JSON,
       category VARCHAR(100) DEFAULT 'general',
+      sport VARCHAR(50),
+      match_status VARCHAR(100),
+      is_external TINYINT(1) DEFAULT 0,
       cached_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
       INDEX idx_category (category),
       INDEX idx_cached_at (cached_at),
-      INDEX idx_published_at (published_at)
+      INDEX idx_published_at (published_at),
+      INDEX idx_sport (sport)
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+  `);
+
+  // Add new columns to existing cached_news table if they don't exist
+  await pool.query(`
+    ALTER TABLE cached_news 
+    ADD COLUMN IF NOT EXISTS sport VARCHAR(50),
+    ADD COLUMN IF NOT EXISTS match_status VARCHAR(100),
+    ADD COLUMN IF NOT EXISTS is_external TINYINT(1) DEFAULT 0
+  `);
+  
+  await pool.query(`
+    ALTER TABLE cached_news 
+    ADD INDEX IF NOT EXISTS idx_sport (sport)
   `);
 
   // Newsletter Subscribers

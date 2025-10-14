@@ -1,5 +1,6 @@
 const axios = require('axios');
 const CachedNews = require('../models/CachedNews');
+const sportsApiService = require('./sportsApiService');
 
 class NewsCacheService {
   constructor() {
@@ -12,15 +13,24 @@ class NewsCacheService {
     try {
       console.log(`Fetching fresh news for category: ${category}`);
       
-      let apiUrl;
-      if (category === 'general') {
-        apiUrl = `${this.baseUrl}/top-headlines?country=${country}&pageSize=${pageSize}&apiKey=${this.apiKey}`;
+      let articles;
+      
+      if (category === 'sports') {
+        // Use sports API service for sports category
+        articles = await sportsApiService.getAllSportsNews();
+        console.log(`Fetched ${articles.length} sports articles from sportsApiService`);
       } else {
-        apiUrl = `${this.baseUrl}/top-headlines?country=${country}&category=${category}&pageSize=${pageSize}&apiKey=${this.apiKey}`;
-      }
+        // Use regular NewsAPI for other categories
+        let apiUrl;
+        if (category === 'general') {
+          apiUrl = `${this.baseUrl}/top-headlines?country=${country}&pageSize=${pageSize}&apiKey=${this.apiKey}`;
+        } else {
+          apiUrl = `${this.baseUrl}/top-headlines?country=${country}&category=${category}&pageSize=${pageSize}&apiKey=${this.apiKey}`;
+        }
 
-      const response = await axios.get(apiUrl);
-      const articles = response.data.articles;
+        const response = await axios.get(apiUrl);
+        articles = response.data.articles;
+      }
 
       if (!articles || articles.length === 0) {
         console.log(`No articles found for category: ${category}`);
@@ -33,17 +43,38 @@ class NewsCacheService {
       // Cache new articles
       const cachedArticles = [];
       for (const article of articles) {
-        if (article.title && article.url) {
+        if (article.title && (article.url || article.isExternal)) {
           try {
-            await CachedNews.create({
-              title: article.title,
-              description: article.description,
-              url: article.url,
-              urlToImage: article.urlToImage,
-              publishedAt: article.publishedAt,
-              source: article.source,
-              category: category
-            });
+            let articleData;
+            
+            if (category === 'sports' && article.isExternal) {
+              // Handle sports API articles with different structure
+              articleData = {
+                title: article.title,
+                description: article.description || article.content,
+                url: article.url || '#',
+                urlToImage: article.url_to_image,
+                publishedAt: article.published_at || article.created_at,
+                source: article.source,
+                category: category,
+                sport: article.sport,
+                matchStatus: article.match_status,
+                isExternal: true
+              };
+            } else {
+              // Handle regular NewsAPI articles
+              articleData = {
+                title: article.title,
+                description: article.description,
+                url: article.url,
+                urlToImage: article.urlToImage,
+                publishedAt: article.publishedAt,
+                source: article.source,
+                category: category
+              };
+            }
+            
+            await CachedNews.create(articleData);
             cachedArticles.push(article);
           } catch (error) {
             console.error('Error caching article:', error.message);
