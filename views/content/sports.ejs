@@ -97,13 +97,23 @@
                     <!-- Regular local article -->
                     <span class="sport-tag football">Sports</span>
                     <h3 style="color: #343a40;"><%= article.title %></h3>
-                    <p class="event-time">Posted on <%= new Date(article.created_at).toLocaleString() %></p>
+                    <p class="event-time">Posted on <%= new Date(article.created_at || article.published_at).toLocaleString() %></p>
                     <p>
                       <%= (article.content || article.description || 'No content available').substring(0, 200) %>...
                     </p>
-                    <a href="/articles/<%= article.article_id %>" class="read-button">
-                      <i class="fas fa-book-open"></i> Read More
-                    </a>
+                    <% if (article.article_id) { %>
+                      <a href="/articles/<%= article.article_id %>" class="read-button">
+                        <i class="fas fa-book-open"></i> Read More
+                      </a>
+                    <% } else if (article.url && !article.url.startsWith('#')) { %>
+                      <a href="<%= article.url %>" target="_blank" class="read-button">
+                        <i class="fas fa-external-link-alt"></i> Read More
+                      </a>
+                    <% } else { %>
+                      <button class="read-button" onclick="alert('Full article will be available soon!')">
+                        <i class="fas fa-info-circle"></i> Preview Only
+                      </button>
+                    <% } %>
                   <% } %>
                 </div>
               </div>

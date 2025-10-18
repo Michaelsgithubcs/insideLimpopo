@@ -1,6 +1,6 @@
 const axios = require('axios');
 const CachedNews = require('../models/CachedNews');
-const sportsApiService = require('./sportsApiService');
+const realSportsApiService = require('./realSportsApiService');
 
 class NewsCacheService {
   constructor() {
@@ -16,9 +16,9 @@ class NewsCacheService {
       let articles;
       
       if (category === 'sports') {
-        // Use sports API service for sports category
-        articles = await sportsApiService.getAllSportsNews();
-        console.log(`Fetched ${articles.length} sports articles from sportsApiService`);
+        // Use real sports API service for sports category
+        articles = await realSportsApiService.getAllSportsNews();
+        console.log(`Fetched ${articles.length} real sports articles from NewsAPI`);
       } else {
         // Use regular NewsAPI for other categories
         let apiUrl;
