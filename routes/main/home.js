@@ -48,4 +48,26 @@ router.get('/', async (req, res) => {
   }
 });
 
+// API endpoint for getting weather by coordinates (client-side geolocation)
+router.get('/api/weather', async (req, res) => {
+  try {
+    const { lat, lon } = req.query;
+
+    if (!lat || !lon) {
+      return res.status(400).json({ error: 'Latitude and longitude are required' });
+    }
+
+    const weather = await getWeatherByCoords(parseFloat(lat), parseFloat(lon));
+    
+    if (!weather) {
+      return res.status(500).json({ error: 'Unable to fetch weather data' });
+    }
+
+    res.json(weather);
+  } catch (error) {
+    console.error('Weather API error:', error);
+    res.status(500).json({ error: 'Failed to fetch weather data' });
+  }
+});
+
 module.exports = router;

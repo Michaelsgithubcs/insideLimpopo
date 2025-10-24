@@ -24,6 +24,7 @@
       <!-- Icon -->
       <div class="weather-left me-3">
         <img
+          class="weather-icon"
           src="<%= weather.icon %>"
           alt="Weather icon"
           style="width: 60px; height: 60px;"
@@ -32,14 +33,14 @@
 
       <!-- Info -->
       <div class="weather-right">
-        <h6 class="fw-semibold mb-1"><%= weather.city %>, <%= weather.country %></h6>
+        <h6 class="fw-semibold mb-1 weather-location"><%= weather.city %>, <%= weather.country %></h6>
         <div class="d-flex align-items-center mb-1">
-          <span class="fw-bold fs-4 me-2"><%= weather.temp %>°C</span>
-          <small class="text-muted text-capitalize"><%= weather.description %></small>
+          <span class="fw-bold fs-4 me-2 weather-temp"><%= weather.temp %>°C</span>
+          <small class="text-muted text-capitalize weather-description"><%= weather.description %></small>
         </div>
 
         <% if (weather.feels_like || weather.humidity) { %>
-          <small class="text-muted">
+          <small class="text-muted weather-details">
             <% if (weather.feels_like) { %>Feels like <%= weather.feels_like %>°C. <% } %>
             <% if (weather.humidity) { %>Humidity <%= weather.humidity %>%.<% } %>
           </small>
@@ -122,6 +123,9 @@
 
     <!-- Bootstrap JS Bundle with Popper -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- User Location Weather -->
+    <script src="/scripts/user-location-weather.js"></script>
     
     <!-- Search Functionality -->
     <script src="/scripts/script.js"></script>

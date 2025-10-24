@@ -15,7 +15,8 @@ class CachedNews {
     
     const [result] = await pool.query(
       `INSERT INTO cached_news 
-       (title, description, url, url_to_image, published_at, source, category, sport, match_status, is_external, cached_at) 
+   
+      (title, description, url, url_to_image, published_at, source, category, sport, match_status, is_external, cached_at) 
        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW())`,
       [title, description, url, urlToImage, mysqlDateTime, JSON.stringify(source), category, sport, matchStatus, isExternal ? 1 : 0]
     );
