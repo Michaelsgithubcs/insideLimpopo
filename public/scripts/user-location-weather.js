@@ -10,20 +10,17 @@
 
   // Get user's location and update weather
   function getUserLocationWeather() {
-    const weatherWidget = document.querySelector('.weather-widget');
+    const weatherWidget = document.querySelector('.weather-widget-compact');
     if (!weatherWidget) return;
 
     // Show loading state
     const originalContent = weatherWidget.innerHTML;
     weatherWidget.innerHTML = `
-      <div class="weather-left me-3">
-        <div class="spinner-border spinner-border-sm text-primary" role="status">
-          <span class="visually-hidden">Loading...</span>
-        </div>
+      <div class="spinner-border spinner-border-sm text-light" role="status" style="width: 20px; height: 20px;">
+        <span class="visually-hidden">Loading...</span>
       </div>
-      <div class="weather-right">
-        <h6 class="fw-semibold mb-1">Getting your location...</h6>
-        <small class="text-muted">Please allow location access</small>
+      <div class="weather-info">
+        <div class="weather-location" style="font-size: 9px;">Getting location...</div>
       </div>
     `;
 
@@ -72,29 +69,19 @@
 
   // Update the weather widget with new data
   function updateWeatherWidget(weather) {
-    const weatherWidget = document.querySelector('.weather-widget');
+    const weatherWidget = document.querySelector('.weather-widget-compact');
     if (!weatherWidget) return;
 
     weatherWidget.innerHTML = `
-      <div class="weather-left me-3">
-        <img
-          src="${weather.icon}"
-          alt="Weather icon"
-          style="width: 60px; height: 60px;"
-        />
-      </div>
-      <div class="weather-right">
-        <h6 class="fw-semibold mb-1">${weather.city}, ${weather.country}</h6>
-        <div class="d-flex align-items-center mb-1">
-          <span class="fw-bold fs-4 me-2">${weather.temp}°C</span>
-          <small class="text-muted text-capitalize">${weather.description}</small>
+      <img class="weather-icon" src="${weather.icon}" alt="${weather.description}" />
+      <div class="weather-info">
+        <div class="weather-location">${weather.city}, ${weather.country}</div>
+        <div class="weather-temp">${weather.temp}°C</div>
+        <div class="weather-description">${weather.description}</div>
+        <div class="weather-details">
+          ${weather.feels_like ? `Feels like ${weather.feels_like}°C. ` : ''}
+          ${weather.humidity ? `Humidity ${weather.humidity}%.` : ''}
         </div>
-        ${weather.feels_like || weather.humidity ? `
-          <small class="text-muted">
-            ${weather.feels_like ? `Feels like ${weather.feels_like}°C. ` : ''}
-            ${weather.humidity ? `Humidity ${weather.humidity}%.` : ''}
-          </small>
-        ` : ''}
       </div>
     `;
   }
