@@ -95,8 +95,8 @@
 </section>
 
 
-     <!-- Add Article Section -->
-      <section id="article" class="content-landing-tab active">
+    <!-- Add Article Section -->
+<section id="article" class="content-landing-tab active">
   <form 
     action="/api/articles" 
     method="POST" 
@@ -106,11 +106,13 @@
   >
     <h2>Create Article</h2>
 
+    <!-- 📰 Article Title -->
     <div class="form-landing-group">
       <label for="article-title">Title</label>
       <input type="text" id="article-title" name="title" required>
     </div>
 
+    <!-- 🏷️ Category -->
     <div class="form-landing-group">
       <label for="article-category">Category</label>
       <select id="article-category" name="category_id" required>
@@ -121,21 +123,22 @@
       </select>
     </div>
 
+    <!-- 🧩 Lead Paragraph -->
     <div class="form-landing-group">
       <label for="article-lead">Lead Paragraph</label>
       <textarea id="article-lead" name="lead" rows="3" required></textarea>
     </div>
 
+    <!-- 📝 Full Content -->
     <div class="form-landing-group">
       <label for="article-content">Content</label>
       <textarea id="article-content" name="content" rows="10" required></textarea>
     </div>
 
-    <!-- ✅ Featured Image with choice -->
+    <!-- 🖼️ Featured Image -->
     <div class="form-landing-group">
       <label>Featured Image</label>
 
-      <!-- Radio buttons for type -->
       <div>
         <label>
           <input type="radio" name="image_type" value="url" checked>
@@ -155,7 +158,36 @@
       <div id="article-image-preview"></div>
     </div>
 
-    <!-- ✅ Fixed button with id -->
+    <!-- 🌐 Social Media Links -->
+    <div class="form-landing-group">
+      <label>Social Media Links (Optional)</label>
+
+      <input 
+        type="url" 
+        name="facebook_link" 
+        placeholder="Facebook URL e.g. https://facebook.com/InsideLimpopo" 
+        class="social-input">
+
+      <input 
+        type="url" 
+        name="twitter_link" 
+        placeholder="Twitter URL e.g. https://twitter.com/InsideLimpopo" 
+        class="social-input">
+
+      <input 
+        type="url" 
+        name="instagram_link" 
+        placeholder="Instagram URL e.g. https://instagram.com/InsideLimpopo" 
+        class="social-input">
+
+      <input 
+        type="url" 
+        name="linkedin_link" 
+        placeholder="LinkedIn URL e.g. https://linkedin.com/company/InsideLimpopo" 
+        class="social-input">
+    </div>
+
+    <!-- ✅ Submit Button -->
     <button 
       type="submit" 
       id="article-submit-btn" 
@@ -164,6 +196,7 @@
     </button>
   </form>
 </section>
+
 
 
         </form>

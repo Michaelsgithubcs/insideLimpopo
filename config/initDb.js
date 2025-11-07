@@ -69,6 +69,7 @@ async function createDatabaseAndTables() {
       author_id INT,
       category_id INT,
       featured_img VARCHAR(255),
+      social_links JSON DEFAULT NULL,
       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
       updated_at TIMESTAMP NULL DEFAULT NULL,
       FOREIGN KEY (author_id) REFERENCES users(id) ON DELETE SET NULL,

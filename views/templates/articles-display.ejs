@@ -46,6 +46,64 @@
         <% } %>
       <% }) %>
     </div>
+    <!-- ✅ Social Links Section -->
+      <% if (socialLinks && Object.keys(socialLinks).length > 0) { %>
+        <div class="social-links border rounded p-3 mt-3 bg-light">
+          <h6 class="text-muted mb-2">Follow this story:</h6>
+          <div class="d-flex flex-wrap gap-3 align-items-center">
+            <% if (socialLinks.facebook) { %>
+              <a href="<%= socialLinks.facebook %>" target="_blank" class="text-primary text-decoration-none">
+                <i class="fab fa-facebook fa-lg me-1"></i> Facebook
+              </a>
+            <% } %>
+            <% if (socialLinks.twitter) { %>
+              <a href="<%= socialLinks.twitter %>" target="_blank" class="text-dark text-decoration-none">
+                <i class="fab fa-x-twitter fa-lg me-1"></i> X (Twitter)
+              </a>
+            <% } %>
+            <% if (socialLinks.instagram) { %>
+              <a href="<%= socialLinks.instagram %>" target="_blank" class="text-danger text-decoration-none">
+                <i class="fab fa-instagram fa-lg me-1"></i> Instagram
+              </a>
+            <% } %>
+            <% if (socialLinks.youtube) { %>
+              <a href="<%= socialLinks.youtube %>" target="_blank" class="text-danger text-decoration-none">
+                <i class="fab fa-youtube fa-lg me-1"></i> YouTube
+              </a>
+            <% } %>
+            <% if (socialLinks.linkedin) { %>
+              <a href="<%= socialLinks.linkedin %>" target="_blank" class="text-primary text-decoration-none">
+                <i class="fab fa-linkedin fa-lg me-1"></i> LinkedIn
+              </a>
+            <% } %>
+            <% if (socialLinks.website) { %>
+              <a href="<%= socialLinks.website %>" target="_blank" class="text-secondary text-decoration-none">
+                <i class="fas fa-globe fa-lg me-1"></i> Website
+              </a>
+            <% } %>
+          </div>
+
+          <!-- ✅ LinkedIn Video Embed -->
+          <% if (socialLinks.linkedin && socialLinks.linkedin.includes('linkedin.com/embed/')) { %>
+            <div class="ratio ratio-16x9 mt-3">
+              <iframe 
+                src="<%= socialLinks.linkedin %>" 
+                frameborder="0" 
+                allowfullscreen 
+                class="rounded shadow-sm"></iframe>
+            </div>
+          <% } else if (socialLinks.linkedin && socialLinks.linkedin.includes('linkedin.com/video')) { %>
+            <div class="ratio ratio-16x9 mt-3">
+              <iframe 
+                src="<%= socialLinks.linkedin.replace('linkedin.com/video', 'linkedin.com/embed/video') %>" 
+                frameborder="0" 
+                allowfullscreen 
+                class="rounded shadow-sm"></iframe>
+            </div>
+          <% } %>
+        </div>
+      <% } %>
+
 
     <!-- Author/Date Footer with Social Sharing -->
     <div class="article-footer">
@@ -60,6 +118,7 @@
           <% } %>
         </div>
       </div>
+      
       
       <div class="article-meta">
         <p class="publish-date">
@@ -103,6 +162,7 @@
         </div>
       </div>
     <% } %>
+    
 
     <!-- Comments Section -->
     <div class="comments-section" id="comments">

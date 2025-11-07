@@ -71,23 +71,37 @@ router.get('/:id', async (req, res) => {
     if (!article) {
       return res.status(404).render('error', { message: 'Article not found' });
     }
-    
+
+    // ✅ Parse social_links JSON if it exists
+    if (article.social_links && typeof article.social_links === 'string') {
+      try {
+        article.social_links = JSON.parse(article.social_links);
+      } catch (err) {
+        console.warn('⚠️ Failed to parse social_links JSON:', err.message);
+        article.social_links = null;
+      }
+    }
+
     // Get related articles and comments
     const relatedArticles = await Article.findByCategory(article.category_id, 3, article.article_id);
     const comments = await Comment.findByArticleId(req.params.id);
     const commentCount = await Comment.getCountByArticleId(req.params.id);
-    
+
+    // ✅ Send parsed social_links to the template
     res.render('templates/articles-display', { 
       article, 
       relatedArticles, 
       comments, 
-      commentCount 
+      commentCount,
+      socialLinks: article.social_links || {} // 👈 Added line
     });
+    
   } catch (err) {
     console.error(err);
     res.status(500).send('Server Error');
   }
 });
+
 // Example Express route
 router.get("/added/:categoryName", articleController.getArticleByCategory);
 

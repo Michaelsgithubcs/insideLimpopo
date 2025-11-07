@@ -14,91 +14,94 @@
   <section class="category-hero">
     <div class="hero-content">
       <h1><%= categoryName %></h1>
-      <p class="subtitle">Stay informed with the latest <%= categoryName %> stories and updates from across Limpopo</p>
+      <p class="subtitle">
+        Stay informed with the latest <%= categoryName %> stories and updates from across Limpopo
+      </p>
     </div>
   </section>
 
   <!-- Articles Section -->
   <section class="section-with-header">
-    <!-- COMMENTED OUT: Section header and description (can be restored later) -->
-    <!-- 
     <div class="section-sport-header">
-      <h2>Latest News & Articles</h2>
+      <h2>News Articles</h2>
       <p class="section-sport-description">
-        Browse all the latest <%= categoryName %> articles, news, and updates from Limpopo and external sources
+        Browse all the latest <%= categoryName %> articles, news, and updates from Limpopo
       </p>
     </div>
-    -->
 
-    <!-- Debug: Show what data we have -->
-    <!-- Total articles: <%= articles ? articles.length : 0 %> -->
-    
-    <% if (articles && articles.length > 0) { %>
+    <% if ((articles && articles.length > 0) || (cachedNews && cachedNews.length > 0)) { %>
       <div class="sports-section">
-        <% articles.forEach(article => { %>
-          <div class="sports-card event-card">
-            <div class="card-image-container">
-              <% if (article.featured_img) { %>
-                <!-- Regular article image -->
-                <img src="<%= article.featured_img %>" alt="<%= article.title %>">
-              <% } else if (article.url_to_image) { %>
-                <!-- Cached news image -->
-                <img src="<%= article.url_to_image %>" alt="<%= article.title %>">
-              <% } else { %>
-                <!-- Fallback image -->
-                <img src="/assets/logo/InsideLimpopoLogoTransparent.png" alt="No image available" />
-              <% } %>
-              
-              <% if (article.created_at) { %>
-                <!-- Regular article date display -->
+
+        <!-- ✅ Local Articles -->
+        <% if (articles && articles.length > 0) { %>
+          <% articles.forEach(article => { %>
+            <div class="sports-card event-card">
+              <div class="card-image-container">
+                <img src="<%= article.featured_img || '/assets/logo/InsideLimpopoLogoTransparent.png' %>" 
+                     alt="<%= article.title %>">
                 <div class="event-date">
                   <span class="day"><%= new Date(article.created_at).getDate() %></span>
-                  <span class="month"><%= new Date(article.created_at).toLocaleString('default', { month: 'short' }).toUpperCase() %></span>
+                  <span class="month">
+                    <%= new Date(article.created_at).toLocaleString('default', { month: 'short' }).toUpperCase() %>
+                  </span>
                 </div>
-              <% } %>
-            </div>
-            <div class="card-content">
-              <% if (article.url && !article.article_id) { %>
-                <!-- This is cached news or sports API data -->
-                <% if (article.isExternal) { %>
-                  <span class="sport-tag sports">🏈 Sports API</span>
-                <% } else { %>
-                  <span class="sport-tag news"><%= article.category || 'News' %></span>
-                <% } %>
-                <h3 style="color: #343a40;"><%= article.title %></h3>
-                <p class="event-time">
-                  <% if (article.match_status) { %>
-                    Status: <%= article.match_status %> | 
-                  <% } %>
-                  Posted on <%= new Date(article.published_at).toLocaleString() %> from <%= article.source ? article.source.name : 'External Source' %>
-                </p>
-                <p>
-                  <%= article.description ? article.description.substring(0, 200) : (article.content ? article.content.substring(0, 200) : '') %>...
-                </p>
-                <% if (article.url.startsWith('#')) { %>
-                  <button class="read-button" onclick="alert('Match details will be available soon!')">
-                    <i class="fas fa-info-circle"></i> Match Info
-                  </button>
-                <% } else { %>
-                  <a href="<%= article.url %>" target="_blank" class="read-button">
-                    <i class="fas fa-external-link-alt"></i> Read More
-                  </a>
-                <% } %>
-              <% } else { %>
-                <!-- This is a regular article -->
+              </div>
+              <div class="card-content">
                 <span class="sport-tag football"><%= categoryName %></span>
-                <h3 style="color: #343a40;"><%= article.title %></h3>
-                <p class="event-time">Posted on <%= new Date(article.created_at).toLocaleString() %></p>
-                <p>
-                  <%= article.content.substring(0, 200) %>...
+
+                <h3><%= article.title %></h3>
+                <p class="event-time">
+                  Posted on <%= new Date(article.created_at).toLocaleString() %>
                 </p>
+
+                <!-- ✅ Safe content rendering -->
+                <p>
+                  <%= article.content ? article.content.substring(0, 200) + '...' : 'No content available.' %>
+                </p>
+
                 <a href="/articles/<%= article.article_id %>" class="read-button">
                   <i class="fas fa-book-open"></i> Read More
                 </a>
-              <% } %>
+              </div>
             </div>
-          </div>
-        <% }) %>
+          <% }) %>
+        <% } %>
+
+        <!-- ✅ Cached News -->
+        <% if (cachedNews && cachedNews.length > 0) { %>
+          <% cachedNews.forEach(news => { %>
+            <div class="sports-card event-card">
+              <div class="card-image-container">
+                <img src="<%= news.url_to_image || '/assets/logo/InsideLimpopoLogoTransparent.png' %>" 
+                     alt="<%= news.title %>">
+                <div class="event-date">
+                  <span class="day"><%= new Date(news.published_at).getDate() %></span>
+                  <span class="month">
+                    <%= new Date(news.published_at).toLocaleString('default', { month: 'short' }).toUpperCase() %>
+                  </span>
+                </div>
+              </div>
+              <div class="card-content">
+                <span class="sport-tag football"><%= categoryName %></span>
+
+                <h3><%= news.title %></h3>
+                <p class="event-time">
+                  Posted on <%= new Date(news.published_at).toLocaleString() %>
+                </p>
+
+                <!-- ✅ Safe description rendering -->
+                <p>
+                  <%= news.description ? news.description.substring(0, 200) + '...' : 'No description available.' %>
+                </p>
+
+                <a href="<%= news.url %>" target="_blank" class="read-button">
+                  <i class="fas fa-book-open"></i> Read More
+                </a>
+              </div>
+            </div>
+          <% }) %>
+        <% } %>
+
       </div>
     <% } else { %>
       <div class="no-articles">
