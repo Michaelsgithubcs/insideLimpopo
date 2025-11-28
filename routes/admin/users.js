@@ -4,154 +4,138 @@ const argon2 = require('argon2');
 const getPool = require('../../config/db');
 const { isAuthenticated, isAdmin } = require('../../middlewares/auth');
 
-// Get all users - Admin only
+// =========================
+// GET all users (Admin only)
+// =========================
 router.get('/', isAuthenticated, isAdmin, async (req, res) => {
   try {
     const pool = await getPool();
-    const [users] = await pool.query(
-      `SELECT id, username, email, role, first_name, last_name, created_at 
-       FROM users 
-       ORDER BY created_at DESC`
-    );
+
+    const [users] = await pool.query(`
+      SELECT 
+        id, username, email, role, first_name, last_name, created_at
+      FROM users
+      ORDER BY created_at DESC
+    `);
+
     res.json(users);
-  } catch (error) {
-    console.error('Error fetching users:', error);
-    res.status(500).json({ error: 'Failed to fetch users' });
+  } catch (err) {
+    console.error("GET USERS ERROR:", err);
+    res.status(500).json({ error: "Failed to fetch users" });
   }
 });
 
-// Create new user - Admin only
+
+// =========================
+// CREATE USER
+// =========================
 router.post('/', isAuthenticated, isAdmin, async (req, res) => {
   try {
     const { first_name, last_name, username, email, role, password } = req.body;
 
-    // Validate required fields
     if (!first_name || !last_name || !username || !email || !role || !password) {
-      return res.status(400).json({ error: 'All fields are required' });
-    }
-
-    // Validate email format
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-      return res.status(400).json({ error: 'Invalid email format' });
-    }
-
-    // Validate role
-    if (!['user', 'admin'].includes(role)) {
-      return res.status(400).json({ error: 'Invalid role' });
+      return res.status(400).json({ error: "All fields are required" });
     }
 
     const pool = await getPool();
-
-    // Check if username or email already exists
-    const [existingUsers] = await pool.query(
-      'SELECT id FROM users WHERE username = ? OR email = ?',
+    const [existing] = await pool.query(
+      "SELECT id FROM users WHERE username = ? OR email = ?",
       [username, email]
     );
 
-    if (existingUsers.length > 0) {
-      return res.status(400).json({ error: 'Username or email already exists' });
+    if (existing.length > 0) {
+      return res.status(400).json({ error: "Username or email already exists" });
     }
 
-    // Hash password using argon2 (consistent with registration system)
-    const hashedPassword = await argon2.hash(password);
+    const hashed = await argon2.hash(password);
 
-    // Insert new user
     const [result] = await pool.query(
-      `INSERT INTO users (first_name, last_name, username, email, password, role, created_at) 
+      `INSERT INTO users (first_name, last_name, username, email, password, role, created_at)
        VALUES (?, ?, ?, ?, ?, ?, NOW())`,
-      [first_name, last_name, username, email, hashedPassword, role]
+      [first_name, last_name, username, email, hashed, role]
     );
 
-    res.status(201).json({ 
-      message: 'User created successfully',
-      userId: result.insertId 
+    res.status(201).json({
+      message: "User created successfully",
+      userId: result.insertId
     });
-  } catch (error) {
-    console.error('Error creating user:', error);
-    res.status(500).json({ error: 'Failed to create user' });
+
+  } catch (err) {
+    console.error("CREATE USER ERROR:", err);
+    res.status(500).json({ error: "Failed to create user" });
   }
 });
 
-// Update user - Admin only
+
+// =========================
+// UPDATE USER
+// =========================
 router.put('/:id', isAuthenticated, isAdmin, async (req, res) => {
   try {
-    const { id } = req.params;
+    const userId = req.params.id;
     const { username, email, role } = req.body;
 
-    // Validate required fields
     if (!username || !email || !role) {
-      return res.status(400).json({ error: 'Username, email, and role are required' });
-    }
-
-    // Validate email format
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-      return res.status(400).json({ error: 'Invalid email format' });
-    }
-
-    // Validate role
-    if (!['user', 'admin'].includes(role)) {
-      return res.status(400).json({ error: 'Invalid role' });
+      return res.status(400).json({ error: "All fields are required" });
     }
 
     const pool = await getPool();
 
-    // Check if username or email already exists for other users
-    const [existingUsers] = await pool.query(
-      'SELECT id FROM users WHERE (username = ? OR email = ?) AND id != ?',
-      [username, email, id]
+    // Check duplicates
+    const [check] = await pool.query(
+      "SELECT id FROM users WHERE (username = ? OR email = ?) AND id != ?",
+      [username, email, userId]
     );
 
-    if (existingUsers.length > 0) {
-      return res.status(400).json({ error: 'Username or email already exists' });
+    if (check.length > 0) {
+      return res.status(400).json({ error: "Username or email already used" });
     }
 
-    // Update user
     const [result] = await pool.query(
-      'UPDATE users SET username = ?, email = ?, role = ? WHERE id = ?',
-      [username, email, role, id]
+      "UPDATE users SET username = ?, email = ?, role = ? WHERE id = ?",
+      [username, email, role, userId]
     );
 
     if (result.affectedRows === 0) {
-      return res.status(404).json({ error: 'User not found' });
+      return res.status(404).json({ error: "User does not exist" });
     }
 
-    res.json({ message: 'User updated successfully' });
-  } catch (error) {
-    console.error('Error updating user:', error);
-    res.status(500).json({ error: 'Failed to update user' });
+    res.json({ message: "User updated successfully" });
+
+  } catch (err) {
+    console.error("UPDATE USER ERROR:", err);
+    res.status(500).json({ error: "Failed to update user" });
   }
 });
 
-// Delete user - Admin only
+
+// =========================
+// DELETE USER
+// =========================
 router.delete('/:id', isAuthenticated, isAdmin, async (req, res) => {
   try {
-    const { id } = req.params;
+    const userToDelete = parseInt(req.params.id);
+
+    // Prevent deleting yourself
+    if (userToDelete === req.session.user.id) {
+      return res.status(400).json({ error: "You cannot delete your own account" });
+    }
+
     const pool = await getPool();
 
-    // Check if user exists
-    const [users] = await pool.query('SELECT id FROM users WHERE id = ?', [id]);
-    if (users.length === 0) {
-      return res.status(404).json({ error: 'User not found' });
+    const [exists] = await pool.query("SELECT id FROM users WHERE id = ?", [userToDelete]);
+
+    if (exists.length === 0) {
+      return res.status(404).json({ error: "User not found" });
     }
 
-    // Prevent deletion of current user
-    if (parseInt(id) === req.session.user.id) {
-      return res.status(400).json({ error: 'Cannot delete your own account' });
-    }
+    await pool.query("DELETE FROM users WHERE id = ?", [userToDelete]);
 
-    // Delete user (this will cascade delete related articles/podcasts if foreign keys are set up)
-    const [result] = await pool.query('DELETE FROM users WHERE id = ?', [id]);
+    res.json({ message: "User deleted successfully" });
 
-    if (result.affectedRows === 0) {
-      return res.status(404).json({ error: 'User not found' });
-    }
-
-    res.json({ message: 'User deleted successfully' });
-  } catch (error) {
-    console.error('Error deleting user:', error);
-    res.status(500).json({ error: 'Failed to delete user' });
+  } catch (err) {
+    console.error("DELETE USER ERROR:", err);
+    res.status(500).json({ error: "Failed to delete user" });
   }
 });
 

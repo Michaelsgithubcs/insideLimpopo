@@ -5,7 +5,7 @@ const { isAuthenticated, isAdmin } = require("../../middlewares/auth");
 const { upload } = require("../../middlewares/uploadMiddleware");
 
 // CREATE
-router.post("/", isAuthenticated, upload.single("featured_img"), podcastController.createPodcast);
+router.post('/create', podcastController.createPodcast);
 
 // READ all
 router.get("/", podcastController.getAllPodcasts);

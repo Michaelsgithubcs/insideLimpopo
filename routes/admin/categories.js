@@ -52,7 +52,7 @@ router.post('/', async (req, res) => {
       'INSERT INTO categories (name, visible) VALUES (?, ?)',
       [name.trim(), visible ? 1 : 0]
     );
-
+    console.log('Inserted category ID:', result.insertId);
     res.status(201).json({ 
       success: true, 
       message: 'Category added successfully', 
