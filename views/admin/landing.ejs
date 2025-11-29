@@ -193,69 +193,70 @@
       </section>
 
             <!-- Add Podcast Section -->
-      <section id="podcast" class="content-landing-tab"> 
-        <!-- Create Podcast -->
-        <form 
-          action="/api/podcasts/create" 
-          method="POST" 
-          id="podcast-form" 
-          class="creation-landing-form"
-        >
-          <h2>Create Podcast</h2>
+     <section id="podcast" class="content-landing-tab"> 
+  <!-- Create Podcast -->
+  <form 
+    action="/api/podcasts/create" 
+    method="POST" 
+    id="podcast-form" 
+    class="creation-landing-form"
+  >
+    <h2>Create Podcast</h2>
 
-          <!-- Title -->
-          <div class="form-landing-group">
-            <label for="podcast-title">Podcast Title</label>
-            <input type="text" id="podcast-title" name="title" required>
-          </div>
+    <!-- Title -->
+    <div class="form-landing-group">
+      <label for="podcast-title">Podcast Title *</label>
+      <input type="text" id="podcast-title" name="title" required>
+    </div>
 
-          <!-- Description -->
-          <div class="form-landing-group">
-            <label for="podcast-description">Description</label>
-            <textarea 
-              id="podcast-description" 
-              name="description" 
-              rows="4" 
-              placeholder="Enter a short description of the podcast" 
-              required>
-            </textarea>
-          </div>
+    <!-- Description -->
+    <div class="form-landing-group">
+      <label for="podcast-description">Description *</label>
+      <textarea 
+        id="podcast-description" 
+        name="description" 
+        rows="4" 
+        placeholder="Enter a short description of the podcast" 
+        required
+      ></textarea>
+    </div>
 
-          <!-- Episode Link -->
-          <div class="form-landing-group">
-            <label for="episode-link">Episode Link</label>
-            <input 
-              type="url" 
-              id="episode-link" 
-              name="episode_link" 
-              placeholder="https://youtu.be/..." 
-              required
-            >
-          </div>
+    <!-- Episode Link -->
+    <div class="form-landing-group">
+      <label for="episode-link">Episode Link *</label>
+      <input 
+        type="url" 
+        id="episode-link" 
+        name="episode_link" 
+        placeholder="https://youtu.be/..." 
+        required
+      >
+      <small style="color: #666; font-size: 0.8rem;">Enter the full URL to your podcast episode (YouTube, SoundCloud, etc.)</small>
+    </div>
 
-          <!-- Date -->
-          <div class="form-landing-group">
-            <label for="episode-date">Date</label>
-            <input type="date" id="episode-date" name="episode_date" required>
-          </div>
+    <!-- Date -->
+    <div class="form-landing-group">
+      <label for="episode-date">Date *</label>
+      <input type="date" id="episode-date" name="episode_date" required>
+    </div>
 
-          <!-- Duration -->
-          <div class="form-landing-group">
-            <label for="episode-duration">Duration</label>
-            <input 
-              type="text" 
-              id="episode-duration" 
-              name="episode_duration" 
-              placeholder="42 min" 
-              required
-            >
-          </div>
+    <!-- Duration -->
+    <div class="form-landing-group">
+      <label for="episode-duration">Duration *</label>
+      <input 
+        type="text" 
+        id="episode-duration" 
+        name="episode_duration" 
+        placeholder="42 min" 
+        required
+      >
+    </div>
 
-          <button type="submit" class="btn btn-landing-primary">
-            Submit Podcast
-          </button>
-          <div id="podcast-form-status" class="form-status" style="display: none;"></div>
-        </form>
+    <button type="submit" class="btn btn-landing-primary" id="podcast-submit-btn">
+      Submit Podcast
+    </button>
+    <div id="podcast-form-status" class="form-status" style="display: none;"></div>
+  </form>
 
         <!-- Manage Podcasts -->
         <div class="creation-landing-form" style="margin-top:2rem;">
@@ -855,7 +856,7 @@ async function saveCategoryVisibility() {
 }
 
 // =========================
-// PODCAST MANAGEMENT
+// PODCAST MANAGEMENT - FIXED VERSION
 // =========================
 function initPodcastManagement() {
   const form = document.getElementById('podcast-form');
@@ -865,76 +866,153 @@ function initPodcastManagement() {
 
   // Set today as default date
   if (dateInput && !dateInput.value) {
-    dateInput.valueAsDate = new Date();
+    const today = new Date().toISOString().split('T')[0];
+    dateInput.value = today;
   }
 
-  // Submit podcast form
+  // Submit podcast form - FIXED VERSION
   if (form) {
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
-      if (statusDiv) statusDiv.style.display = 'none';
-
-      const formData = new FormData(form);
-
-      const required = ['title', 'description', 'episode_link', 'episode_date', 'episode_duration'];
-      for (let field of required) {
-        const value = formData.get(field);
-        if (!value || !String(value).trim()) {
-          showFormStatus(statusDiv, `Please fill in ${field.replace('_', ' ')}`, 'error');
-          return;
-        }
+      if (statusDiv) {
+        statusDiv.style.display = 'block';
+        statusDiv.textContent = '';
       }
 
-      // Validate episode link
-      try {
-        new URL(formData.get('episode_link'));
-      } catch {
-        showFormStatus(statusDiv, 'Please enter a valid episode URL', 'error');
+      // Get form values directly as object
+      const podcastData = {
+        title: document.getElementById('podcast-title').value.trim(),
+        description: document.getElementById('podcast-description').value.trim(),
+        episode_link: document.getElementById('episode-link').value.trim(),
+        episode_date: document.getElementById('episode-date').value,
+        episode_duration: document.getElementById('episode-duration').value.trim()
+      };
+
+      console.log('🎯 Submitting podcast data:', podcastData);
+
+      // Validate required fields
+      const required = ['title', 'description', 'episode_link', 'episode_date', 'episode_duration'];
+      const missingFields = required.filter(field => !podcastData[field]);
+      
+      if (missingFields.length > 0) {
+        showFormStatus(statusDiv, `Please fill in: ${missingFields.join(', ').replace(/_/g, ' ')}`, 'error');
         return;
       }
 
-      toggleButton(submitBtn, true);
+      // Validate episode link is a proper URL
+      try {
+        new URL(podcastData.episode_link);
+      } catch {
+        showFormStatus(statusDiv, 'Please enter a valid episode URL (include http:// or https://)', 'error');
+        return;
+      }
+
+      // Validate date
+      if (!isValidDate(podcastData.episode_date)) {
+        showFormStatus(statusDiv, 'Please enter a valid date', 'error');
+        return;
+      }
+
+      toggleButton(submitBtn, true, 'Creating Podcast...');
 
       try {
         const res = await fetch('/api/podcasts/create', {
           method: 'POST',
-          body: formData,
-          credentials: 'include'
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          credentials: 'include',
+          body: JSON.stringify(podcastData)
         });
-        const data = await res.json();
+
+        console.log('📡 Response status:', res.status);
+        
+        const data = await res.json().catch(async () => {
+          // If JSON parsing fails, try to get text
+          const text = await res.text();
+          console.error('❌ Failed to parse JSON response:', text);
+          return { error: 'Invalid server response' };
+        });
 
         if (!res.ok) {
-          throw new Error(data.error || data.message || 'Failed to create podcast');
+          console.error('❌ Server error response:', data);
+          throw new Error(data.error || data.message || `Server error: ${res.status}`);
         }
 
-        showFormStatus(statusDiv, 'Podcast created successfully! 🎉', 'success');
+        console.log('✅ Podcast created successfully:', data);
+        showFormStatus(statusDiv, '✅ Podcast created successfully! 🎉', 'success');
+        
+        // Reset form
         form.reset();
+        
+        // Reset date to today
+        if (dateInput) {
+          const today = new Date().toISOString().split('T')[0];
+          dateInput.value = today;
+        }
 
-        if (dateInput) dateInput.valueAsDate = new Date();
+        // Reload page after short delay to show new podcast
+        setTimeout(() => {
+          window.location.reload();
+        }, 1500);
 
-        setTimeout(() => window.location.reload(), 1200);
       } catch (err) {
-        console.error('Podcast creation error:', err);
-        showFormStatus(statusDiv, 'Error: ' + err.message, 'error');
+        console.error('❌ Podcast creation error:', err);
+        showFormStatus(statusDiv, `❌ Error: ${err.message}`, 'error');
       } finally {
-        toggleButton(submitBtn, false);
+        toggleButton(submitBtn, false, 'Submit Podcast');
       }
     });
   }
 
-  // Search
+  // Search functionality
   const searchInput = document.getElementById('podcast-search');
   if (searchInput) {
     searchInput.addEventListener('input', handlePodcastSearch);
   }
 
-  // Sort
+  // Sort functionality
   const sortSelect = document.getElementById('podcast-sort');
   if (sortSelect) {
     sortSelect.addEventListener('change', handlePodcastSort);
   }
 }
 
+// Helper function to validate date
+function isValidDate(dateString) {
+  const regex = /^\d{4}-\d{2}-\d{2}$/;
+  if (!dateString.match(regex)) return false;
+  
+  const date = new Date(dateString);
+  const timestamp = date.getTime();
+  
+  if (typeof timestamp !== 'number' || Number.isNaN(timestamp)) {
+    return false;
+  }
+  
+  return date.toISOString().startsWith(dateString);
+}
+
+// Improved toggleButton function
+function toggleButton(button, isLoading, loadingText = 'Processing...') {
+  if (!button) return;
+  if (isLoading) {
+    button.disabled = true;
+    button.dataset.originalText = button.textContent;
+    button.textContent = loadingText;
+    button.style.opacity = '0.7';
+    button.style.cursor = 'not-allowed';
+  } else {
+    button.disabled = false;
+    if (button.dataset.originalText) {
+      button.textContent = button.dataset.originalText;
+    }
+    button.style.opacity = '1';
+    button.style.cursor = 'pointer';
+  }
+}
+
+// Rest of your podcast functions remain the same but I'll include them for completeness:
 function handlePodcastSearch(e) {
   const searchTerm = e.target.value.toLowerCase().trim();
   const podcastItems = document.querySelectorAll('.podcast-item');
@@ -989,7 +1067,7 @@ function handlePodcastSort(e) {
   podcastItems.forEach(item => tbody.appendChild(item));
 }
 
-// Global delete podcast function used in HTML onclick
+// Global delete podcast function
 window.deletePodcast = async function (podcastId, podcastTitle = 'this podcast') {
   if (!confirm(`Are you sure you want to delete "${podcastTitle}"? This action cannot be undone.`)) {
     return;
@@ -1004,6 +1082,7 @@ window.deletePodcast = async function (podcastId, podcastTitle = 'this podcast')
       },
       credentials: 'include'
     });
+    
     const data = await res.json();
 
     if (!res.ok) {

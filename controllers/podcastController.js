@@ -2,37 +2,93 @@
 const Podcast = require('../models/Podcast');
 const getPool = require('../config/db');
 
-// CREATE
+// CREATE - FIXED VERSION
 exports.createPodcast = async (req, res) => {
   try {
+    console.log('📥 CREATE PODCAST - Request body:', req.body);
+    console.log('📥 CREATE PODCAST - User session:', req.session.user);
+
     const { title, description, episode_link, episode_date, episode_duration, category_id } = req.body;
 
+    // Validate required fields
+    if (!title || !episode_link || !episode_date || !episode_duration) {
+      console.log('❌ Missing required fields:', { title, episode_link, episode_date, episode_duration });
+      return res.status(400).json({ 
+        error: 'Missing required fields: title, episode_link, episode_date, episode_duration are required',
+        received: req.body
+      });
+    }
+
     const author_id = req.session.user?.id;
-    if (!author_id) return res.status(401).json({ error: 'User not authenticated' });
+    if (!author_id) {
+      console.log('❌ User not authenticated');
+      return res.status(401).json({ error: 'User not authenticated' });
+    }
 
-    // category is optional; if provided ensure integer
-    const catId = category_id ? parseInt(category_id, 10) : null;
-
-    const podcastId = await Podcast.create({
-      title,
-      description: description || '',
+    // Validate and format data
+    const podcastData = {
+      title: title.trim(),
+      description: (description || '').trim(),
       author_id,
-      category_id: Number.isInteger(catId) ? catId : null,
-      episode_link: episode_link || null,
-      episode_date: episode_date || null,        // expect 'YYYY-MM-DD'
-      episode_duration: episode_duration || null // e.g. '42 min'
-    });
+      category_id: category_id ? parseInt(category_id, 10) : null,
+      episode_link: episode_link.trim(), // This was the main issue - it was being set to null
+      episode_date: episode_date,        // Make sure this is in 'YYYY-MM-DD' format
+      episode_duration: episode_duration.trim()
+    };
+
+    console.log('🎯 Processed podcast data:', podcastData);
+
+    // Validate URL format
+    try {
+      new URL(podcastData.episode_link);
+    } catch (err) {
+      console.log('❌ Invalid URL:', podcastData.episode_link);
+      return res.status(400).json({ 
+        error: 'Invalid episode link URL format. Please include http:// or https://' 
+      });
+    }
+
+    // Validate date format
+    if (!isValidDate(podcastData.episode_date)) {
+      console.log('❌ Invalid date:', podcastData.episode_date);
+      return res.status(400).json({ 
+        error: 'Invalid date format. Use YYYY-MM-DD' 
+      });
+    }
+
+    const podcastId = await Podcast.create(podcastData);
+
+    console.log('✅ Podcast created successfully with ID:', podcastId);
 
     return res.status(201).json({
       success: true,
       podcastId,
       message: 'Podcast created successfully'
     });
+
   } catch (err) {
-    console.error('CREATE PODCAST ERROR:', err);
-    return res.status(500).json({ error: err.message });
+    console.error('❌ CREATE PODCAST ERROR:', err);
+    return res.status(500).json({ 
+      error: 'Failed to create podcast: ' + err.message,
+      details: 'Check server logs for more information'
+    });
   }
 };
+
+// Helper function to validate date format
+function isValidDate(dateString) {
+  const regex = /^\d{4}-\d{2}-\d{2}$/;
+  if (!dateString.match(regex)) return false;
+  
+  const date = new Date(dateString);
+  const timestamp = date.getTime();
+  
+  if (typeof timestamp !== 'number' || Number.isNaN(timestamp)) {
+    return false;
+  }
+  
+  return date.toISOString().startsWith(dateString);
+}
 
 // READ (single)
 exports.getPodcast = async (req, res) => {
@@ -45,28 +101,66 @@ exports.getPodcast = async (req, res) => {
   }
 };
 
-// UPDATE
+// UPDATE - FIXED VERSION
 exports.updatePodcast = async (req, res) => {
   try {
+    console.log('📥 UPDATE PODCAST - Request body:', req.body);
+    
     const podcastId = req.params.id;
     const { title, description, category_id, episode_link, episode_date, episode_duration } = req.body;
 
-    await Podcast.update(podcastId, {
-      title,
-      description: description ?? '',
+    // Validate required fields for update
+    if (!title || !episode_link || !episode_date || !episode_duration) {
+      return res.status(400).json({ 
+        error: 'Missing required fields',
+        received: req.body
+      });
+    }
+
+    const updateData = {
+      title: title.trim(),
+      description: (description || '').trim(),
       category_id: category_id ? parseInt(category_id, 10) : null,
-      episode_link: episode_link ?? null,
-      episode_date: episode_date ?? null,
-      episode_duration: episode_duration ?? null
-    });
+      episode_link: episode_link.trim(), // Fixed - was being set to null
+      episode_date: episode_date,
+      episode_duration: episode_duration.trim()
+    };
 
-    // if you prefer JSON:
-    // return res.json({ success: true, message: 'Podcast updated successfully' });
+    // Validate URL
+    try {
+      new URL(updateData.episode_link);
+    } catch (err) {
+      return res.status(400).json({ 
+        error: 'Invalid episode link URL format' 
+      });
+    }
 
-    // keep redirect semantics if you have an edit page:
+    // Validate date
+    if (!isValidDate(updateData.episode_date)) {
+      return res.status(400).json({ 
+        error: 'Invalid date format' 
+      });
+    }
+
+    await Podcast.update(podcastId, updateData);
+
+    console.log('✅ Podcast updated successfully:', podcastId);
+
+    // Return JSON response for API calls
+    if (req.xhr || req.headers.accept?.includes('application/json')) {
+      return res.json({ success: true, message: 'Podcast updated successfully' });
+    }
+
+    // Redirect for form submissions
     return res.redirect(`/api/podcasts/edit/${podcastId}?success=Podcast updated successfully`);
+
   } catch (err) {
-    console.error('Error updating podcast:', err);
+    console.error('❌ Error updating podcast:', err);
+    
+    if (req.xhr || req.headers.accept?.includes('application/json')) {
+      return res.status(500).json({ error: 'Error updating podcast: ' + err.message });
+    }
+    
     return res.redirect(`/api/podcasts/edit/${req.params.id}?error=Error updating podcast`);
   }
 };

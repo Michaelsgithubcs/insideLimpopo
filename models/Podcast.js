@@ -2,13 +2,13 @@
 const getPool = require('../config/db');
 
 class Podcast {
-  static async create({ title, description, author_id, category_id, episode_link, episode_date, episode_duration }) {
+  static async create({ title, description, author_id, category_id, episode_link, episode_date }) {
     const pool = await getPool();
     const [result] = await pool.query(
       `
       INSERT INTO podcasts
-        (title, description, author_id, category_id, episode_link, episode_date, episode_duration, created_at)
-      VALUES (?, ?, ?, ?, ?, ?, ?, NOW())
+        (title, description, author_id, category_id, episode_link, episode_date, created_at)
+      VALUES (?, ?, ?, ?, ?, ?, NOW())
       `,
       [
         (title || '').trim(),
@@ -16,8 +16,7 @@ class Podcast {
         author_id,
         category_id || null,
         (episode_link || '').trim(),
-        episode_date || null,
-        (episode_duration || '').trim()
+        episode_date || null
       ]
     );
     return result.insertId;
@@ -54,13 +53,13 @@ class Podcast {
     return rows;
   }
 
-  static async update(podcast_id, { title, description, category_id, episode_link, episode_date, episode_duration }) {
+  static async update(podcast_id, { title, description, category_id, episode_link, episode_date }) {
     const pool = await getPool();
     await pool.query(
       `
       UPDATE podcasts
       SET title = ?, description = ?, category_id = ?,
-          episode_link = ?, episode_date = ?, episode_duration = ?,
+          episode_link = ?, episode_date = ?,
           updated_at = NOW()
       WHERE podcast_id = ?
       `,
@@ -70,7 +69,6 @@ class Podcast {
         category_id || null,
         (episode_link || '').trim(),
         episode_date || null,
-        (episode_duration || '').trim(),
         podcast_id
       ]
     );
@@ -103,7 +101,7 @@ class Podcast {
     const like = `%${query}%`;
     const [rows] = await pool.query(
       `
-      SELECT p.podcast_id, p.title, p.description, p.episode_link, p.episode_date, p.episode_duration,
+      SELECT p.podcast_id, p.title, p.description, p.episode_link, p.episode_date,
              u.username AS author, p.created_at, c.name AS category_name
       FROM podcasts p
       LEFT JOIN users u ON p.author_id = u.id
