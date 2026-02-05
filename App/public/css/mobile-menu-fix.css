@@ -28,3 +28,14 @@
     display: none !important;
   }
 }
+
+/* Add spacing for logo and hamburger on mobile */
+@media (max-width: 991px) {
+  .navbar-brand {
+    margin-left: 1rem !important;
+  }
+  
+  .navbar-toggler {
+    margin-right: 1rem !important;
+  }
+}
