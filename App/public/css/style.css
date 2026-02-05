@@ -4610,4 +4610,17 @@ footer p {
 .select-container select:valid + label {
   transform: translateY(-100%) scale(0.75);
   color: #011131;
+}/* Mobile navbar padding */
+@media (max-width: 991px) {
+  .navbar {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+}
+/* Mobile navbar padding */
+@media (max-width: 991px) {
+  .navbar {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
 }
