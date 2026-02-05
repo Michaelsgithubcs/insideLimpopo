@@ -4624,3 +4624,10 @@ footer p {
     padding-right: 1rem;
   }
 }
+/* Mobile navbar container padding */
+@media (max-width: 991px) {
+  .navbar .container-fluid {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+}
