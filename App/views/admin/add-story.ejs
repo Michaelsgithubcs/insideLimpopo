@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+  <%- include('../partials/head.ejs') %>
+  <body>
+    <!-- Main Content -->
+    <main>
+         <!-- Add Story Section -->
+      <section id="story-tab" class="content-landing-tab">
+        <form
+          action="/stories"
+          method="POST"
+          enctype="multipart/form-data"
+          class="creation-landing-form"
+          id="story-form"
+        >
+          <div class="form-landing-grid">
+            <div class="form-landing-group">
+              <label for="story-title">Story Title</label>
+              <input
+                type="text"
+                id="story-title"
+                name="title"
+                required
+                minlength="5"
+                maxlength="100"
+              />
+              <div class="form-error" id="story-title-error"></div>
+            </div>
+
+            <div class="form-landing-group">
+              <label for="story-category">Category</label>
+              <select id="story-category" name="category" required>
+                <option value="">Select Category</option>
+                <option value="news">News</option>
+                <option value="opinion">Opinion</option>
+                <option value="sports">Sports</option>
+                <option value="events">Events</option>
+              </select>
+            </div>
+
+            <div class="form-landing-group full-width">
+              <label for="story-description">Brief Description</label>
+              <textarea
+                id="story-description"
+                name="description"
+                rows="3"
+                required
+                minlength="20"
+                maxlength="200"
+              ></textarea>
+              <div class="form-error" id="story-description-error"></div>
+            </div>
+
+            <div class="form-landing-group full-width">
+              <label for="story-content">Full Content</label>
+              <textarea
+                id="story-content"
+                name="content"
+                rows="8"
+                required
+                minlength="100"
+              ></textarea>
+              <div class="form-error" id="story-content-error"></div>
+            </div>
+
+            <div class="form-landing-group">
+              <label for="story-image">Featured Image</label>
+              <input
+                type="file"
+                id="story-image"
+                name="image"
+                accept="image/*"
+              />
+              <div class="image-preview" id="story-image-preview"></div>
+              <div class="form-error" id="story-image-error"></div>
+            </div>
+
+            <div class="form-landing-group">
+              <label for="story-expiry">Expiry Date</label>
+              <input
+                type="date"
+                id="story-expiry"
+                name="expiry_date"
+                min="<%= new Date().toISOString().split('T')[0] %>"
+              />
+            </div>
+          </div>
+
+          <div class="form-landing-actions">
+            <button
+              type="submit"
+              class="btn btn-landing-primary"
+              id="story-submit-btn"
+            >
+              Publish Story
+            </button>
+            <button type="reset" class="btn btn-landing-outline">
+              Clear Form
+            </button>
+          </div>
+        </form>
+      </section>
+    </main>
+    <!-- Footer Section -->
+    <%- include('../partials/footer.ejs') %>
+
+    <script>
+        document
+        .querySelectorAll("input, textarea, select")
+        .forEach((element) => {
+          element.addEventListener("blur", validateField);
+        });
+
+        function validateField(e) {
+        const field = e.target;
+        let isValid = true;
+        let errorMessage = "";
+    
+        if (field.required && !field.value.trim()) {
+          isValid = false;
+          errorMessage = "This field is required";
+        }
+
+        if (field.id === "story-title") {
+          if (field.value.length < 5) {
+            isValid = false;
+            errorMessage = "Title must be at least 5 characters";
+          }
+        }
+    }
+
+
+        document
+        .getElementById("story-form")
+        ?.addEventListener("submit", function (e) {
+          if (!validateForm(this)) {
+            e.preventDefault();
+          }
+        });
+
+        function validateForm(form) {
+        let isValid = true;
+        form.querySelectorAll("input, textarea, select").forEach((field) => {
+          const event = { target: field };
+          if (!validateField(event)) {
+            isValid = false;
+          }
+        });
+        return isValid;
+      }
+    </script>
+  </body>
+</html>

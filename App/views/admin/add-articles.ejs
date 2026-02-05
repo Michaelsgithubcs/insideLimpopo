@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+  <%- include('../partials/head.ejs') %>
+
+  <body>
+    <main>
+      <!-- Add Article Section -->
+      <section id="article-tab" class="content-landing-tab active">
+        <form
+          action="/api/articles"
+          method="POST"
+          class="creation-landing-form"
+          id="article-form"
+          enctype="multipart/form-data"
+        >
+          <div class="form-landing-grid">
+            <div class="form-landing-group full-width">
+              <label for="article-title">Article Title</label>
+              <input
+                type="text"
+                id="article-title"
+                name="title"
+                required
+                minlength="5"
+                maxlength="100"
+              />
+              <div class="form-error" id="article-title-error"></div>
+            </div>
+
+            <div class="form-landing-group">
+              <label for="article-category">Category</label>
+              <select id="article-category" name="category_id" required>
+                <option value="">Select Category</option>
+                <% if (typeof categories !== 'undefined' && categories.length) { %>
+                  <% categories.forEach(function(category) { %>
+                    <option value="<%= category.category_id %>"><%= category.name %></option>
+                  <% }); %>
+                <% } else { %>
+                  <option value="">No categories available</option>
+                <% } %>
+              </select>
+            </div>
+
+            <div class="form-landing-group">
+              <label for="article-tags">Tags</label>
+              <input
+                type="text"
+                id="article-tags"
+                name="tags"
+                placeholder="tech, health, education"
+              />
+              <small class="form-hint"
+                >Maximum 5 tags, each under 20 characters</small
+              >
+            </div>
+
+            <div class="form-landing-group full-width">
+              <label for="article-lead">Lead Paragraph</label>
+              <textarea
+                id="article-lead"
+                name="lead"
+                rows="3"
+                required
+                minlength="20"
+                maxlength="200"
+              ></textarea>
+              <div class="form-error" id="article-lead-error"></div>
+            </div>
+
+            <div class="form-landing-group full-width">
+              <label for="article-content">Article Content</label>
+              <textarea
+                id="article-content"
+                name="content"
+                rows="10"
+                required
+                minlength="100"
+              ></textarea>
+              <div class="form-error" id="article-content-error"></div>
+            </div>
+
+            <div class="form-landing-group">
+              <label for="featured_img">Featured Image</label>
+              <input type="file" id="featured_img" name="featured_img" accept="image/*" />
+            </div>
+
+            <div class="form-landing-group">
+              <label for="featured_img_url">Or Featured Image URL</label>
+              <input type="text" id="featured_img_url" name="featured_img_url" placeholder="https://example.com/image.jpg" />
+              <div id="image-preview"></div>
+            </div>
+          </div>
+
+          <div class="form-landing-actions">
+            <button
+              type="submit"
+              class="btn btn-landing-primary"
+              id="article-submit-btn"
+            >
+              Submit Article
+            </button>
+            <button
+              type="button"
+              class="btn btn-landing-outline preview-btn"
+              id="article-preview-btn"
+            >
+              Preview
+            </button>
+          </div>
+        </form>
+      </section>
+    </main>
+
+    <%- include('../partials/footer.ejs') %>
+
+    <script>
+      document
+        .querySelectorAll("input, textarea, select")
+        .forEach((element) => {
+          element.addEventListener("blur", validateField);
+        });
+
+      function validateField(e) {
+        const field = e.target;
+        let isValid = true;
+        let errorMessage = "";
+
+        if (field.required && !field.value.trim()) {
+          isValid = false;
+          errorMessage = "This field is required";
+        }
+
+        if (field.id === "article-title") {
+          if (field.value.length < 5) {
+            isValid = false;
+            errorMessage = "Title must be at least 5 characters";
+          }
+        }
+
+        if (field.id === "article-lead") {
+          if (field.value.length < 20) {
+            isValid = false;
+            errorMessage = "Lead paragraph must be at least 20 characters";
+          }
+        }
+
+        const errorDiv = document.getElementById(field.id + "-error");
+        if (errorDiv) {
+          errorDiv.textContent = isValid ? "" : errorMessage;
+        }
+
+        return isValid;
+      }
+
+      document
+        .getElementById("article-form")
+        ?.addEventListener("submit", function (e) {
+          if (!validateForm(this)) {
+            e.preventDefault();
+          }
+        });
+
+      function validateForm(form) {
+        let isValid = true;
+        form.querySelectorAll("input, textarea, select").forEach((field) => {
+          const event = { target: field };
+          if (!validateField(event)) {
+            isValid = false;
+          }
+        });
+        return isValid;
+      }
+
+      const imageUrlInput = document.getElementById("featured_img_url");
+      const imagePreviewDiv = document.getElementById("image-preview");
+
+      if (imageUrlInput) {
+        imageUrlInput.addEventListener("input", function () {
+          const url = imageUrlInput.value.trim();
+          if (url) {
+            imagePreviewDiv.innerHTML = `<img src="${url}" alt="Image Preview" style="max-width: 100%; max-height: 200px; margin-top: 10px;" />`;
+          } else {
+            imagePreviewDiv.innerHTML = "";
+          }
+        });
+      }
+    </script>
+  </body>
+</html> 

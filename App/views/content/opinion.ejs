@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+  <%- include('../partials/head.ejs') %>
+  <body class="opinion-page">
+    <!-- Header Section -->
+    <%- include('../partials/header.ejs') %>
+    <%- include('../partials/nav.ejs') %>
+
+      <%- include('../partials/BreakingNews.ejs') %>
+    <main class="opinion-container">
+      <!-- Hero Section -->
+      <section class="opinion-hero">
+        <div class="hero-content">
+          <h1>Opinion & Analysis</h1>
+          <p class="subtitle">Thought-provoking perspectives on current events and trending topics</p>
+        </div>
+      </section>
+
+      <!-- Filter Controls -->
+      <section class="filter-controls">
+        <div class="search-filter-container">
+          <div class="search-bar">
+            <i class="fas fa-search"></i>
+            <input type="text" id="searchInput" placeholder="Search opinion articles..." 
+                   onkeyup="filterArticles()" aria-label="Search articles">
+          </div>
+          <div class="filter-dropdown">
+            <select id="categoryFilter" onchange="filterArticles()">
+              <option value="">All Categories</option>
+              <option value="politics">Politics</option>
+              <option value="business">Business</option>
+              <option value="technology">Technology</option>
+              <option value="health">Health</option>
+              <option value="entertainment">Entertainment</option>
+              <option value="sports">Sports</option>
+            </select>
+          </div>
+        </div>
+        <div id="no-results" class="no-results-message">No matching articles found. Try adjusting your search criteria.</div>
+      </section>
+
+      <!-- Opinion Articles Grid -->
+      <section class="opinion-grid" id="opinionArticles">
+        <!-- Articles will be dynamically inserted here by JavaScript -->
+        <div class="loading-spinner">
+          <div class="spinner"></div>
+          <p>Loading opinion articles...</p>
+        </div>
+      </section>
+
+      <!-- Posted Articles Section (above newsletter) -->
+      <section class="section-with-header">
+        <div class="section-sport-header">
+          <h2>Posted Articles</h2>
+          <p class="section-sport-description">
+            Browse all the latest posted articles, news, and updates from Limpopo.
+          </p>
+        </div>
+        <div class="sports-section">
+          <% if (postedArticles && postedArticles.length === 0) { %>
+            <p>No posted articles found.</p>
+          <% } else if (postedArticles) { %>
+            <% postedArticles.forEach(article => { %>
+              <div class="sports-card event-card">
+                <div class="card-image-container">
+                  <% if (article.featured_img) { %>
+                    <img src="<%= article.featured_img %>" alt="Featured image" />
+                  <% } else { %>
+                    <img src="/assets/sportsimages/logo.jpg" alt="No image available" />
+                  <% } %>
+                  <div class="event-date">
+                    <span class="day"><%= new Date(article.created_at).getDate() %></span>
+                    <span class="month"><%= new Date(article.created_at).toLocaleString('default', { month: 'short' }).toUpperCase() %></span>
+                  </div>
+                </div>
+                <div class="card-content">
+                  <span class="sport-tag football">Opinion</span>
+                  <h3><%= article.title %></h3>
+                  <p class="event-time">Posted on <%= new Date(article.created_at).toLocaleString() %></p>
+                  <p>
+                    <%= article.content.substring(0, 200) %>...
+                  </p>
+                  <a href="/articles/<%= article.article_id %>" class="read-button">
+                    <i class="fas fa-book-open"></i> Read More
+                  </a>
+                </div>
+              </div>
+            <% }) %>
+          <% } %>
+        </div>
+      </section>
+
+      <!-- Newsletter Section -->
+      <section class="opinion-newsletter">
+ <div class="newsletter-container">
+    <div class="newsletter-content">
+      <h2>Stay Updated</h2>
+      <p>Subscribe to our newsletter for daily news updates</p>
+      <form class="newsletter-form" id="newsletterForm">
+        <input type="email" name="email" placeholder="Your email address" required>
+        <button type="submit">Subscribe</button>
+      </form>
+      <p id="responseMessage"></p>
+    </div>
+  </div>
+      </section>
+           <!-- Newsletter Section -->
+
+
+    </main>
+
+    <!-- Footer Section -->
+    <%- include('../partials/footer.ejs') %>
+
+    <!-- Scripts -->
+    <link rel="stylesheet" href="/assets/fontawesome/fontawesome-free-5.15.4-web/css/all.min.css">
+    <style>
+      .view-more-opinions-btn {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin: 30px auto 0 auto;
+        padding: 12px 32px;
+        background: #1e90ff;
+        color: #fff;
+        border: none;
+        border-radius: 25px;
+        font-size: 1.1rem;
+        font-weight: 600;
+        cursor: pointer;
+        box-shadow: 0 2px 8px rgba(30,144,255,0.15);
+        transition: transform 0.2s, box-shadow 0.2s;
+        animation: bounce 1.2s infinite;
+      }
+      .view-more-opinions-btn:hover {
+        background: #156dc1;
+        box-shadow: 0 4px 16px rgba(30,144,255,0.25);
+      }
+      @keyframes bounce {
+        0%   { transform: translateY(0); }
+        30%  { transform: translateY(-10px); }
+        50%  { transform: translateY(0); }
+        70%  { transform: translateY(-5px); }
+        100% { transform: translateY(0); }
+      }
+    </style>
+    <script>
+         document.getElementById('newsletterForm').addEventListener('submit', async function(e) {
+  e.preventDefault();
+  const email = this.email.value;
+  const responseMessage = document.getElementById('responseMessage');
+  
+  try {
+    const res = await fetch('/subscribe', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email })
+    });
+
+    const data = await res.json();
+    responseMessage.textContent = data.message;
+    responseMessage.style.color = res.ok ? 'green' : 'red';
+    if (res.ok) this.reset();
+  } catch (error) {
+    responseMessage.textContent = 'Network error, please try again.';
+    responseMessage.style.color = 'red';
+  }
+});
+
+      // News API configuration
+      const apiUrl = '/api/opinion-news';
+      
+      // Cache for articles
+      let articlesCache = [];
+      
+      // DOM elements
+      const opinionGrid = document.getElementById('opinionArticles');
+      const searchInput = document.getElementById('searchInput');
+      const categoryFilter = document.getElementById('categoryFilter');
+      const noResultsMessage = document.getElementById('no-results');
+
+      // Fetch news articles
+      async function fetchNews(apiUrl) {
+        try {
+          // Show loading spinner
+          opinionGrid.innerHTML = `
+            <div class="loading-spinner">
+              <div class="spinner"></div>
+              <p>Loading opinion articles...</p>
+            </div>
+          `;
+          
+          const res = await fetch(apiUrl);
+          if (!res.ok) {
+            throw new Error(`HTTP error! Status: ${res.status}`);
+          }
+          const data = await res.json();
+          
+          if (data.articles && data.articles.length > 0) {
+            articlesCache = data.articles;
+            displayNews(articlesCache);
+          } else {
+            showNoResults();
+          }
+        } catch (err) {
+          console.error("Error fetching news: ", err);
+          opinionGrid.innerHTML = `
+            <div class="error-message">
+              <i class="fas fa-exclamation-triangle"></i>
+              <p>Failed to load articles. Please try again later.</p>
+            </div>
+          `;
+        }
+      }
+
+      // Display news articles
+      function displayNews(articles) {
+        if (articles.length === 0) {
+          showNoResults();
+          return;
+        }
+        opinionGrid.innerHTML = '';
+        const maxInitial = 3;
+        const showMoreBtn = document.createElement('button');
+        showMoreBtn.textContent = 'View More Opinions';
+        showMoreBtn.className = 'view-more-opinions-btn';
+        let showingAll = false;
+        function renderCards(count) {
+          opinionGrid.innerHTML = '';
+          articles.slice(0, count).forEach((article, index) => {
+            const articleCard = document.createElement('article');
+            articleCard.className = 'opinion-card';
+            // Generate a random category for demonstration
+            const categories = ['politics', 'business', 'technology', 'health', 'entertainment', 'sports'];
+            const randomCategory = categories[Math.floor(Math.random() * categories.length)];
+            articleCard.setAttribute('data-category', randomCategory);
+            articleCard.setAttribute('data-title', article.title.toLowerCase());
+            articleCard.setAttribute('data-description', article.description ? article.description.toLowerCase() : '');
+            articleCard.innerHTML = `
+              <div class="article-image">
+                <img src="${article.urlToImage || '/assets/opinionimages/chealse.jpg'}" 
+                     alt="${article.title}" loading="lazy">
+                <span class="article-category ${randomCategory}">${randomCategory.charAt(0).toUpperCase() + randomCategory.slice(1)}</span>
+              </div>
+              <div class="article-content">
+                <div class="article-meta">
+                  <span class="source">${article.source?.name || 'Unknown source'}</span>
+                </div>
+                <h2 class="article-title">${article.title}</h2>
+                <div class="article-date">
+                  <span class="date">${formatDate(article.publishedAt)}</span>
+                </div>
+                <p class="article-excerpt">${article.description || 'No description available'}</p>
+                <div class="article-footer">
+                  <a href="${article.url}" target="_blank" class="read-more" aria-label="Read full article: ${article.title}">
+                    Read Full Opinion <i class="fas fa-arrow-right"></i>
+                  </a>
+                  <button class="save-article" aria-label="Save article">
+                    <i class="far fa-bookmark"></i>
+                  </button>
+                </div>
+              </div>
+            `;
+            opinionGrid.appendChild(articleCard);
+          });
+          if (!showingAll && articles.length > maxInitial) {
+            opinionGrid.appendChild(showMoreBtn);
+          }
+        }
+        renderCards(maxInitial);
+        showMoreBtn.onclick = function() {
+          showingAll = true;
+          renderCards(articles.length);
+        };
+      }
+
+      // Filter articles based on search and category
+      function filterArticles() {
+        const searchTerm = searchInput.value.toLowerCase();
+        const selectedCategory = categoryFilter.value.toLowerCase();
+        
+        const filteredArticles = articlesCache.filter(article => {
+          const matchesSearch = article.title.toLowerCase().includes(searchTerm) || 
+                              (article.description && article.description.toLowerCase().includes(searchTerm));
+          const matchesCategory = selectedCategory === '' || 
+                                (article.randomCategory && article.randomCategory === selectedCategory);
+          
+          return matchesSearch && matchesCategory;
+        });
+        
+        if (filteredArticles.length === 0) {
+          showNoResults();
+        } else {
+          displayNews(filteredArticles);
+        }
+      }
+
+      // Show no results message
+      function showNoResults() {
+        opinionGrid.innerHTML = '';
+        noResultsMessage.style.display = 'block';
+      }
+
+      // Format date
+      function formatDate(dateString) {
+        if (!dateString) return 'Date unknown';
+        const options = { year: 'numeric', month: 'long', day: 'numeric' };
+        return new Date(dateString).toLocaleDateString('en-US', options);
+      }
+
+      // Initialize page
+      document.addEventListener('DOMContentLoaded', () => {
+        fetchNews(apiUrl);
+        
+        // Add event listeners for saved articles
+        document.addEventListener('click', (e) => {
+          if (e.target.closest('.save-article')) {
+            const btn = e.target.closest('.save-article');
+            btn.innerHTML = '<i class="fas fa-bookmark"></i>';
+            btn.classList.add('saved');
+            // Here you would typically save to localStorage or send to backend
+          }
+        });
+      });
+    </script>
+    <!-- <script src="/public/scrips/scipt.js"></script> -->
+  </body>
+</html>

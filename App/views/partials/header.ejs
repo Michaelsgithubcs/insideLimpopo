@@ -1,0 +1,30 @@
+<header>
+    <div class="header-content">
+        
+        <p>Latest news and more!</p>
+        <div class="weather-datetime">
+    <span id="current-date"></span>
+    <span id="current-time"></span>
+</div>
+
+        <div class="header-weather">
+            <% if (typeof weather !== 'undefined' && weather) { %>
+                <div class="weather-widget-compact">
+                    <img class="weather-icon" 
+                         src="<%= weather.icon %>" 
+                         alt="<%= weather.description %>"
+                         onerror="this.style.display='none'" />
+                    <div class="weather-info">
+                        <div class="weather-location"><%= weather.city %>, <%= weather.country %></div>
+                        <div class="weather-temp"><%= weather.temp %>°C</div>
+                        <div class="weather-description"><%= weather.description %></div>
+                        <div class="weather-details">
+                            <% if (weather.feels_like) { %>Feels like <%= weather.feels_like %>°C. <% } %>
+                            <% if (weather.humidity) { %>Humidity <%= weather.humidity %>%.<% } %>
+                        </div>
+                    </div>
+                </div>
+            <% } %>
+        </div>
+    </div>
+</header>

@@ -1,0 +1,113 @@
+/* --- General Fixes --- */
+
+/* Ensure nav items are always clickable */
+#navbarNav .nav-item,
+#navbarNav .nav-link {
+  pointer-events: auto !important;
+  cursor: pointer !important;
+}
+
+/* Fix z-index so menu stays above content */
+#navbarNav {
+  z-index: 1001 !important;
+}
+
+/* --- Mobile (max 991px) --- */
+@media (max-width: 991px) {
+  /* Slide-in menu setup */
+  #navbarNav {
+    position: fixed;
+    top: 0;
+    right: -100%; /* Hidden off screen */
+    width: 80%; /* Slide-in drawer width */
+    height: 100vh;
+    background-color: #001f4d; /* Match navbar */
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    transition: right 0.3s ease;
+    overflow-y: auto; /* Allow scrolling */
+    -webkit-overflow-scrolling: touch; /* Smooth iOS scroll */
+    padding: 60px 20px 20px; /* Space for brand + links */
+  }
+
+  /* When open */
+  #navbarNav.mobile-open {
+    right: 0 !important;
+  }
+
+  /* Stack nav items */
+  #navbarNav .navbar-nav {
+    display: flex !important;
+    flex-direction: column !important;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+  }
+
+  #navbarNav .nav-item {
+    margin: 10px 0;
+  }
+
+  /* Move search box to top of menu */
+  #navbarNav .search-container {
+    width: 100%;
+    margin: 15px 0 20px;
+    order: -1; /* Force above links */
+  }
+
+  #navbarNav .search-container input {
+    width: 100%;
+    border-radius: 4px;
+  }
+
+  /* Fix search button size */
+  #navbarNav .search-button {
+    height: 42px;
+  }
+
+  /* Close button inside slide-in menu */
+  #mobile-menu-close {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    font-size: 1.5rem;
+    background: none;
+    border: none;
+    color: #fff;
+    z-index: 9999;
+    cursor: pointer;
+  }
+}
+
+/* --- Desktop (min 992px) --- */
+@media (min-width: 992px) {
+  /* Hide custom mobile close button */
+  #mobile-menu-close {
+    display: none !important;
+  }
+
+  #navbarNav {
+    position: static;
+    height: auto;
+    width: auto;
+    background: transparent;
+    padding: 0;
+    overflow: visible;
+  }
+
+  #navbarNav .navbar-nav {
+    flex-direction: row !important;
+  }
+
+  #navbarNav .search-container {
+    margin: 0;
+    order: 0;
+    width: auto;
+  }
+}
+
+/* Prevent Bootstrap collapsing animation conflicts */
+.collapsing {
+  transition: none !important;
+}

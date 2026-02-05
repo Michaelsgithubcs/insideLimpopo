@@ -1,0 +1,853 @@
+<!DOCTYPE html>
+<html lang="en">
+  <%- include('../partials/head.ejs') %>
+  <body class="podcast-page">
+
+    <!-- Header + Nav -->
+    <%- include('../partials/header.ejs') %>
+    <%- include('../partials/nav.ejs') %>
+    <%- include('../partials/BreakingNews.ejs') %>
+
+    <main class="podcast-main">
+
+      <!-- ======================== -->
+      <!-- FEATURED EPISODE SECTION -->
+      <!-- ======================== -->
+      <section class="featured-episode">
+        <div class="container">
+          <header class="section-header section-header-featured">
+            <div>
+              <p class="section-kicker">Podcasts</p>
+              <h2 class="section-title">Featured Episode</h2>
+            </div>
+          </header>
+
+          <%
+            // Take the FIRST posted article as the featured episode
+            const featured = postedArticles && postedArticles.length > 0 ? postedArticles[0] : null;
+          %>
+
+          <% if (featured && featured.episode_link) { %>
+         <div class="featured-content">
+  <div class="featured-video-container">
+  <%- featured.episode_link %>
+</div>
+
+  </div>
+</div>
+
+
+          <div class="featured-info">
+  <div class="episode-badge">Featured</div>
+  <h3 class="featured-episode-title"><%= featured.title %></h3>
+
+  <div class="episode-meta">
+    <span>
+      <i class="fas fa-calendar-alt"></i>
+      <%= new Date(featured.created_at)
+           .toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }) %>
+    </span>
+
+    <% if (featured.episode_duration) { %>
+      <span>
+        <i class="fas fa-clock"></i> <%= featured.episode_duration %>
+      </span>
+    <% } %>
+  </div>
+
+  <p class="featured-description">
+    <%= featured.description
+          ? featured.description.substring(0, 250)
+          : "No description available for this episode." %>…
+  </p>
+
+  <div class="featured-actions">
+    <% 
+      // Extract the src URL from the iframe for the "Watch on YouTube" button
+      let youtubeUrl = "";
+      const match = featured.episode_link.match(/src=["'](.*?)["']/);
+      if (match && match[1]) youtubeUrl = match[1];
+    %>
+    <% if (youtubeUrl) { %>
+      <a href="<%= youtubeUrl %>" target="_blank" rel="noopener" class="btn-primary">
+        <i class="fas fa-play-circle"></i>
+        Watch on YouTube
+      </a>
+    <% } %>
+  </div>
+</div>
+
+          </div>
+          <% } else { %>
+            <p class="no-featured-message">
+              No featured episode available yet. Check out the latest episodes below.
+            </p>
+          <% } %>
+        </div>
+      </section>
+
+
+      <!-- ======================== -->
+      <!-- MAIN CONTENT -->
+      <!-- ======================== -->
+      <div class="podcast-content container">
+        <!-- ======================== -->
+        <!-- EPISODE LIST -->
+        <!-- ======================== -->
+        <section class="podcast-list" aria-label="Podcast episodes">
+          <header class="section-header">
+            <h2 class="section-title">Latest Episodes</h2>
+            <div class="view-options" role="group" aria-label="Change episodes layout">
+              <span class="view-label">View:</span>
+              <button class="view-option active" onclick="changeView('list')" aria-label="List view">
+                <i class="fas fa-list"></i>
+              </button>
+              <button class="view-option" onclick="changeView('grid')" aria-label="Grid view">
+                <i class="fas fa-th-large"></i>
+              </button>
+            </div>
+          </header>
+
+          <div class="episodes-container list-view">
+             <% if (postedArticles && postedArticles.length > 0) { %>
+    <% postedArticles.forEach((article, index) => { %>
+      <% if (index > 0) { %> <!-- Skip the first article since it's featured -->
+        <article class="podcast-episode" aria-label="<%= article.title %>">
+          
+          <!-- Episode Video -->
+          <div class="video-frame-container">
+            <% 
+              // Support multiple iframes stored in an array or single string
+              const iframes = Array.isArray(article.episode_link)
+                              ? article.episode_link
+                              : [article.episode_link];
+
+              iframes.forEach(embedCode => {
+                if (embedCode && embedCode.includes('<iframe')) {
+            %>
+                  <%- embedCode %>
+            <%   } else { %>
+                  <div class="no-video-placeholder">
+                    <i class="fas fa-video-slash"></i>
+                    <p>Video unavailable</p>
+                  </div>
+            <%   } 
+              }); 
+            %>
+          </div>
+
+          <!-- Episode Details -->
+          <div class="episode-details">
+            <h3 class="episode-title"><%= article.title %></h3>
+
+            <div class="episode-meta">
+              <span>
+                <i class="fas fa-calendar-alt"></i>
+                <%= new Date(article.created_at)
+                     .toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' }) %>
+              </span>
+
+              <% if (article.episode_duration) { %>
+                <span>
+                  <i class="fas fa-clock"></i> <%= article.episode_duration %>
+                </span>
+              <% } %>
+
+              <span class="episode-tag">
+                <i class="fas fa-tag"></i> Podcast
+              </span>
+            </div>
+
+            <p class="episode-description">
+              <%= article.description
+                    ? article.description.substring(0, 200)
+                    : "No description available for this episode." %>…
+            </p>
+
+            <div class="episode-actions">
+              <% 
+                // Extract the src from the first iframe for the "Watch on YouTube" button
+                let youtubeUrl = "";
+                const match = iframes[0]?.match(/src=["'](.*?)["']/);
+                if (match && match[1]) youtubeUrl = match[1];
+              %>
+              <% if (youtubeUrl) { %>
+                <a href="<%= youtubeUrl %>" target="_blank" rel="noopener" class="btn-secondary">
+                  <i class="fas fa-play"></i>
+                  Watch on YouTube
+                </a>
+              <% } %>
+            </div>
+          </div>
+        </article>
+      <% } %>
+    <% }) %>
+  <% } else { %>
+    <div class="no-episodes">
+      <i class="fas fa-podcast"></i>
+      <h3>No Podcast Episodes Available</h3>
+      <p>New episodes will appear here as soon as they are published.</p>
+    </div>
+  <% } %>
+          </div>
+        </section>
+
+        <!-- ======================== -->
+        <!-- SIDEBAR -->
+        <!-- ======================== -->
+        <aside class="podcast-sidebar" aria-label="Podcast filters and subscription">
+
+          <!-- Categories -->
+          <section class="sidebar-section" aria-label="Podcast categories">
+            <h3 class="sidebar-title">Categories</h3>
+            <ul class="category-list">
+              <li>
+                <a href="#">
+                  <i class="fas fa-microphone"></i>
+                  All Episodes
+                </a>
+              </li>
+              <li>
+                <a href="#">
+                  <i class="fas fa-child"></i>
+                  Kids &amp; Family
+                </a>
+              </li>
+              <li>
+                <a href="#">
+                  <i class="fas fa-chart-line"></i>
+                  Business
+                </a>
+              </li>
+              <li>
+                <a href="#">
+                  <i class="fas fa-heartbeat"></i>
+                  Health
+                </a>
+              </li>
+              <li>
+                <a href="#">
+                  <i class="fas fa-graduation-cap"></i>
+                  Education
+                </a>
+              </li>
+              <li>
+                <a href="#">
+                  <i class="fas fa-futbol"></i>
+                  Sports
+                </a>
+              </li>
+            </ul>
+          </section>
+
+          <!-- Subscribe -->
+          <section class="sidebar-section" aria-label="Newsletter subscription">
+            <h3 class="sidebar-title">Subscribe</h3>
+            <p class="sidebar-text">
+              Stay updated with the latest podcasts, news and stories from Inside Limpopo.
+            </p>
+
+            <form id="newsletterForm" class="subscribe-form" novalidate>
+              <div class="input-group">
+                <input
+                  name="email"
+                  type="email"
+                  placeholder="Your email address"
+                  aria-label="Email address"
+                  required>
+                <button type="submit" class="btn-subscribe">
+                  <i class="fas fa-paper-plane"></i>
+                  Subscribe
+                </button>
+              </div>
+            </form>
+            <p id="responseMessage" class="response-message" aria-live="polite"></p>
+          </section>
+
+        </aside>
+      </div>
+
+    </main>
+
+    <%- include('../partials/footer.ejs') %>
+
+    <!-- ======================== -->
+    <!-- JAVASCRIPT -->
+    <!-- ======================== -->
+    <script>
+      // Newsletter subscribe
+      const newsletterForm = document.getElementById('newsletterForm');
+      if (newsletterForm) {
+        newsletterForm.addEventListener('submit', async function (e) {
+          e.preventDefault();
+          const email = this.email.value.trim();
+          const responseMessage = document.getElementById('responseMessage');
+
+          if (!email) {
+            responseMessage.textContent = 'Please enter your email address.';
+            responseMessage.className = 'response-message error';
+            return;
+          }
+
+          try {
+            const res = await fetch('/subscribe', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ email })
+            });
+
+            const data = await res.json();
+            responseMessage.textContent = data.message || 'Subscription processed.';
+            responseMessage.className = res.ok
+              ? 'response-message success'
+              : 'response-message error';
+
+            if (res.ok) this.reset();
+          } catch (error) {
+            responseMessage.textContent = 'Network error, please try again.';
+            responseMessage.className = 'response-message error';
+          }
+        });
+      }
+
+      // Switch between list / grid view
+      function changeView(viewType) {
+        const container = document.querySelector('.episodes-container');
+        if (!container) return;
+
+        document
+          .querySelectorAll('.view-option')
+          .forEach(btn => btn.classList.remove('active'));
+
+        const activeBtn = document.querySelector(
+          `.view-option[onclick="changeView('${viewType}')"]`
+        );
+        if (activeBtn) activeBtn.classList.add('active');
+
+        container.className = 'episodes-container ' + viewType + '-view';
+      }
+    </script>
+
+    <!-- ======================== -->
+    <!-- STYLES -->
+    <!-- ======================== -->
+    <style>
+      /* Base Design Tokens */
+      :root {
+        --primary-color: #1f2933;
+        --primary-color-soft: #243b53;
+        --secondary-color: #086fb6;
+        --accent-color: #e76f51;
+        --light-color: #f8fafc;
+        --dark-color: #111827;
+        --gray-light: #e5e7eb;
+        --gray-medium: #6b7280;
+        --gray-strong: #374151;
+        --border-radius: 12px;
+        --shadow-soft: 0 4px 18px rgba(15, 23, 42, 0.08);
+        --transition: all 0.25s ease;
+      }
+
+      body.podcast-page {
+        background-color: #f3f4f6;
+        color: var(--dark-color);
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+          sans-serif;
+        line-height: 1.6;
+      }
+
+      .podcast-main {
+        padding-bottom: 3rem;
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 1.25rem;
+      }
+
+      /* Typography & Section Headings */
+      .section-kicker {
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+        font-size: 0.75rem;
+        color: var(--secondary-color);
+        font-weight: 600;
+        margin-bottom: 0.25rem;
+      }
+
+      .section-title {
+        font-size: 1.8rem;
+        font-weight: 700;
+        color: white;
+        margin-bottom: 1.5rem;
+        position: relative;
+        padding-bottom: 0.4rem;
+      }
+
+      .section-title::after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 56px;
+        height: 3px;
+        background: linear-gradient(90deg, var(--secondary-color), #4f46e5);
+        border-radius: 999px;
+      }
+
+      .section-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+      }
+
+      .section-header-featured {
+        margin-bottom: 2rem;
+      }
+
+      @media (max-width: 640px) {
+        .section-title {
+          font-size: 1.5rem;
+        }
+
+        .section-header {
+          flex-direction: column;
+          align-items: flex-start;
+        }
+      }
+
+      /* Featured Episode */
+      .featured-episode {
+        padding: 3rem 0 2.5rem;
+        background: radial-gradient(circle at top left, #e0f2fe 0, #f9fafb 45%);
+        border-bottom: 1px solid var(--gray-light);
+      }
+
+      .featured-content {
+        display: grid;
+        grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+        gap: 2rem;
+        align-items: flex-start;
+      }
+
+      @media (max-width: 992px) {
+        .featured-content {
+          grid-template-columns: minmax(0, 1fr);
+        }
+      }
+
+      .featured-video-container {
+        position: relative;
+        width: 100%;
+        padding-bottom: 56.25%;
+        border-radius: 18px;
+        overflow: hidden;
+        box-shadow: 0 18px 40px rgba(15, 23, 42, 0.25);
+        background: #000;
+      }
+
+      .featured-video-container iframe {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+      }
+
+      .featured-info {
+        padding: 0.25rem 0;
+      }
+
+      .episode-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
+        background: rgba(8, 111, 182, 0.1);
+        color: var(--secondary-color);
+        font-size: 0.75rem;
+        font-weight: 700;
+        padding: 0.2rem 0.8rem;
+        border-radius: 999px;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        margin-bottom: 0.8rem;
+      }
+
+      .episode-badge::before {
+        content: "";
+        width: 8px;
+        height: 8px;
+        border-radius: 999px;
+        background: #22c55e;
+      }
+
+      .featured-episode-title {
+        font-size: 1.6rem;
+        font-weight: 700;
+        color: var(--primary-color-soft);
+        margin-bottom: 0.65rem;
+        line-height: 1.3;
+      }
+
+      .episode-meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.75rem;
+        margin-bottom: 1rem;
+        color: var(--gray-medium);
+        font-size: 0.9rem;
+      }
+
+      .episode-meta span {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
+      }
+
+      .featured-description {
+        color: var(--gray-medium);
+        margin-bottom: 1.4rem;
+      }
+
+      .no-featured-message {
+        color: var(--gray-medium);
+        font-size: 0.95rem;
+      }
+
+      /* Buttons */
+      .btn-primary,
+      .btn-secondary,
+      .btn-subscribe {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.75rem 1.45rem;
+        border-radius: 999px;
+        font-weight: 600;
+        text-decoration: none;
+        border: none;
+        cursor: pointer;
+        font-size: 0.9rem;
+        transition: var(--transition);
+      }
+
+      .btn-primary {
+        background: var(--secondary-color);
+        color: #f9fafb;
+        box-shadow: 0 12px 30px rgba(8, 111, 182, 0.35);
+      }
+
+      .btn-primary:hover {
+        background: #055086;
+        transform: translateY(-1px);
+        box-shadow: 0 16px 40px rgba(8, 111, 182, 0.4);
+      }
+
+      .btn-secondary {
+        background: transparent;
+        color: var(--secondary-color);
+        border: 1px solid rgba(8, 111, 182, 0.35);
+      }
+
+      .btn-secondary:hover {
+        background: rgba(8, 111, 182, 0.06);
+      }
+
+      .btn-subscribe {
+        background: var(--primary-color);
+        color: #f9fafb;
+        white-space: nowrap;
+      }
+
+      .btn-subscribe:hover {
+        background: #020617;
+      }
+
+      /* Layout: Content + Sidebar */
+      .podcast-content {
+        display: grid;
+        grid-template-columns: minmax(0, 2.2fr) minmax(0, 0.9fr);
+        gap: 2rem;
+        margin: 2.5rem auto 0;
+      }
+
+      @media (max-width: 992px) {
+        .podcast-content {
+          grid-template-columns: minmax(0, 1fr);
+        }
+      }
+
+      /* View Switcher */
+      .view-options {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        background: #ffffff;
+        border-radius: 999px;
+        padding: 0.25rem;
+        border: 1px solid var(--gray-light);
+      }
+
+      .view-label {
+        font-size: 0.8rem;
+        color: var(--gray-medium);
+        padding-inline: 0.7rem 0.3rem;
+      }
+
+      .view-option {
+        background: transparent;
+        border: none;
+        border-radius: 999px;
+        padding: 0.3rem 0.7rem;
+        cursor: pointer;
+        transition: var(--transition);
+        color: var(--gray-medium);
+      }
+
+      .view-option.active,
+      .view-option:hover {
+        background: var(--secondary-color);
+        color: #f9fafb;
+      }
+
+      /* Episodes List / Grid */
+      .episodes-container.list-view .podcast-episode {
+        display: grid;
+        grid-template-columns: minmax(0, 1.25fr) minmax(0, 1.6fr);
+        gap: 1.5rem;
+        background: #ffffff;
+        border-radius: 16px;
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+        box-shadow: var(--shadow-soft);
+        transition: var(--transition);
+      }
+
+      .episodes-container.list-view .podcast-episode:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 30px rgba(15, 23, 42, 0.15);
+      }
+
+      @media (max-width: 768px) {
+        .episodes-container.list-view .podcast-episode {
+          grid-template-columns: minmax(0, 1fr);
+        }
+      }
+
+      .episodes-container.grid-view {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+        gap: 1.5rem;
+      }
+
+      .episodes-container.grid-view .podcast-episode {
+        display: flex;
+        flex-direction: column;
+        background: #ffffff;
+        border-radius: 16px;
+        overflow: hidden;
+        box-shadow: var(--shadow-soft);
+        transition: var(--transition);
+      }
+
+      .episodes-container.grid-view .podcast-episode:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 30px rgba(15, 23, 42, 0.15);
+      }
+
+      .episodes-container.grid-view .video-frame-container {
+        border-radius: 16px 16px 0 0;
+      }
+
+      .episodes-container.grid-view .episode-details {
+        padding: 1.25rem 1.35rem 1.5rem;
+      }
+
+      .video-frame-container {
+        position: relative;
+        width: 100%;
+        padding-bottom: 56.25%;
+        height: 0;
+        border-radius: 14px;
+        overflow: hidden;
+        background: #000;
+      }
+
+      .video-frame-container iframe {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+      }
+
+      .no-video-placeholder {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        background: #e5e7eb;
+        color: var(--gray-medium);
+        gap: 0.4rem;
+      }
+
+      .no-video-placeholder i {
+        font-size: 1.6rem;
+      }
+
+      .episode-details {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+      }
+
+      .episode-title {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: var(--primary-color-soft);
+        margin-bottom: 0.5rem;
+      }
+
+      .episode-tag {
+        background: #eef2ff;
+        color: #4338ca;
+        padding: 0.2rem 0.55rem;
+        border-radius: 999px;
+        font-size: 0.75rem;
+      }
+
+      .episode-description {
+        color: var(--gray-medium);
+        margin-top: 0.5rem;
+        font-size: 0.92rem;
+      }
+
+      .episode-actions {
+        margin-top: 1rem;
+      }
+
+      /* Empty state */
+      .no-episodes {
+        text-align: center;
+        padding: 3rem 1rem;
+        background: #ffffff;
+        border-radius: 16px;
+        box-shadow: var(--shadow-soft);
+      }
+
+      .no-episodes i {
+        font-size: 2.5rem;
+        margin-bottom: 0.7rem;
+        color: var(--gray-light);
+      }
+
+      /* Sidebar */
+      .podcast-sidebar {
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+      }
+
+      .sidebar-section {
+        background: #ffffff;
+        border-radius: 16px;
+        padding: 1.5rem;
+        box-shadow: var(--shadow-soft);
+      }
+
+      .sidebar-title {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: var(--primary-color-soft);
+        margin-bottom: 0.75rem;
+        padding-bottom: 0.5rem;
+        border-bottom: 1px solid var(--gray-light);
+      }
+
+      .category-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+      }
+
+      .category-list li + li {
+        margin-top: 0.3rem;
+      }
+
+      .category-list a {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.4rem 0.2rem;
+        text-decoration: none;
+        color: var(--gray-medium);
+        border-radius: 6px;
+        transition: var(--transition);
+      }
+
+      .category-list a:hover {
+        color: var(--secondary-color);
+        background: rgba(8, 111, 182, 0.05);
+        padding-left: 0.5rem;
+      }
+
+      .sidebar-text {
+        color: var(--gray-medium);
+        font-size: 0.92rem;
+        margin-bottom: 1rem;
+      }
+
+      .subscribe-form .input-group {
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+      }
+
+      @media (min-width: 576px) {
+        .subscribe-form .input-group {
+          flex-direction: row;
+          align-items: stretch;
+        }
+
+        .subscribe-form input {
+          flex: 1;
+        }
+      }
+
+      .subscribe-form input {
+        padding: 0.75rem 0.9rem;
+        border-radius: 999px;
+        border: 1px solid var(--gray-light);
+        font-size: 0.9rem;
+        outline: none;
+        transition: var(--transition);
+      }
+
+      .subscribe-form input:focus {
+        border-color: var(--secondary-color);
+        box-shadow: 0 0 0 2px rgba(8, 111, 182, 0.15);
+      }
+
+      .response-message {
+        margin-top: 0.8rem;
+        font-size: 0.85rem;
+        border-radius: 8px;
+        padding: 0.6rem 0.75rem;
+      }
+
+      .response-message.success {
+        background: #dcfce7;
+        color: #166534;
+      }
+
+      .response-message.error {
+        background: #fee2e2;
+        color: #991b1b;
+      }
+    </style>
+
+  </body>
+</html>

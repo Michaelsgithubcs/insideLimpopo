@@ -1,0 +1,607 @@
+<%- include('../partials/head', { 
+  title: article.title || 'Daily News Article',
+  meta: {
+    description: article.content.substring(0, 160).replace(/[^\w\s]/gi, ''),
+    keywords: article.tags ? article.tags.join(', ') : article.category || 'news'
+  }
+}) %>
+
+<%- include('../partials/header') %>
+<%- include('../partials/nav') %>
+<%- include('../partials/BreakingNews') %>
+
+
+<main class="newspaper-template">
+  <!-- Article Content with Enhanced Features -->
+  <article class="newspaper-article">
+    <% if (article.featured_img) { %>
+      <div class="article-featured-img">
+        <img src="<%= article.featured_img %>" alt="<%= article.title %>">
+        <% if (article.img_caption) { %>
+          <p class="img-caption"><%= article.img_caption %></p>
+        <% } %>
+      </div>
+    <% } %>
+
+    <h2 class="headline"><%= article.title %></h2>
+
+    <% if (article.subtitle) { %>
+      <h3 class="subhead"><%= article.subtitle %></h3>
+    <% } %>
+
+    <!-- Formatted paragraphs with optional drop caps -->
+    <div class="article-body">
+      <% let firstParagraph = true; %>
+      <% article.content.split('\n').forEach((paragraph, index) => { %>
+        <% if (paragraph.trim()) { %>
+          <p class="<%= firstParagraph ? 'first-paragraph' : '' %>">
+            <% if (firstParagraph) { %>
+              <span class="drop-cap"><%= paragraph.substring(0,1) %></span>
+              <%= paragraph.substring(1) %>
+            <% } else { %>
+              <%= paragraph %>
+            <% } %>
+          </p>
+          <% firstParagraph = false; %>
+        <% } %>
+      <% }) %>
+    </div>
+    <!-- ✅ Social Links Section -->
+      <% if (socialLinks && Object.keys(socialLinks).length > 0) { %>
+        <div class="social-links border rounded p-3 mt-3 bg-light">
+          <h6 class="text-muted mb-2">Follow this story:</h6>
+          <div class="d-flex flex-wrap gap-3 align-items-center">
+            <% if (socialLinks.facebook) { %>
+              <a href="<%= socialLinks.facebook %>" target="_blank" class="text-primary text-decoration-none">
+                <i class="fab fa-facebook fa-lg me-1"></i> Facebook
+              </a>
+            <% } %>
+            <% if (socialLinks.twitter) { %>
+              <a href="<%= socialLinks.twitter %>" target="_blank" class="text-dark text-decoration-none">
+                <i class="fab fa-x-twitter fa-lg me-1"></i> X (Twitter)
+              </a>
+            <% } %>
+            <% if (socialLinks.instagram) { %>
+              <a href="<%= socialLinks.instagram %>" target="_blank" class="text-danger text-decoration-none">
+                <i class="fab fa-instagram fa-lg me-1"></i> Instagram
+              </a>
+            <% } %>
+            <% if (socialLinks.youtube) { %>
+              <a href="<%= socialLinks.youtube %>" target="_blank" class="text-danger text-decoration-none">
+                <i class="fab fa-youtube fa-lg me-1"></i> YouTube
+              </a>
+            <% } %>
+            <% if (socialLinks.linkedin) { %>
+              <a href="<%= socialLinks.linkedin %>" target="_blank" class="text-primary text-decoration-none">
+                <i class="fab fa-linkedin fa-lg me-1"></i> LinkedIn
+              </a>
+            <% } %>
+            <% if (socialLinks.website) { %>
+              <a href="<%= socialLinks.website %>" target="_blank" class="text-secondary text-decoration-none">
+                <i class="fas fa-globe fa-lg me-1"></i> Website
+              </a>
+            <% } %>
+          </div>
+
+          <!-- ✅ LinkedIn Video Embed -->
+          <% if (socialLinks.linkedin && socialLinks.linkedin.includes('linkedin.com/embed/')) { %>
+            <div class="ratio ratio-16x9 mt-3">
+              <iframe 
+                src="<%= socialLinks.linkedin %>" 
+                frameborder="0" 
+                allowfullscreen 
+                class="rounded shadow-sm"></iframe>
+            </div>
+          <% } else if (socialLinks.linkedin && socialLinks.linkedin.includes('linkedin.com/video')) { %>
+            <div class="ratio ratio-16x9 mt-3">
+              <iframe 
+                src="<%= socialLinks.linkedin.replace('linkedin.com/video', 'linkedin.com/embed/video') %>" 
+                frameborder="0" 
+                allowfullscreen 
+                class="rounded shadow-sm"></iframe>
+            </div>
+          <% } %>
+        </div>
+      <% } %>
+
+
+    <!-- Author/Date Footer with Social Sharing -->
+    <div class="article-footer">
+      <div class="author-info">
+        <% if ((article.author && article.author.avatar) || article.profile_picture) { %>
+          <img src="<%= (article.author && article.author.avatar) ? article.author.avatar : article.profile_picture %>" class="author-avatar" alt="<%= (article.author && article.author.username) ? article.author.username : (article.username || 'Author') %>">
+        <% } %>
+        <div>
+          <p>By <span class="author"><%= (article.author && article.author.username) ? article.author.username : (article.username || 'Unknown Author') %></span></p>
+          <% if (article.author && article.author.bio) { %>
+            <p class="author-bio"><%= article.author.bio %></p>
+          <% } %>
+        </div>
+      </div>
+      
+      
+      <div class="article-meta">
+        <p class="publish-date">
+          Published: <%= new Date(article.published_at || article.createdAt || article.created_at || Date.now()).toLocaleDateString('en-US', { 
+            year: 'numeric', 
+            month: 'long', 
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit'
+          }) %>
+        </p>
+        
+       <div class="social-share">
+  <span>Share:</span>
+  <a href="#" class="social-icon twitter" data-share="twitter">
+    <i class="fab fa-twitter"></i>
+  </a>
+  <a href="#" class="social-icon facebook" data-share="facebook">
+    <i class="fab fa-facebook-f"></i>
+  </a>
+  <a href="#" class="social-icon linkedin" data-share="linkedin">
+    <i class="fab fa-linkedin-in"></i>
+  </a>
+</div>
+      </div>
+    </div>
+
+    <!-- Related Articles -->
+    <% if (relatedArticles && relatedArticles.length > 0) { %>
+      <div class="related-articles">
+        <h4>You Might Also Like</h4>
+        <div class="related-grid">
+          <% relatedArticles.forEach(related => { %>
+            <a href="/articles/<%= related.article_id %>" class="related-article">
+              <% if (related.featured_img) { %>
+                <img src="<%= related.featured_img %>" alt="<%= related.title %>">
+              <% } %>
+              <h5><%= related.title %></h5>
+            </a>
+          <% }) %>
+        </div>
+      </div>
+    <% } %>
+    
+
+    <!-- Comments Section -->
+    <div class="comments-section" id="comments">
+      <h4 class="comments-title">Comments</h4>
+      
+      <!-- Comment Form -->
+      <div class="comment-form-container">
+        <h5>Leave a Comment</h5>
+        <form id="commentForm" class="comment-form">
+          <input type="hidden" id="articleId" value="<%= article.article_id %>">
+          
+          <div class="form-group">
+            <label for="commentName">Your Name <span class="required">*</span></label>
+            <input type="text" id="commentName" name="name" required maxlength="255" placeholder="Enter your name">
+          </div>
+          
+          <div class="form-group">
+            <label for="commentEmail">Your Email <span class="required">*</span></label>
+            <input type="email" id="commentEmail" name="email" required maxlength="255" placeholder="Enter your email (not displayed publicly)">
+            <small class="email-privacy-note">Your email will not be displayed publicly and will only be used for moderation purposes.</small>
+          </div>
+          
+          <div class="form-group">
+            <label for="commentText">Comment <span class="required">*</span></label>
+            <textarea id="commentText" name="comment" rows="4" required maxlength="1000" placeholder="Write your comment here..."></textarea>
+            <div class="char-counter">
+              <span id="charCount">0</span>/1000 characters
+            </div>
+          </div>
+          
+          <button type="submit" id="submitComment" class="submit-comment-btn">
+            <i class="fas fa-comment"></i> Post Comment
+          </button>
+        </form>
+      </div>
+
+      <!-- Comments Display -->
+      <div class="comments-container" id="commentsContainer">
+        <div class="loading-comments" id="loadingComments" style="display: none;">
+          <i class="fas fa-spinner fa-spin"></i> Loading comments...
+        </div>
+        
+        <div class="comments-list" id="commentsList">
+          <!-- Comments will be loaded here dynamically -->
+        </div>
+        
+        <div class="no-comments" id="noComments" style="display: none;">
+          <p><i class="fas fa-comments"></i> No comments yet. Be the first to share your thoughts!</p>
+        </div>
+      </div>
+    </div>
+  </article>
+</main>
+
+<%- include('../partials/footer') %>
+
+<script>
+// Social sharing functionality
+document.querySelectorAll('[data-share]').forEach(button => {
+  button.addEventListener('click', function(e) {
+    e.preventDefault();
+    const platform = this.getAttribute('data-share');
+    const url = encodeURIComponent(window.location.href);
+    const text = encodeURIComponent('<%= article.title %>');
+    
+    let shareUrl;
+    switch(platform) {
+      case 'twitter':
+        shareUrl = `https://twitter.com/intent/tweet?text=${text}&url=${url}`;
+        break;
+      case 'facebook':
+        shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${url}`;
+        break;
+      case 'linkedin':
+        shareUrl = `https://www.linkedin.com/shareArticle?mini=true&url=${url}&title=${text}`;
+        break;
+    }
+    
+    window.open(shareUrl, '_blank', 'width=600,height=400');
+  });
+});
+
+// Comments functionality
+document.addEventListener('DOMContentLoaded', function() {
+  const articleId = document.getElementById('articleId').value;
+  const commentForm = document.getElementById('commentForm');
+  const commentsList = document.getElementById('commentsList');
+  const loadingComments = document.getElementById('loadingComments');
+  const noComments = document.getElementById('noComments');
+  const charCount = document.getElementById('charCount');
+  const commentText = document.getElementById('commentText');
+
+  // Character counter for comment textarea
+  commentText.addEventListener('input', function() {
+    const count = this.value.length;
+    charCount.textContent = count;
+    
+    if (count > 900) {
+      charCount.style.color = '#ff6b6b';
+    } else if (count > 700) {
+      charCount.style.color = '#ffa500';
+    } else {
+      charCount.style.color = '#666';
+    }
+  });
+
+  // Load existing comments
+  function loadComments() {
+    loadingComments.style.display = 'block';
+    commentsList.style.display = 'none';
+    noComments.style.display = 'none';
+
+    fetch(`/api/comments/${articleId}`)
+      .then(response => response.json())
+      .then(data => {
+        loadingComments.style.display = 'none';
+        
+        if (data.success && data.comments.length > 0) {
+          displayComments(data.comments);
+          commentsList.style.display = 'block';
+        } else {
+          noComments.style.display = 'block';
+        }
+      })
+      .catch(error => {
+        console.error('Error loading comments:', error);
+        loadingComments.style.display = 'none';
+        noComments.innerHTML = '<p><i class="fas fa-exclamation-triangle"></i> Error loading comments. Please try again later.</p>';
+        noComments.style.display = 'block';
+      });
+  }
+
+  // Display comments with threading
+  function displayComments(comments) {
+    commentsList.innerHTML = '';
+    
+    comments.forEach(comment => {
+      const commentElement = createCommentElement(comment);
+      commentsList.appendChild(commentElement);
+    });
+  }
+
+  // Create comment element with reply functionality
+  function createCommentElement(comment, isReply = false) {
+    const commentElement = document.createElement('div');
+    commentElement.className = `comment-item ${isReply ? 'comment-reply' : ''}`;
+    commentElement.setAttribute('data-comment-id', comment.comment_id);
+    
+    commentElement.innerHTML = `
+      <div class="comment-header">
+        <div class="comment-author">
+          <i class="fas fa-user-circle"></i>
+          <strong>${escapeHtml(comment.name)}</strong>
+          ${isReply ? '<span class="reply-indicator"><i class="fas fa-reply"></i></span>' : ''}
+        </div>
+        <div class="comment-date">
+          ${new Date(comment.created_at).toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'short',
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit'
+          })}
+        </div>
+      </div>
+      <div class="comment-content">
+        ${escapeHtml(comment.comment).replace(/\n/g, '<br>')}
+      </div>
+      <div class="comment-actions">
+        ${!isReply ? `<button class="reply-btn" onclick="showReplyForm(${comment.comment_id})">
+          <i class="fas fa-reply"></i> Reply
+        </button>` : ''}
+      </div>
+      <div class="reply-form-container" id="replyForm-${comment.comment_id}" style="display: none;">
+        <form class="reply-form" onsubmit="submitReply(event, ${comment.comment_id})">
+          <div class="form-group">
+            <label>Your Name <span class="required">*</span></label>
+            <input type="text" name="name" required maxlength="255" placeholder="Enter your name">
+          </div>
+          <div class="form-group">
+            <label>Your Email <span class="required">*</span></label>
+            <input type="email" name="email" required maxlength="255" placeholder="Enter your email (not displayed publicly)">
+            <small class="email-privacy-note">Your email will not be displayed publicly.</small>
+          </div>
+          <div class="form-group">
+            <label>Reply <span class="required">*</span></label>
+            <textarea name="comment" rows="3" required maxlength="1000" placeholder="Write your reply..."></textarea>
+            <div class="char-counter">
+              <span class="char-count">0</span>/1000 characters
+            </div>
+          </div>
+          <div class="reply-actions">
+            <button type="submit" class="submit-reply-btn">
+              <i class="fas fa-reply"></i> Post Reply
+            </button>
+            <button type="button" class="cancel-reply-btn" onclick="hideReplyForm(${comment.comment_id})">
+              Cancel
+            </button>
+          </div>
+        </form>
+      </div>
+      <div class="replies-container" id="replies-${comment.comment_id}">
+        ${comment.replies ? comment.replies.map(reply => createCommentElement(reply, true).outerHTML).join('') : ''}
+      </div>
+    `;
+    
+    return commentElement;
+  }
+
+  // Submit comment
+  commentForm.addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const name = document.getElementById('commentName').value.trim();
+    const email = document.getElementById('commentEmail').value.trim();
+    const comment = commentText.value.trim();
+    
+    if (!name || !email || !comment) {
+      alert('Please fill in all required fields.');
+      return;
+    }
+    
+    if (name.length > 255) {
+      alert('Name must be 255 characters or less.');
+      return;
+    }
+    
+    // Basic email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      alert('Please enter a valid email address.');
+      return;
+    }
+    
+    if (email.length > 255) {
+      alert('Email must be 255 characters or less.');
+      return;
+    }
+    
+    if (comment.length > 1000) {
+      alert('Comment must be 1000 characters or less.');
+      return;
+    }
+
+    const submitBtn = document.getElementById('submitComment');
+    const originalText = submitBtn.innerHTML;
+    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Posting...';
+    submitBtn.disabled = true;
+
+    fetch('/api/comments', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        article_id: articleId,
+        name: name,
+        email: email,
+        comment: comment
+      })
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.success) {
+        // Clear form
+        commentForm.reset();
+        charCount.textContent = '0';
+        charCount.style.color = '#666';
+        
+        // Reload comments
+        loadComments();
+        
+        // Show success message
+        const successMsg = document.createElement('div');
+        successMsg.className = 'success-message';
+        successMsg.innerHTML = '<i class="fas fa-check-circle"></i> Comment posted successfully!';
+        commentForm.appendChild(successMsg);
+        
+        setTimeout(() => {
+          successMsg.remove();
+        }, 3000);
+      } else {
+        alert(data.error || 'Failed to post comment. Please try again.');
+      }
+    })
+    .catch(error => {
+      console.error('Error posting comment:', error);
+      alert('Network error. Please check your connection and try again.');
+    })
+    .finally(() => {
+      submitBtn.innerHTML = originalText;
+      submitBtn.disabled = false;
+    });
+  });
+
+  // Show reply form
+  window.showReplyForm = function(parentCommentId) {
+    // Hide any other open reply forms
+    document.querySelectorAll('.reply-form-container').forEach(form => {
+      form.style.display = 'none';
+    });
+    
+    // Show the specific reply form
+    const replyForm = document.getElementById(`replyForm-${parentCommentId}`);
+    replyForm.style.display = 'block';
+    
+    // Focus on the first input
+    const firstInput = replyForm.querySelector('input[name="name"]');
+    firstInput.focus();
+    
+    // Set up character counter for this reply form
+    const textarea = replyForm.querySelector('textarea[name="comment"]');
+    const charCount = replyForm.querySelector('.char-count');
+    
+    textarea.addEventListener('input', function() {
+      const count = this.value.length;
+      charCount.textContent = count;
+      
+      if (count > 900) {
+        charCount.style.color = '#ff6b6b';
+      } else if (count > 700) {
+        charCount.style.color = '#ffa500';
+      } else {
+        charCount.style.color = '#666';
+      }
+    });
+  };
+
+  // Hide reply form
+  window.hideReplyForm = function(parentCommentId) {
+    const replyForm = document.getElementById(`replyForm-${parentCommentId}`);
+    replyForm.style.display = 'none';
+    
+    // Reset form
+    const form = replyForm.querySelector('form');
+    form.reset();
+    
+    // Reset character counter
+    const charCount = replyForm.querySelector('.char-count');
+    charCount.textContent = '0';
+    charCount.style.color = '#666';
+  };
+
+  // Submit reply
+  window.submitReply = function(event, parentCommentId) {
+    event.preventDefault();
+    
+    const form = event.target;
+    const name = form.name.value.trim();
+    const email = form.email.value.trim();
+    const comment = form.comment.value.trim();
+    
+    if (!name || !email || !comment) {
+      alert('Please fill in all required fields.');
+      return;
+    }
+    
+    if (name.length > 255) {
+      alert('Name must be 255 characters or less.');
+      return;
+    }
+    
+    // Basic email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      alert('Please enter a valid email address.');
+      return;
+    }
+    
+    if (email.length > 255) {
+      alert('Email must be 255 characters or less.');
+      return;
+    }
+    
+    if (comment.length > 1000) {
+      alert('Reply must be 1000 characters or less.');
+      return;
+    }
+
+    const submitBtn = form.querySelector('.submit-reply-btn');
+    const originalText = submitBtn.innerHTML;
+    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Posting...';
+    submitBtn.disabled = true;
+
+    fetch('/api/comments', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        article_id: articleId,
+        parent_comment_id: parentCommentId,
+        name: name,
+        email: email,
+        comment: comment
+      })
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.success) {
+        // Hide reply form
+        hideReplyForm(parentCommentId);
+        
+        // Reload comments to show the new reply
+        loadComments();
+        
+        // Show success message
+        const successMsg = document.createElement('div');
+        successMsg.className = 'success-message';
+        successMsg.innerHTML = '<i class="fas fa-check-circle"></i> Reply posted successfully!';
+        
+        const commentElement = document.querySelector(`[data-comment-id="${parentCommentId}"]`);
+        commentElement.appendChild(successMsg);
+        
+        setTimeout(() => {
+          successMsg.remove();
+        }, 3000);
+      } else {
+        alert(data.error || 'Failed to post reply. Please try again.');
+      }
+    })
+    .catch(error => {
+      console.error('Error posting reply:', error);
+      alert('Network error. Please check your connection and try again.');
+    })
+    .finally(() => {
+      submitBtn.innerHTML = originalText;
+      submitBtn.disabled = false;
+    });
+  };
+
+  // Utility function to escape HTML
+  function escapeHtml(text) {
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+  }
+
+  // Load comments on page load
+  loadComments();
+});
+</script>

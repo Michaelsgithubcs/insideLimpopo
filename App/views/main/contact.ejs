@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+  <%- include('../partials/head.ejs') %>
+  <body class="contact-page">
+    <!-- Header Section -->
+    <%- include('../partials/header.ejs') %>
+    <%- include('../partials/nav.ejs') %>
+
+    <main class="contact-main">
+      <!-- Hero Section -->
+      <section class="contact-hero">
+        <div class="hero-content">
+          <h1>Get in Touch</h1>
+          <p class="subtitle">We'd love to hear from you! Reach out for inquiries, feedback, or partnership opportunities.</p>
+        </div>
+      </section>
+
+      <!-- Contact Content -->
+      <div class="contact-content">
+        <!-- Contact Form Section -->
+        <section class="contact-form-section">
+          <div class="form-container">
+            <div class="form-header">
+              <h2>Send Us a Message</h2>
+              <p>Fill out the form below and we'll get back to you as soon as possible.</p>
+            </div>
+            
+            <form action="https://api.web3forms.com/submit" method="POST" class="contact-form">
+              <input type="hidden" name="access_key" value="02b91bbe-d042-4966-af8d-35e052f35a2f">
+              <div class="form-group">
+                <label for="name">Your Name</label>
+                <input type="text" id="name" name="name" placeholder="Enter your name" required>
+              </div>
+              <div class="form-group">
+                <label for="email">Email Address</label>
+                <input type="email" id="email" name="email" placeholder="Enter your email" required>
+              </div>
+              <div class="form-group">
+                <label for="subject">Subject</label>
+                <select id="subject" name="subject" required>
+                  <option value="" disabled selected>Select a subject</option>
+                  <option value="General Inquiry">General Inquiry</option>
+                  <option value="Advertising">Advertising</option>
+                  <option value="Partnership">Partnership</option>
+                  <option value="Technical Support">Technical Support</option>
+                  <option value="Feedback">Feedback</option>
+                  <option value="Other">Other</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="message">Your Message</label>
+                <textarea id="message" name="message" placeholder="Type your message here..." rows="5" required></textarea>
+              </div>
+              <button type="submit" class="submit-button">Send Message</button>
+            </form>
+          </div>
+        </section>
+
+        <!-- Contact Info Section -->
+        <section class="contact-info-section">
+          <div class="info-container">
+            <div class="logo-container">
+              <img src="/assets/logo/InsideLimpopoLogoTransparentnav.png" alt="Inside Limpopo Logo" class="logo-image">
+            </div>
+            
+            <div class="contact-methods">
+              <div class="contact-method">
+                <div class="contact-icon">
+                  <i class="fas fa-envelope"></i>
+                </div>
+                <div class="contact-details">
+                  <h3>Email Us</h3>
+                  <a href="mailto:info@insidelimpopo.co.za">info@zareport.co.za</a>
+                </div>
+              </div>
+              
+              <div class="contact-method">
+                <div class="contact-icon">
+                  <i class="fas fa-phone"></i>
+                </div>
+                <div class="contact-details">
+                  <h3>Call Us</h3>
+                  <a href="tel:+270815500304">+27 81 550 0304</a>
+                </div>
+              </div>
+              
+              <div class="contact-method">
+                <div class="contact-icon">
+                  <i class="fas fa-map-marker-alt"></i>
+                </div>
+                <div class="contact-details">
+                  <h3>Visit Us</h3>
+                  <address>123 Media Street, Polokwane, Limpopo, 0700</address>
+                </div>
+              </div>
+            </div>
+            
+            <div class="social-links">
+              <h3>Follow Us</h3>
+              <div class="social-icons">
+                <a href="#" class="social-icon facebook" aria-label="Facebook">
+                  <i class="fab fa-facebook-f"></i>
+                </a>
+                <a href="#" class="social-icon twitter" aria-label="Twitter">
+                  <i class="fab fa-twitter"></i>
+                </a>
+                <a href="#" class="social-icon instagram" aria-label="Instagram">
+                  <i class="fab fa-instagram"></i>
+                </a>
+                <a href="#" class="social-icon linkedin" aria-label="LinkedIn">
+                  <i class="fab fa-linkedin-in"></i>
+                </a>
+                <a href="#" class="social-icon youtube" aria-label="YouTube">
+                  <i class="fab fa-youtube"></i>
+                </a>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Newsletter Section -->
+        <section class="newsletter-section">
+          <div class="newsletter-container">
+            <div class="newsletter-content">
+              <h2>Stay Updated</h2>
+              <p>Subscribe to our newsletter for the latest news and updates from Inside Limpopo.</p>
+              <form name="submit-to-google-sheet" class="newsletter-form">
+                <div class="form-group">
+                  <input type="email" name="email" placeholder="Enter your email address" required>
+                  <button type="submit" class="subscribe-button">Subscribe</button>
+                </div>
+                <p class="privacy-notice">We respect your privacy. Unsubscribe at any time.</p>
+              </form>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <!-- Map Section -->
+      <section class="map-section">
+        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3579.988243520316!2d29.45181531502989!3d-23.8965504848729!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x1ec6d93e3e5d8e2b%3A0x1e5e5e5e5e5e5e5e!2sPolokwane!5e0!3m2!1sen!2sza!4v1620000000000!5m2!1sen!2sza" 
+                width="100%" height="450" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+      </section>
+    </main>
+
+    <!-- Footer Section -->
+    <%- include('../partials/footer.ejs') %>
+
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    <script>
+      // Google Sheets Submission for Newsletter
+      const scriptURL = 'https://script.google.com/macros/s/AKfycbxg2SfK85jvra1e7McRhvIOs918kjjrTuAjltbq65oHgGKZeYnEWt35IRm3fAgQBZ6C/exec';
+      const newsletterForm = document.forms['submit-to-google-sheet'];
+      
+      newsletterForm.addEventListener('submit', e => {
+        e.preventDefault();
+        const submitButton = newsletterForm.querySelector('button[type="submit"]');
+        const originalText = submitButton.textContent;
+        
+        submitButton.disabled = true;
+        submitButton.textContent = 'Subscribing...';
+        
+        fetch(scriptURL, { method: 'POST', body: new FormData(newsletterForm) })
+          .then(response => {
+            if (response.ok) {
+              showNotification('Thank you for subscribing!', 'success');
+              newsletterForm.reset();
+            } else {
+              throw new Error('Network response was not ok');
+            }
+          })
+          .catch(error => {
+            console.error('Error!', error.message);
+            showNotification('Subscription failed. Please try again later.', 'error');
+          })
+          .finally(() => {
+            submitButton.disabled = false;
+            submitButton.textContent = originalText;
+          });
+      });
+      
+      // Web3Forms Submission for Contact Form
+      const contactForm = document.querySelector('.contact-form');
+      contactForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        const submitButton = this.querySelector('button[type="submit"]');
+        const originalText = submitButton.textContent;
+        
+        submitButton.disabled = true;
+        submitButton.textContent = 'Sending...';
+        
+        fetch(this.action, { method: 'POST', body: new FormData(this) })
+          .then(response => {
+            if (response.ok) {
+              showNotification('Message sent successfully! We\'ll get back to you soon.', 'success');
+              this.reset();
+            } else {
+              throw new Error('Network response was not ok');
+            }
+          })
+          .catch(error => {
+            console.error('Error:', error);
+            showNotification('Message failed to send. Please try again later.', 'error');
+          })
+          .finally(() => {
+            submitButton.disabled = false;
+            submitButton.textContent = originalText;
+          });
+      });
+      
+      // Notification function
+      function showNotification(message, type) {
+        const notification = document.createElement('div');
+        notification.className = `notification ${type}`;
+        notification.textContent = message;
+        document.body.appendChild(notification);
+        
+        setTimeout(() => {
+          notification.classList.add('show');
+        }, 10);
+        
+        setTimeout(() => {
+          notification.classList.remove('show');
+          setTimeout(() => {
+            document.body.removeChild(notification);
+          }, 300);
+        }, 3000);
+      }
+    </script>
+  </body>
+</html>

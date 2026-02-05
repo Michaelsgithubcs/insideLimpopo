@@ -1,0 +1,59 @@
+{
+  "name": "inside-limpopo",
+  "version": "1.0.0",
+  "description": "Inside Limpopo is an online newsletter dedicated to delivering timely and relevant news, updates, and insights to the people of Limpopo. The platform aims to keep the community informed on current affairs, sports, events, opinions, and opportunities while fostering engagement through podcasts, competitions, and interactive content.",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/spane4all/inside-Limpopo.git"
+  },
+  "author": "Hlogo",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/spane4all/inside-Limpopo/issues"
+  },
+  "homepage": "https://github.com/spane4all/inside-Limpopo#readme",
+  "dependencies": {
+    "argon2": "^0.41.1",
+    "axios": "^1.12.2",
+    "bcrypt": "^6.0.0",
+    "compression": "^1.8.0",
+    "connect-flash": "^0.1.1",
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.5",
+    "csurf": "^1.11.0",
+    "date-fns": "^4.1.0",
+    "dot": "^1.1.3",
+    "dotenv": "^16.6.1",
+    "ejs": "^3.1.10",
+    "env": "^0.0.2",
+    "express": "^4.21.2",
+    "express-mysql-session": "^3.0.3",
+    "express-rate-limit": "^7.5.0",
+    "express-session": "^1.18.1",
+    "express-validator": "^7.2.1",
+    "geoip-lite": "^1.4.10",
+    "helmet": "^8.1.0",
+    "http": "^0.0.1-security",
+    "jsonwebtoken": "^9.0.2",
+    "lodash": "^4.17.21",
+    "method-override": "^3.0.0",
+    "morgan": "^1.10.0",
+    "multer": "^1.4.5-lts.2",
+    "mysql": "^2.18.1",
+    "mysql2": "^3.14.2",
+    "newsapi": "^2.4.1",
+    "node-cron": "^3.0.3",
+    "nodemailer": "^7.0.5",
+    "sequelize": "^6.37.6",
+    "sequelize-cli": "^6.6.2",
+    "uuid": "^11.1.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.9"
+  }
+}

@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+  <%- include('../partials/head.ejs') %>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-T86K5TWT7W"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-T86K5TWT7W');
+</script>
+  <body class="news-homepage">
+    <!-- Header Section -->
+    <%- include('../partials/header.ejs') %>
+    <%- include('../partials/nav.ejs') %>
+
+    <!-- Breaking News Ticker -->
+    <%- include('../partials/BreakingNews.ejs') %>
+<script>
+    function updateDateTime() {
+        const now = new Date();
+
+        const date = now.toLocaleDateString('en-ZA', {
+            weekday: 'short',
+            day: '2-digit',
+            month: 'short',
+            year: 'numeric'
+        });
+
+        const time = now.toLocaleTimeString('en-ZA', {
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit'
+        });
+
+        document.getElementById('current-date').textContent = date;
+        document.getElementById('current-time').textContent = time;
+    }
+
+    updateDateTime();
+    setInterval(updateDateTime, 1000);
+</script>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <!-- Featured Section -->
+      <section>
+        <div class="featured-article" id="breakingNews">
+          <div class="featured-image" id="breakingImg">
+            <div class="category-badge">Breaking</div>
+          </div>
+          <div class="featured-content">
+            <h2 class="featured-title" id="breakingTitle"></h2>
+            <p class="featured-description" id="breakingDesc"></p>
+            <div class="article-meta">
+              <span class="source" id="breakingSource"></span>
+              <span class="date" id="breakingDate"></span>
+            </div>
+            <a href="#" class="read-more" id="breakingLink" target="_blank">Read Full Story →</a>
+          </div>
+        </div>
+
+       
+      </section>
+
+        <section >
+        
+
+        <div class="headlines-sidebar">
+          <h2 class="section-title">Top Headlines</h2>
+          <div class="headlines-list" id="topHeadlines"></div>
+        </div>
+      </section>
+
+      <!-- News Categories -->
+      <section class="news-categories">
+        <div class="news-category" id="sportsNews">
+          <div class="category-header">
+            <h2 class="category-title">Sports</h2>
+            <a href="#" class="view-all">View All</a>
+          </div>
+          <div class="news-grid" id="sportsGrid"></div>
+        </div>
+
+        <div class="news-category" id="businessNews">
+          <div class="category-header">
+            <h2 class="category-title">Business</h2>
+            <a href="#" class="view-all">View All</a>
+          </div>
+          <div class="news-grid" id="businessGrid"></div>
+        </div>
+
+        <div class="news-category" id="techNews">
+          <div class="category-header">
+            <h2 class="category-title">Technology</h2>
+            <a href="#" class="view-all">View All</a>
+          </div>
+          <div class="news-grid" id="techGrid"></div>
+        </div>
+      </section>
+
+      <!-- Newsletter Section -->
+
+<section class="newsletter-section">
+  <div class="newsletter-container">
+    <div class="newsletter-content">
+      <h2>Stay Updated</h2>
+      <p>Subscribe to our newsletter for daily news updates</p>
+      <form class="newsletter-form" id="newsletterForm">
+        <input type="email" name="email" placeholder="Your email address" required>
+        <button type="submit">Subscribe</button>
+      </form>
+      <p id="responseMessage"></p>
+    </div>
+  </div>
+</section>
+    </main>
+
+    <!-- Bootstrap JS Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- User Location Weather -->
+    <script src="/scripts/user-location-weather.js"></script>
+    
+    <!-- Search Functionality -->
+    <script src="/scripts/script.js"></script>
+
+    <!-- Footer Section -->
+    <%- include('../partials/footer.ejs') %>
+
+    <script>
+      document.getElementById('newsletterForm').addEventListener('submit', async function(e) {
+  e.preventDefault();
+  const email = this.email.value;
+  const responseMessage = document.getElementById('responseMessage');
+  
+  try {
+    const res = await fetch('/subscribe', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email })
+    });
+
+    const data = await res.json();
+    responseMessage.textContent = data.message;
+    responseMessage.style.color = res.ok ? 'green' : 'red';
+    if (res.ok) this.reset();
+  } catch (error) {
+    responseMessage.textContent = 'Network error, please try again.';
+    responseMessage.style.color = 'red';
+  }
+});
+
+      // DOM Elements
+      const breakingImg = document.getElementById("breakingImg");
+      const breakingTitle = document.getElementById("breakingTitle");
+      const breakingDesc = document.getElementById("breakingDesc");
+      const breakingSource = document.getElementById("breakingSource");
+      const breakingDate = document.getElementById("breakingDate");
+      const breakingLink = document.getElementById("breakingLink");
+      const topHeadlines = document.getElementById("topHeadlines");
+      const sportsGrid = document.getElementById("sportsGrid");
+      const businessGrid = document.getElementById("businessGrid");
+      const techGrid = document.getElementById("techGrid");
+
+      // Get current news source from global function
+      function getCurrentNewsSourceForAPI() {
+        // Use the global function if available, otherwise default to 'sa' (local news)
+        return (typeof window.getCurrentNewsSource === 'function') 
+               ? window.getCurrentNewsSource() 
+               : 'sa';
+      }
+
+      // Fetch data from cached news API
+      const fetchData = async (category, pageSize = 10) => {
+        try {
+          // Get current news source and use appropriate API endpoint
+          const currentSource = getCurrentNewsSourceForAPI();
+          const apiBase = currentSource === 'world' ? '/api/news' : '/api/sa-news';
+          const url = `${apiBase}/headlines?category=${category}&limit=${pageSize}`;
+          
+          const response = await fetch(url);
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+          const data = await response.json();
+          return data.articles;
+        } catch (error) {
+          console.error("Error fetching cached news:", error);
+          return [];
+        }
+      };
+
+      // Format date
+      const formatDate = (dateString) => {
+        if (!dateString) return '';
+        const options = { year: 'numeric', month: 'short', day: 'numeric' };
+        return new Date(dateString).toLocaleDateString('en-US', options);
+      };
+
+      // Display breaking news
+      const displayBreakingNews = (article) => {
+        if (article) {
+          breakingImg.style.backgroundImage = `url(${article.urlToImage || '/assets/logo/InsideLimpopoLogoTransparent.png'})`;
+          breakingTitle.textContent = article.title;
+          breakingDesc.textContent = article.description || 'No description available';
+          breakingSource.textContent = article.source?.name || 'Unknown source';
+          breakingDate.textContent = formatDate(article.publishedAt);
+          breakingLink.href = article.url;
+        } else {
+          breakingImg.style.backgroundImage = 'url(/assets/logo/InsideLimpopoLogoTransparent.png)';
+          breakingTitle.textContent = 'No breaking news available';
+          breakingDesc.textContent = 'Check back later for updates';
+        }
+      };
+
+      // Display top headlines
+      const displayTopHeadlines = (articles) => {
+        let html = '';
+        articles.slice(0, 5).forEach(article => {
+          const hasImage = article.urlToImage && article.urlToImage.trim() !== '' && article.urlToImage !== 'null';
+          
+          if (hasImage) {
+            html += `
+              <div class="headline-item">
+                <div class="headline-image" style="background-image: url('${article.urlToImage}')" 
+                     onerror="this.style.backgroundImage='url(data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTUwIiBoZWlnaHQ9IjEwMCIgdmlld0JveD0iMCAwIDE1MCAxMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIxNTAiIGhlaWdodD0iMTAwIiBmaWxsPSIjY2NjY2NjIi8+Cjx0ZXh0IHg9Ijc1IiB5PSI1NSIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjEyIiBmaWxsPSIjNjY2NjY2IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5ObyBJbWFnZTwvdGV4dD4KPC9zdmc+)'"></div>
+                <div class="headline-content">
+                  <h3><a href="${article.url}" target="_blank">${article.title}</a></h3>
+                  <div class="headline-meta">
+                    <span>${article.source?.name || 'Unknown'}</span>
+                    <span>${formatDate(article.publishedAt)}</span>
+                  </div>
+                </div>
+              </div>
+            `;
+          } else {
+            html += `
+              <div class="headline-item">
+                <div class="headline-image" style="background-color: #cccccc; display: flex; align-items: center; justify-content: center; color: #666666; font-size: 12px; font-family: Arial, sans-serif;">No Image</div>
+                <div class="headline-content">
+                  <h3><a href="${article.url}" target="_blank">${article.title}</a></h3>
+                  <div class="headline-meta">
+                    <span>${article.source?.name || 'Unknown'}</span>
+                    <span>${formatDate(article.publishedAt)}</span>
+                  </div>
+                </div>
+              </div>
+            `;
+          }
+        });
+        topHeadlines.innerHTML = html || '<p>No headlines available</p>';
+      };
+
+      // Display category news
+      const displayCategoryNews = (articles, container) => {
+        let html = '';
+        articles.slice(0, 4).forEach(article => {
+          html += `
+            <div class="news-card">
+              <div class="card-image" style="background-image: url(${article.urlToImage || '/assets/logo/InsideLimpopoLogoTransparent.png'})">
+                <div class="category-overlay">${container.id.replace('Grid', '')}</div>
+              </div>
+              <div class="card-content">
+                <h3><a href="${article.url}" target="_blank">${article.title}</a></h3>
+                <p>${article.description?.substring(0, 100) || 'No description available'}...</p>
+                <div class="card-meta">
+                  <span>${article.source?.name || 'Unknown'}</span>
+                  <span>${formatDate(article.publishedAt)}</span>
+                </div>
+              </div>
+            </div>
+          `;
+        });
+        container.innerHTML = html || '<p>No news available in this category</p>';
+      };
+
+      // Function to load all news sections
+      async function loadAllNews() {
+        // Show loading states
+        breakingTitle.textContent = 'Loading breaking news...';
+        topHeadlines.innerHTML = '<p>Loading headlines...</p>';
+        sportsGrid.innerHTML = '<p>Loading sports news...</p>';
+        businessGrid.innerHTML = '<p>Loading business news...</p>';
+        techGrid.innerHTML = '<p>Loading tech news...</p>';
+
+        try {
+          // Fetch and display data
+          const [breaking, general, sports, business, tech] = await Promise.all([
+            fetchData('general', 1),
+            fetchData('general', 5),
+            fetchData('sports', 4),
+            fetchData('business', 4),
+            fetchData('technology', 4)
+          ]);
+
+          displayBreakingNews(breaking[0]);
+          displayTopHeadlines(general);
+          displayCategoryNews(sports, sportsGrid);
+          displayCategoryNews(business, businessGrid);
+          displayCategoryNews(tech, techGrid);
+        } catch (error) {
+          console.error('Error loading news:', error);
+          breakingTitle.textContent = 'Failed to load news';
+          topHeadlines.innerHTML = '<p>Error loading headlines. Please refresh the page.</p>';
+        }
+      }
+
+      // Initialize page
+      window.addEventListener('load', async () => {
+        // Load news immediately
+        loadAllNews();
+      });
+
+      // Ticker animation is now handled by breaking-news-ticker.js
+    </script>
+  </body>
+</html>

@@ -1,0 +1,259 @@
+/* COMPLETELY RESET MOBILE MENU - Simple Version */
+@media (max-width: 991px) {
+  /* Fix hamburger positioning */
+  .navbar-toggler {
+    position: relative;
+    z-index: 1001;
+  }
+  
+  /* Ensure proper navbar layout */
+  .navbar .container-fluid {
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+  }
+  
+  /* Base styling for menu container */
+  #navbarNav {
+    position: fixed;
+    top: 0;
+    right: -100%; /* Start off-screen */
+    width: 80%;
+    max-width: 300px;
+    height: 100vh;
+    max-height: 100vh; /* Ensure it doesn't exceed viewport height */
+    background-color: #001f4d;
+    z-index: 1000;
+    padding: 60px 20px 20px;
+    overflow-y: scroll; /* Force scroll instead of auto */
+    -webkit-overflow-scrolling: touch; /* For smooth scrolling on iOS */
+    box-shadow: -5px 0 15px rgba(0, 0, 0, 0.2);
+    transition: right 0.3s ease;
+  }
+  
+  /* When open, move menu into view */
+  #navbarNav.mobile-open {
+    right: 0;
+  }
+  
+  /* Important: override any Bootstrap classes */
+  #navbarNav.collapse, 
+  #navbarNav.collapsing,
+  #navbarNav.collapse:not(.show) {
+    display: block !important;
+    height: auto !important;
+    visibility: visible !important;
+  }
+
+  /* Ensure navbar items stack vertically */
+  #navbarNav .navbar-nav {
+    display: flex !important;
+    flex-direction: column !important;
+    width: 100% !important;
+    margin-top: 80px !important; /* Space for search box */
+    padding: 10px 0 !important;
+    position: relative !important;
+    z-index: 2 !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
+
+  /* Style each nav item */
+  #navbarNav .nav-item {
+    width: 100%;
+    margin: 8px 0;
+    text-align: left;
+    opacity: 1;
+    position: relative;
+    z-index: 1002; /* Higher z-index to ensure clickability */
+  }
+
+  #navbarNav .nav-link {
+    padding: 12px 15px;
+    width: 100%;
+    display: block;
+    color: white !important;
+    border-radius: 5px;
+    transition: background-color 0.2s;
+    font-weight: 600;
+    background-color: rgba(0, 0, 0, 0.1);
+    border-left: 3px solid rgba(255, 255, 255, 0.2);
+    cursor: pointer; /* Make sure cursor shows it's clickable */
+    position: relative;
+    z-index: 1002; /* Ensure higher z-index than overlay */
+  }
+
+  #navbarNav .nav-link:hover,
+  #navbarNav .nav-link:focus {
+    background-color: rgba(255, 255, 255, 0.15);
+    border-left-color: white;
+  }
+
+  /* Search box styling for mobile menu */
+  #navbarNav .search-container {
+    width: 100%;
+    margin: 15px 0;
+    padding: 0 10px;
+    display: flex !important;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    order: -1; /* Place search above other elements */
+  }
+  
+  #navbarNav .search-input {
+    flex: 1;
+    min-width: 0;
+    padding: 12px 15px;
+    border-radius: 6px 0 0 6px;
+    border: 1px solid #ddd;
+    font-size: 16px;
+    height: 44px;
+    box-sizing: border-box;
+  }
+  
+  #navbarNav .search-button {
+    min-width: 60px;
+    padding: 12px 15px;
+    border-radius: 0 6px 6px 0;
+    border: none;
+    background-color: #0056b3;
+    color: white;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  /* Ensure mobile search appears first in mobile menu */
+  #navbarNav .search-container.d-lg-none {
+    order: -2;
+    margin-bottom: 20px;
+  }
+  
+  /* Hide the desktop search in mobile view only */
+  #navbarNav .d-flex .search-container {
+    display: none !important;
+  }
+
+  /* Make World/Local toggle match search width in mobile only */
+  #navbarNav .news-source-toggle-nav {
+    width: 100%;
+    margin: 10px 0;
+    padding: 0 10px;
+  }
+  
+  #navbarNav .news-source-toggle-nav .toggle-buttons {
+    width: 100%;
+    display: flex;
+  }
+
+  /* Close button for mobile menu */
+  #mobile-menu-close {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: rgba(255, 255, 255, 0.1);
+    border: none;
+    color: white;
+    font-size: 1.8rem;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 1001;
+  }
+
+  /* Simple overlay implementation */
+  #mobile-menu-overlay {
+    display: none; /* Hidden by default */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 999; /* Lower than navbar but higher than page content */
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+  
+  /* When active, display and fade in */
+  #mobile-menu-overlay.active {
+    display: block;
+    opacity: 0.7;
+    pointer-events: auto; /* Allow clicks on overlay to close menu */
+  }
+  
+  /* Prevent scroll when menu is open */
+  html.menu-open,
+  body.menu-open {
+    overflow: hidden;
+  }
+
+  /* Adjust toggler button position */
+  .navbar-toggler {
+    z-index: 1001;
+    position: relative;
+  }
+  
+  /* Fix for iOS */
+  .ios-fixed-position-bugfix {
+    position: fixed;
+    width: 100%;
+  }
+  
+  /* Ensure full-height menu on various devices */
+  html.menu-open,
+  body.menu-open {
+    overflow: hidden;
+    height: 100%;
+    position: fixed;
+    width: 100%;
+  }
+  
+  /* Prevent flickering and ensure smooth transitions */
+  .navbar-collapse {
+    will-change: right;
+  }
+  
+  .mobile-menu-overlay {
+    will-change: opacity;
+  }
+}
+
+/* Ensure desktop view is not affected */
+@media (min-width: 992px) {
+  #navbarNav .news-source-toggle-nav {
+    width: auto !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+  
+  #navbarNav .news-source-toggle-nav .toggle-buttons {
+    width: auto !important;
+    display: inline-flex !important;
+  }
+  
+  /* Reset desktop search to original compact size */
+  #navbarNav .search-container {
+    width: auto !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+  
+  #navbarNav .search-input {
+    flex: none !important;
+    width: 200px !important; /* Original desktop search width */
+    height: 32px !important;
+    padding: 5px 10px !important;
+    font-size: 14px !important;
+  }
+  
+  #navbarNav .search-button {
+    height: 32px !important;
+    padding: 6px 12px !important;
+  }
+}

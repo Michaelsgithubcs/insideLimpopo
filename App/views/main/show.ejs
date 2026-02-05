@@ -1,0 +1,115 @@
+<%- include('../partials/head', { 
+  title: categoryName || 'Category Page',
+  meta: { description: `Articles for category ${categoryName}`, keywords: categoryName }
+}) %>
+
+<link rel="stylesheet" href="/css/category-styles.css" />
+
+<%- include('../partials/header') %>
+<%- include('../partials/nav') %>
+<%- include('../partials/BreakingNews') %>
+
+<main class="category-container">
+  <!-- Hero Section -->
+  <section class="category-hero">
+    <div class="hero-content">
+      <h1><%= categoryName %></h1>
+      <p class="subtitle">
+        Stay informed with the latest <%= categoryName %> stories and updates from across Limpopo
+      </p>
+    </div>
+  </section>
+
+  <!-- Articles Section -->
+  <section class="section-with-header">
+    <div class="section-sport-header">
+      <h2>News Articles</h2>
+      <p class="section-sport-description">
+        Browse all the latest <%= categoryName %> articles, news, and updates from Limpopo
+      </p>
+    </div>
+
+    <% if ((articles && articles.length > 0) || (cachedNews && cachedNews.length > 0)) { %>
+      <div class="sports-section">
+
+        <!-- ✅ Local Articles -->
+        <% if (articles && articles.length > 0) { %>
+          <% articles.forEach(article => { %>
+            <div class="sports-card event-card">
+              <div class="card-image-container">
+                <img src="<%= article.featured_img || '/assets/logo/InsideLimpopoLogoTransparent.png' %>" 
+                     alt="<%= article.title %>">
+                <div class="event-date">
+                  <span class="day"><%= new Date(article.created_at).getDate() %></span>
+                  <span class="month">
+                    <%= new Date(article.created_at).toLocaleString('default', { month: 'short' }).toUpperCase() %>
+                  </span>
+                </div>
+              </div>
+              <div class="card-content">
+                <span class="sport-tag football"><%= categoryName %></span>
+
+                <h3><%= article.title %></h3>
+                <p class="event-time">
+                  Posted on <%= new Date(article.created_at).toLocaleString() %>
+                </p>
+
+                <!-- ✅ Safe content rendering -->
+                <p>
+                  <%= article.content ? article.content.substring(0, 200) + '...' : 'No content available.' %>
+                </p>
+
+                <a href="/articles/<%= article.article_id %>" class="read-button">
+                  <i class="fas fa-book-open"></i> Read More
+                </a>
+              </div>
+            </div>
+          <% }) %>
+        <% } %>
+
+        <!-- ✅ Cached News -->
+        <% if (cachedNews && cachedNews.length > 0) { %>
+          <% cachedNews.forEach(news => { %>
+            <div class="sports-card event-card">
+              <div class="card-image-container">
+                <img src="<%= news.url_to_image || '/assets/logo/InsideLimpopoLogoTransparent.png' %>" 
+                     alt="<%= news.title %>">
+                <div class="event-date">
+                  <span class="day"><%= new Date(news.published_at).getDate() %></span>
+                  <span class="month">
+                    <%= new Date(news.published_at).toLocaleString('default', { month: 'short' }).toUpperCase() %>
+                  </span>
+                </div>
+              </div>
+              <div class="card-content">
+                <span class="sport-tag football"><%= categoryName %></span>
+
+                <h3><%= news.title %></h3>
+                <p class="event-time">
+                  Posted on <%= new Date(news.published_at).toLocaleString() %>
+                </p>
+
+                <!-- ✅ Safe description rendering -->
+                <p>
+                  <%= news.description ? news.description.substring(0, 200) + '...' : 'No description available.' %>
+                </p>
+
+                <a href="<%= news.url %>" target="_blank" class="read-button">
+                  <i class="fas fa-book-open"></i> Read More
+                </a>
+              </div>
+            </div>
+          <% }) %>
+        <% } %>
+
+      </div>
+    <% } else { %>
+      <div class="no-articles">
+        <p>No articles found in this category yet. Check back soon for updates!</p>
+      </div>
+    <% } %>
+  </section>
+
+</main>
+
+<%- include('../partials/footer') %>

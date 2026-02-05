@@ -1,0 +1,46 @@
+/* 
+ * Mobile Menu Scroll Fix
+ * Ensures the mobile menu is scrollable when content exceeds screen height
+ */
+
+@media (max-width: 991px) {
+  /* Ensure menu scrolls */
+  #navbarNav {
+    overflow-y: scroll !important;
+    -webkit-overflow-scrolling: touch !important;
+    max-height: 100vh !important;
+    overscroll-behavior: contain !important; /* Prevent scroll chaining */
+    padding-bottom: 80px !important; /* Add extra padding at bottom for better UX */
+  }
+  
+  /* Ensure content is properly sized for scrolling */
+  #navbarNav .navbar-nav {
+    padding-bottom: 50px !important;
+    margin-bottom: 50px !important;
+  }
+  
+  /* Allow touch scrolling */
+  #navbarNav .navbar-nav,
+  #navbarNav .nav-item,
+  #navbarNav .nav-link {
+    touch-action: pan-y !important;
+  }
+  
+  /* For the close button - ensure it stays put while scrolling */
+  #mobile-menu-close {
+    position: fixed !important;
+    top: 10px !important;
+    right: 10px !important;
+  }
+  
+  /* Prevent accidental touch-scrolling on body */
+  body.menu-open {
+    touch-action: none !important;
+  }
+  
+  /* Allow menu to scroll */
+  #navbarNav.mobile-open {
+    touch-action: pan-y !important;
+    overflow: auto !important;
+  }
+}

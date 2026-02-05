@@ -1,0 +1,251 @@
+/* =============================================== */
+/*                     HEADER                      */
+/* =============================================== */
+header {
+  background-color: #011131;
+  color: whitesmoke;
+  padding: 20px 0;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  position: relative;
+}
+
+header .header-content {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 2rem;
+  position: relative;
+}
+
+header .header-left {
+  text-align: center;
+}
+
+header h1 {
+  font-size: 36px;
+  margin: 0;
+  font-weight: bold;
+}
+
+header p {
+  font-size: 18px;
+  margin-top: 10px;
+  font-style: italic;
+}
+
+/* Weather Widget in Header */
+header .header-weather {
+  position: absolute;
+  right: 2rem;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+header .weather-widget-compact {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(255, 255, 255, 0.08);
+  padding: 10px 16px;
+  border-radius: 10px;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+header .weather-widget-compact .weather-icon {
+  width: 40px;
+  height: 40px;
+  filter: none;
+  background: transparent !important;
+  background-color: transparent !important;
+  display: block;
+  object-fit: contain;
+  border: none;
+  outline: none;
+  flex-shrink: 0;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  image-rendering: auto;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+/* Ensure no grey circle from any source */
+header .weather-widget-compact .weather-icon::before,
+header .weather-widget-compact .weather-icon::after {
+  display: none !important;
+}
+
+header .weather-widget-compact .weather-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  color: white;
+  line-height: 1.2;
+}
+
+header .weather-widget-compact .weather-location {
+  font-size: 12px;
+  font-weight: 600;
+  opacity: 0.9;
+  line-height: 1.2;
+}
+
+header .weather-widget-compact .weather-temp {
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 1.1;
+}
+
+header .weather-widget-compact .weather-description {
+  font-size: 11px;
+  text-transform: capitalize;
+  opacity: 0.8;
+  font-style: italic;
+  line-height: 1.2;
+}
+
+header .weather-widget-compact .weather-details {
+  font-size: 10px;
+  opacity: 0.7;
+  line-height: 1.2;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  header .header-weather {
+    position: static;
+    transform: none;
+    display: flex;
+    justify-content: center;
+    margin-top: 1rem;
+  }
+  
+  header .weather-widget-compact {
+    padding: 6px 10px;
+  }
+  
+  header .weather-widget-compact .weather-icon {
+    width: 30px;
+    height: 30px;
+  }
+  
+  header .weather-widget-compact .weather-temp {
+    font-size: 16px;
+  }
+}
+
+/* =============================================== */
+/*                NAVIGATION STYLE                 */
+/* =============================================== */
+nav {
+  background: #011131;
+  padding: 1rem;
+  font-size: 16px;
+  font-weight: 550;
+}
+
+nav ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: space-around;
+}
+
+nav ul li {
+  display: inline;
+}
+
+nav ul li a {
+  display: block;
+  padding: 0.5rem 1rem;
+  color: white;
+  text-decoration: none;
+}
+
+.nav-items::after {
+  height: 3px;
+  display: block;
+  content: "";
+  background-color: whitesmoke;
+  margin-top: 3px;
+  box-shadow: 0 0 10px white;
+  transform: scaleX(0);
+  transition: transform 0.4s;
+}
+
+.nav-items:hover::after {
+  transform: scaleX(1);
+}
+
+.search {
+  border: none;
+  padding: 10px 12px;
+  border-radius: 6px;
+  width: 12rem;
+  outline: none;
+  font-size: medium;
+}
+
+/* ===== Main Content ===== */
+.main-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+}
+
+/* ===== Featured Section ====== */
+.featured-section {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 2rem;
+  margin-bottom: 3rem;
+}
+
+/* ===== Headlines Sidebar ====== */
+.headlines-sidebar {
+  background-color: white;
+  border-radius: 8px;
+  padding: 1.5rem;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+/* ===== News Categories ====== */
+.news-categories {
+  display: grid;
+  gap: 2rem;
+  margin-bottom: 3rem;
+}
+
+/* ===== FOOTER SECTION ===== */
+footer {
+  background-color: #011131;
+  color: white;
+  text-align: center;
+  padding: 20px 0;
+  box-shadow: 0 -4px 8px rgba(0, 0, 0, 0.1);
+}
+
+footer .social-media-icons {
+  margin-bottom: 15px;
+}
+
+footer .social-media-icons a {
+  color: white;
+  font-size: 28px;
+  margin: 0 15px;
+  text-decoration: none;
+  transition: color 0.3s ease, transform 0.3s ease;
+}
+
+footer .social-media-icons a:hover {
+  color: #333;
+  transform: scale(1.2);
+}
+
+footer p {
+  font-size: 14px;
+  margin: 0;
+  font-style: italic;
+  color: #ccc;
+}

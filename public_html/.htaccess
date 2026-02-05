@@ -1,0 +1,20 @@
+# DO NOT REMOVE. CLOUDLINUX PASSENGER CONFIGURATION BEGIN
+PassengerAppRoot "/home/zareport/domains/zareport.co.za/App"
+PassengerBaseURI "/"
+PassengerNodejs "/home/zareport/nodevenv/domains/zareport.co.za/App/16/bin/node"
+PassengerAppType node
+PassengerStartupFile app.js
+# DO NOT REMOVE. CLOUDLINUX PASSENGER CONFIGURATION END
+# DO NOT REMOVE OR MODIFY. CLOUDLINUX ENV VARS CONFIGURATION BEGIN
+<IfModule Litespeed>
+SetEnv DB_USER zareport_db
+SetEnv DB_NAME zareport_db
+SetEnv DB_PASSWORD nLUcTCk7H6njz4W84hWz
+SetEnv SESSION_SECRET 0dec3b722797d87cf69a12414164b43bc635937c586abbfcb7a49d5fce3234b0578ff70da326c80fb0d50462c199b0b59b0b16411f7f96289ed83a0dd81f4568
+SetEnv MAIL_HOST smtp.gmail.com
+SetEnv MAIL_PORT 587
+SetEnv MAIL_USER mosewadesmond919@gmail.com
+SetEnv MAIL_PASS nqsiqrwmxidhwuko
+SetEnv MAIL_FROM "Inside Limpopo <mosewadesmond919@gmail.com>" 
+</IfModule>
+# DO NOT REMOVE OR MODIFY. CLOUDLINUX ENV VARS CONFIGURATION END

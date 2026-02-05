@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Unsubscribe</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f6fa;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    .card {
+      background: #fff;
+      padding: 2rem;
+      border-radius: 8px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      text-align: center;
+      max-width: 400px;
+      width: 100%;
+    }
+    h2 { margin-bottom: 1rem; color: #003366; }
+    input[type="email"] {
+      width: 100%;
+      padding: 0.7rem;
+      margin-bottom: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    button {
+      background: #c82333;
+      color: white;
+      border: none;
+      padding: 0.7rem 1.2rem;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    .message {
+      margin-top: 1rem;
+      color: <%= success === true ? 'green' : 'red' %>;
+    }
+
+    /* ---------------- */
+    /* Cute CSS Dog */
+    /* ---------------- */
+    .dog-container {
+      margin: 1rem auto;
+    }
+    .dog {
+      position: relative;
+      width: 120px;
+      height: 100px;
+      margin: auto;
+    }
+    /* Head */
+    .dog-head {
+      width: 80px;
+      height: 80px;
+      background: #d19f68;
+      border-radius: 50%;
+      position: absolute;
+      left: 20px;
+      top: 0;
+    }
+    /* Ears */
+    .ear {
+      width: 30px;
+      height: 40px;
+      background: #a67845;
+      position: absolute;
+      top: 5px;
+      border-radius: 50%;
+      animation: ear-wiggle 3s infinite ease-in-out;
+    }
+    .ear.left { left: -15px; transform: rotate(-20deg); }
+    .ear.right { right: -15px; transform: rotate(20deg); }
+
+    @keyframes ear-wiggle {
+      0%, 100% { transform: rotate(0deg); }
+      50% { transform: rotate(10deg); }
+    }
+
+    /* Eyes */
+    .eye {
+      width: 14px;
+      height: 14px;
+      background: #000;
+      border-radius: 50%;
+      position: absolute;
+      top: 30px;
+    }
+    .eye.left { left: 22px; }
+    .eye.right { right: 22px; }
+
+    /* Tears (always visible) */
+    .tear {
+      width: 8px;
+      height: 8px;
+      background: #00c3ff;
+      border-radius: 50%;
+      position: absolute;
+      top: 42px;
+      left: 28px;
+      animation: drop 2s infinite;
+      opacity: 0.8;
+    }
+    .tear.right {
+      left: auto;
+      right: 28px;
+      animation-delay: 1s;
+    }
+
+    @keyframes drop {
+      0% { transform: translateY(0) scale(1); opacity: 0.8; }
+      70% { transform: translateY(25px) scale(0.8); opacity: 0.6; }
+      100% { transform: translateY(40px) scale(0.6); opacity: 0; }
+    }
+
+    /* Nose */
+    .nose {
+      width: 14px;
+      height: 10px;
+      background: #000;
+      border-radius: 50% / 40%;
+      position: absolute;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    /* Mouth */
+    .mouth {
+      width: 30px;
+      height: 20px;
+      border: 2px solid #000;
+      border-top: none;
+      border-radius: 0 0 50% 50%;
+      position: absolute;
+      bottom: 5px;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h2>Unsubscribe from Newsletter</h2>
+
+    <!-- Dog is always visible and always crying -->
+    <div class="dog-container">
+      <div class="dog">
+        <div class="ear left"></div>
+        <div class="ear right"></div>
+        <div class="dog-head">
+          <div class="eye left"></div>
+          <div class="eye right"></div>
+          <div class="tear"></div>
+          <div class="tear right"></div>
+          <div class="nose"></div>
+          <div class="mouth"></div>
+        </div>
+      </div>
+      <p style="color:#555; margin-top:0.5rem;">The puppy is sad to see you here 😢</p>
+    </div>
+
+    <form action="/subscribe/unsubscribe" method="POST">
+      <input type="email" name="email" placeholder="Enter your email" required>
+      <button type="submit">Unsubscribe</button>
+    </form>
+
+    <% if (message) { %>
+      <p class="message"><%= message %></p>
+    <% } %>
+  </div>
+</body>
+</html>

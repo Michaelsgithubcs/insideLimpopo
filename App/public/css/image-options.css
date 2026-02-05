@@ -1,0 +1,37 @@
+/* Image Input Options Styling */
+.image-input-options {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.image-option {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.image-option input[type="radio"] {
+  width: auto;
+  margin: 0;
+}
+
+.image-option label {
+  margin: 0;
+  font-weight: normal;
+  cursor: pointer;
+}
+
+.image-input-section {
+  margin-bottom: 1rem;
+}
+
+.image-preview {
+  margin-top: 1rem;
+  text-align: center;
+}
+
+.image-preview img {
+  border-radius: 6px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}

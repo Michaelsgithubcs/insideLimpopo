@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+  <%- include('../partials/head.ejs') %>
+
+  <body class="sports-page">
+    <!-- Header Section -->
+    <%- include('../partials/header.ejs') %>
+    <%- include('../partials/nav.ejs') %>
+
+    <%- include('../partials/BreakingNews.ejs') %>
+    <!-- Main Content -->
+     
+    <main class="sports-container">
+      <!-- Hero Section -->
+      <section class="sports-hero">
+        <div class="hero-content">
+          <h1>Sports </h1>
+          <p class="subtitle">Your premier source for local sports news, events, and team coverage</p>
+          <button class="cta-button">Subscribe for Updates</button>
+        </div>
+      </section>
+
+      <!-- Main Sports News Section -->
+      <section class="section-with-header">
+        <div class="section-sport-header">
+          <h2>Latest Sports News & Articles</h2>
+          <p class="section-sport-description">
+            Browse all the latest sports articles, match updates, and news from Limpopo and beyond.
+            <% if (typeof apiDataCount !== 'undefined' && typeof manualArticlesCount !== 'undefined') { %>
+              <br><small>Showing <%= manualArticlesCount %> local articles and <%= apiDataCount %> live sports updates</small>
+            <% } %>
+          </p>
+        </div>
+        <div class="sports-section">
+          <% if (sportsArticles.length === 0) { %>
+            <p>No sports content available at the moment. Please check back later!</p>
+          <% } else { %>
+            <% sportsArticles.forEach(article => { %>
+              <div class="sports-card event-card">
+                <div class="card-image-container">
+                  <% if (article.featured_img) { %>
+                    <!-- Regular article image -->
+                    <img src="<%= article.featured_img %>" alt="<%= article.title %>" />
+                  <% } else if (article.url_to_image) { %>
+                    <!-- Sports API image -->
+                    <img src="<%= article.url_to_image %>" alt="<%= article.title %>" />
+                  <% } else { %>
+                    <!-- Fallback image -->
+                    <img src="/assets/sportsimages/logo.jpg" alt="No image available" />
+                  <% } %>
+                  
+                  <div class="event-date">
+                    <% 
+                      const articleDate = new Date(article.created_at || article.published_at);
+                      if (!isNaN(articleDate.getTime())) {
+                    %>
+                      <span class="day"><%= articleDate.getDate() %></span>
+                      <span class="month"><%= articleDate.toLocaleString('default', { month: 'short' }).toUpperCase() %></span>
+                    <% } else { %>
+                      <span class="day">--</span>
+                      <span class="month">---</span>
+                    <% } %>
+                  </div>
+                </div>
+                <div class="card-content">
+                  <% if (article.isExternal) { %>
+                    <!-- Sports API content -->
+                    <% if (article.sport && article.sport !== 'Unknown') { %>
+                      <span class="sport-tag <%= article.sport.toLowerCase() %>"><%= article.sport %></span>
+                    <% } else { %>
+                      <span class="sport-tag sports">Live Sports</span>
+                    <% } %>
+                    <h3 style="color: #343a40;"><%= article.title %></h3>
+                    <p class="event-time">
+                      <% if (article.match_status) { %>
+                        Status: <%= article.match_status %> | 
+                      <% } %>
+                      <%= new Date(article.published_at).toLocaleString() %> from <%= article.source ? article.source.name : 'Sports API' %>
+                    </p>
+                    <p>
+                      <%= article.description ? article.description.substring(0, 200) : (article.content ? article.content.substring(0, 200) : 'Sports update') %>...
+                    </p>
+                    <% if (article.url && article.url.startsWith('#')) { %>
+                      <button class="read-button" onclick="alert('Match details will be updated soon!')">
+                        <i class="fas fa-info-circle"></i> Match Info
+                      </button>
+                    <% } else if (article.url) { %>
+                      <a href="<%= article.url %>" target="_blank" class="read-button">
+                        <i class="fas fa-external-link-alt"></i> More Details
+                      </a>
+                    <% } else { %>
+                      <button class="read-button" disabled>
+                        <i class="fas fa-info-circle"></i> Info
+                      </button>
+                    <% } %>
+                  <% } else { %>
+                    <!-- Regular local article -->
+                    <span class="sport-tag football">Sports</span>
+                    <h3 style="color: #343a40;"><%= article.title %></h3>
+                    <p class="event-time">Posted on <%= new Date(article.created_at || article.published_at).toLocaleString() %></p>
+                    <p>
+                      <%= (article.content || article.description || 'No content available').substring(0, 200) %>...
+                    </p>
+                    <% if (article.article_id) { %>
+                      <a href="/articles/<%= article.article_id %>" class="read-button">
+                        <i class="fas fa-book-open"></i> Read More
+                      </a>
+                    <% } else if (article.url && !article.url.startsWith('#')) { %>
+                      <a href="<%= article.url %>" target="_blank" class="read-button">
+                        <i class="fas fa-external-link-alt"></i> Read More
+                      </a>
+                    <% } else { %>
+                      <button class="read-button" onclick="alert('Full article will be available soon!')">
+                        <i class="fas fa-info-circle"></i> Preview Only
+                      </button>
+                    <% } %>
+                  <% } %>
+                </div>
+              </div>
+            <% }) %>
+          <% } %>
+        </div>
+      </section>
+
+           <!-- Newsletter Section -->
+
+<section class="newsletter-section">
+  <div class="newsletter-container">
+    <div class="newsletter-content">
+      <h2>Never Miss a Game</h2>
+      <p>Subscribe to our newsletter for weekly updates on your favorite teams and events</p>
+      <form class="newsletter-form" id="newsletterForm">
+        <input type="email" name="email" placeholder="Your email address" required>
+        <button type="submit">Subscribe</button>
+      </form>
+      <p id="responseMessage"></p>
+    </div>
+  </div>
+</section>
+    </main>
+
+    <!-- Footer Section -->
+    <%- include('../partials/footer.ejs') %>
+
+    <script src="/public/scrips/scipt.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/scripts/script.js"></script>
+  </body>
+</html>
+
+<script>
+         document.getElementById('newsletterForm').addEventListener('submit', async function(e) {
+  e.preventDefault();
+  const email = this.email.value;
+  const responseMessage = document.getElementById('responseMessage');
+  
+  try {
+    const res = await fetch('/subscribe', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email })
+    });
+
+    const data = await res.json();
+    responseMessage.textContent = data.message;
+    responseMessage.style.color = res.ok ? 'green' : 'red';
+    if (res.ok) this.reset();
+  } catch (error) {
+    responseMessage.textContent = 'Network error, please try again.';
+    responseMessage.style.color = 'red';
+  }
+});
+
+    </script>
+  </body>
+</html>

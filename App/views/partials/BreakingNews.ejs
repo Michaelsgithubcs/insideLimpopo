@@ -1,0 +1,44 @@
+<section class="breaking-news-ticker">
+  <marquee id="breaking-news-marquee" behavior="scroll" direction="left" scrollamount="5" onmouseover="this.stop();" onmouseout="this.start();">
+    Loading breaking news...
+  </marquee>
+</section>
+
+<script>
+async function loadBreakingNews() {
+  try {
+    const response = await fetch('/api/news/headlines?category=general&limit=6');
+    const data = await response.json();
+
+    if (data.status === 'ok' && data.articles && data.articles.length > 0) {
+      const marquee = document.getElementById('breaking-news-marquee');
+      const defaultImages = [
+        './assets/home/ramapho.jpeg',
+        './assets/home/outa.jpeg', 
+        './assets/home/investigat.jpeg',
+        './assets/home/kzn.jpeg',
+        './assets/home/us.jpeg',
+        './assets/home/rain.jpeg'
+      ];
+
+      marquee.innerHTML = data.articles.map((article, index) => {
+        const imageUrl = article.urlToImage || defaultImages[index % defaultImages.length];
+        return `
+          <span style="margin-right: 30px; white-space: nowrap;">
+            <img src="${imageUrl}" alt="News" style="height:20px; margin-right:8px;" 
+                 onerror="this.src='${defaultImages[index % defaultImages.length]}'">
+            <a href="${article.url}" target="_blank" style="color:white; text-decoration:none;">
+              ${article.title}
+            </a>
+          </span>
+        `;
+      }).join('');
+    }
+  } catch (error) {
+    console.error('Error loading breaking news:', error);
+    // leave default marquee text
+  }
+}
+
+document.addEventListener('DOMContentLoaded', loadBreakingNews);
+</script>

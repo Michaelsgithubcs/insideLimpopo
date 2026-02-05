@@ -1,0 +1,16 @@
+<header class="admin-header">
+  <div class="admin-header-container">
+    <div class="admin-logo">
+      <h1>Inside Limpopo Admin</h1>
+    </div>
+    <nav class="admin-nav">
+      <ul>
+        <li><a href="/landing" class="<%= currentPath === '/landing' ? 'active' : '' %>">Dashboard</a></li>
+        <li><a href="/api/articles/add" class="<%= currentPath === '/api/articles/add' ? 'active' : '' %>">Add Article</a></li>
+        <li><a href="/api/articles" class="<%= currentPath === '/api/articles' ? 'active' : '' %>">Manage Articles</a></li>
+        <li><a href="/profile" class="<%= currentPath === '/profile' ? 'active' : '' %>">Profile</a></li>
+        <li><a href="/logout" class="logout">Logout</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>

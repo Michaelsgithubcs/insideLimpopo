@@ -1,0 +1,20 @@
+<!-- views/articles/searchResults.ejs -->
+<main>
+  <h2>Search results for "<%= query %>"</h2>
+
+  <% if (articles.length > 0) { %>
+    <% articles.forEach(article => { %>
+      <div class="article-item">
+        <div class="article-image">
+          <img src="<%= article.featured_img || '/assets/articles/default.jpg' %>" alt="<%= article.title %> cover" />
+        </div>
+        <div class="article-details">
+          <h3><a href="/articles/<%= article.article_id %>"><%= article.title %></a></h3>
+          <p><%= article.content.substring(0, 200) %>...</p>
+        </div>
+      </div>
+    <% }) %>
+  <% } else { %>
+    <p>No articles found.</p>
+  <% } %>
+</main>

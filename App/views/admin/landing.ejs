@@ -1,0 +1,1415 @@
+<!DOCTYPE html>
+<html lang="en">
+  <%- include('../partials/head.ejs') %>
+  <link rel="stylesheet" href="/css/image-options.css">
+  <link rel="stylesheet" href="/css/admin-styles.css">
+
+  <body>
+    <!-- Main Section -->
+    <main class="dashboard-landing-container">
+      <!-- User Profile Section -->
+      <section class="profile-landing-section">
+        <div class="profile-landing-card">
+          <div class="profile-landing-header">
+            <div class="avatar-landing">
+              <img
+                src="<%= user.avatar || '/images/default-avatar.jpg' %>"
+                alt="<%= user.username %>'s Profile Picture"
+                class="profile-avatar"
+                id="profile-avatar"
+              />
+              <form id="avatar-upload-form" style="display: none">
+                <input
+                  type="file"
+                  id="avatar-upload"
+                  name="avatar"
+                  accept="image/*"
+                />
+              </form>
+            </div>
+            <div class="profile-landing-info">
+              <h2 id="profile-username"><%= user.username %></h2>
+              <p class="email-landing"><%= user.email %></p>
+              <div class="stats-landing">
+                <div class="stat-landing-item">
+                  <span class="stat-landing-number"><%= user.storyCount %></span>
+                  <span class="stat-landing-label">Stories</span>
+                </div>
+                <div class="stat-landing-item">
+                  <span class="stat-landing-number"><%= user.articleCount %></span>
+                  <span class="stat-landing-label">Articles</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="profile-landing-actions">
+            <button class="btn btn-landing-edit" id="edit-profile-btn">
+              Edit Profile
+            </button>
+            <form action="/logout" method="POST" style="display: inline">
+              <button type="submit" class="btn btn-landing-logout">
+                Logout
+              </button>
+            </form>
+          </div>
+        </div>
+      </section>
+
+      <!-- Content Creation Tabs -->
+      <div class="creation-landing-tabs">
+        <button class="tab-landing-btn active" data-tab="article">Add Article</button>
+        <button class="tab-landing-btn" data-tab="podcast">Add Podcast</button>
+        <button class="tab-landing-btn" data-tab="manage-articles">Manage Articles</button>
+        <% if (user.role === 'admin') { %>
+        <button class="tab-landing-btn" data-tab="manage-users">Manage Users</button>
+        <button class="tab-landing-btn" data-tab="categories">Manage Categories</button>
+        <button class="tab-landing-btn" data-tab="custom-emails">Send Custom Emails</button>
+        <% } %>
+      </div>
+
+      <!-- Custom Emails Section -->
+      <section id="custom-emails" class="content-landing-tab">
+        <div class="creation-landing-form">
+          <h2>Send Custom Email</h2>
+          <p>Send a custom message to all newsletter subscribers.</p>
+
+          <form id="custom-email-form" method="POST" action="/send-custom-email">
+            <div class="form-landing-group">
+              <label for="custom-subject">Subject</label>
+              <input type="text" id="custom-subject" name="subject" required>
+            </div>
+
+            <div class="form-landing-group">
+              <label for="custom-message">Message (plain text)</label>
+              <textarea id="custom-message" name="message" rows="8" required></textarea>
+            </div>
+
+            <button type="submit" class="btn btn-landing-primary">Send Email</button>
+            <p id="custom-email-status" style="margin-top:10px;"></p>
+          </form>
+        </div>
+      </section>
+
+      <!-- Add Article Section -->
+      <section id="article" class="content-landing-tab active">
+        <form 
+          action="/api/articles" 
+          method="POST" 
+          enctype="multipart/form-data" 
+          id="article-form" 
+          class="creation-landing-form"
+        >
+          <h2>Create Article</h2>
+
+          <!-- Article Title -->
+          <div class="form-landing-group">
+            <label for="article-title">Title</label>
+            <input type="text" id="article-title" name="title" required>
+          </div>
+
+          <!-- Category -->
+          <div class="form-landing-group">
+            <label for="article-category">Category</label>
+            <select id="article-category" name="category_id" required>
+              <option value="">Select Category</option>
+              <% categories.forEach(c => { %>
+                <option value="<%= c.category_id %>"><%= c.name %></option>
+              <% }) %>
+            </select>
+          </div>
+
+          <!-- Lead Paragraph -->
+          <div class="form-landing-group">
+            <label for="article-lead">Lead Paragraph</label>
+            <textarea id="article-lead" name="lead" rows="3" required></textarea>
+          </div>
+
+          <!-- Full Content -->
+          <div class="form-landing-group">
+            <label for="article-content">Content</label>
+            <textarea id="article-content" name="content" rows="10" required></textarea>
+          </div>
+
+          <!-- Featured Image -->
+          <div class="form-landing-group">
+            <label>Featured Image</label>
+
+            <div>
+              <label>
+                <input type="radio" name="image_type" value="url" checked>
+                Use URL
+              </label>
+              <input type="url" id="article-image-url" name="image_url" placeholder="https://example.com/image.jpg">
+            </div>
+
+            <div>
+              <label>
+                <input type="radio" name="image_type" value="upload">
+                Upload File
+              </label>
+              <input type="file" id="article-image-file" name="featured_img" accept="image/*">
+            </div>
+
+            <div id="article-image-preview"></div>
+          </div>
+
+          <!-- Social Media Links -->
+          <div class="form-landing-group">
+            <label>Social Media Links (Optional)</label>
+
+            <input 
+              type="url" 
+              name="facebook_link" 
+              placeholder="Facebook URL e.g. https://facebook.com/InsideLimpopo" 
+              class="social-input">
+
+            <input 
+              type="url" 
+              name="twitter_link" 
+              placeholder="Twitter URL e.g. https://twitter.com/InsideLimpopo" 
+              class="social-input">
+
+            <input 
+              type="url" 
+              name="instagram_link" 
+              placeholder="Instagram URL e.g. https://instagram.com/InsideLimpopo" 
+              class="social-input">
+
+            <input 
+              type="url" 
+              name="linkedin_link" 
+              placeholder="LinkedIn URL e.g. https://linkedin.com/company/InsideLimpopo" 
+              class="social-input">
+          </div>
+
+          <!-- Submit Button -->
+          <button 
+            type="submit" 
+            id="article-submit-btn" 
+            class="btn btn-landing-primary">
+            Submit Article
+          </button>
+        </form>
+      </section>
+
+            <!-- Add Podcast Section -->
+     <section id="podcast" class="content-landing-tab"> 
+  <!-- Create Podcast -->
+  <form 
+    action="/api/podcasts/create" 
+    method="POST" 
+    id="podcast-form" 
+    class="creation-landing-form"
+  >
+    <h2>Create Podcast</h2>
+
+    <!-- Title -->
+    <div class="form-landing-group">
+      <label for="podcast-title">Podcast Title *</label>
+      <input type="text" id="podcast-title" name="title" required>
+    </div>
+
+    <!-- Description -->
+    <div class="form-landing-group">
+      <label for="podcast-description">Description *</label>
+      <textarea 
+        id="podcast-description" 
+        name="description" 
+        rows="4" 
+        placeholder="Enter a short description of the podcast" 
+        required
+      ></textarea>
+    </div>
+
+    <!-- Episode Link -->
+    <div class="form-landing-group">
+      <label for="episode-link">Episode Link *</label>
+      <input 
+        type="text" 
+        id="episode-link" 
+        name="episode_link" 
+        placeholder="https://youtu.be/..." 
+        required
+      >
+      <small style="color: #666; font-size: 0.8rem;">Enter the full URL to your podcast episode (YouTube, SoundCloud, etc.)</small>
+    </div>
+
+    <!-- Date -->
+    <div class="form-landing-group">
+      <label for="episode-date">Date *</label>
+      <input type="date" id="episode-date" name="episode_date" required>
+    </div>
+
+    <!-- Duration -->
+    <div class="form-landing-group">
+      <label for="episode-duration">Duration *</label>
+      <input 
+        type="text" 
+        id="episode-duration" 
+        name="episode_duration" 
+        placeholder="42 min" 
+        required
+      >
+    </div>
+
+    <button type="submit" class="btn btn-landing-primary" id="podcast-submit-btn">
+      Submit Podcast
+    </button>
+    <div id="podcast-form-status" class="form-status" style="display: none;"></div>
+  </form>
+
+        <!-- Manage Podcasts -->
+        <div class="creation-landing-form" style="margin-top:2rem;">
+          <h2>Manage Podcasts</h2>
+
+          <!-- Search and Sort Controls -->
+          <div class="podcast-controls" style="margin-bottom: 1rem;">
+            <input 
+              type="text" 
+              id="podcast-search" 
+              placeholder="Search podcasts..." 
+              style="padding: 0.5rem; border: 1px solid #ddd; border-radius: 4px; width: 200px;"
+            >
+            <select id="podcast-sort" style="margin-left: 1rem; padding: 0.5rem; border: 1px solid #ddd; border-radius: 4px;">
+              <option value="newest">Newest First</option>
+              <option value="oldest">Oldest First</option>
+              <option value="title">Title A-Z</option>
+            </select>
+          </div>
+
+          <% const _podcasts = (typeof podcasts !== 'undefined' && podcasts) ? podcasts : []; %>
+
+          <% if (_podcasts.length > 0) { %>
+            <div id="podcasts-list-container">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>Title</th>
+                    <th>Description</th>
+                    <th>Link</th>
+                    <th>Date</th>
+                    <th>Duration</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <% _podcasts.forEach(p => { %>
+                    <tr class="podcast-item" data-id="<%= p.podcast_id %>">
+                      <td class="title-cell"><strong><%= p.title %></strong></td>
+                      <td class="description-cell"><%= p.description ? p.description.substring(0, 50) + '...' : '' %></td>
+                      <td>
+                        <% if (p.episode_link) { %>
+                          <a href="<%= p.episode_link %>" target="_blank" class="btn btn-sm btn-view">Play</a>
+                        <% } else { %>
+                          <span>No link</span>
+                        <% } %>
+                      </td>
+                      <td class="date-cell"><%= p.episode_date_str || p.episode_date || '' %></td>
+                      <td><%= p.episode_duration || '' %></td>
+                      <td>
+                        <a href="/podcasts/<%= p.podcast_id %>" class="btn btn-sm btn-view" target="_blank">View</a>
+                        <a href="/api/podcasts/edit/<%= p.podcast_id %>" class="btn btn-sm btn-edit">Edit</a>
+                        <button 
+                          type="button" 
+                          class="btn btn-sm btn-delete" 
+                          onclick="deletePodcast('<%= p.podcast_id %>', '<%= p.title %>')"
+                        >
+                          Delete
+                        </button>
+                      </td>
+                    </tr>
+                  <% }) %>
+                </tbody>
+              </table>
+            </div>
+          <% } else { %>
+            <div id="podcasts-empty">
+              <p>No podcasts found. Create one above.</p>
+            </div>
+          <% } %>
+        </div>
+      </section>
+
+      <!-- Manage Users Section -->
+      <% if (user.role === 'admin') { %>
+      <section id="manage-users" class="content-landing-tab">
+        <div class="creation-landing-form">
+          <div class="d-flex align-items-center justify-content-between mb-3">
+            <h2>Manage Users</h2>
+            <button class="btn btn-landing-primary" id="add-user-btn">＋ Add User</button>
+          </div>
+
+          <% if (recentUsers && recentUsers.length > 0) { %>
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Username</th>
+                  <th>Email</th>
+                  <th>Role</th>
+                  <th>Articles</th>
+                  <th>Podcasts</th>
+                  <th>Joined</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% recentUsers.forEach(u => { %>
+                  <tr>
+                    <td><%= u.username %></td>
+                    <td><%= u.email %></td>
+                    <td><span class="badge bg-dark"><%= u.role %></span></td>
+                    <td><%= u.articleCount || 0 %></td>
+                    <td><%= u.podcastCount || 0 %></td>
+                    <td><%= u.joined %></td>
+                    <td>
+                      <button class="btn btn-sm btn-edit" onclick="openEditUser('<%= u.id %>', '<%= u.username %>', '<%= u.email %>', '<%= u.role %>')">Edit</button>
+                      <button class="btn btn-sm btn-delete" onclick="deleteUser('<%= u.id %>')">Delete</button>
+                    </td>
+                  </tr>
+                <% }) %>
+              </tbody>
+            </table>
+          <% } else { %>
+            <p>No users found.</p>
+          <% } %>
+        </div>
+      </section>
+      <% } %>
+
+      <!-- Manage Articles Section -->
+      <section id="manage-articles" class="content-landing-tab">
+        <div class="creation-landing-form">
+          <h2>Recent Articles</h2>
+          <div class="articles-list">
+            <% if (recentArticles && recentArticles.length > 0) { %>
+              <% recentArticles.forEach(article => { %>
+                <div class="article-item">
+                  <div class="article-header">
+                    <h3><%= article.title %></h3>
+                    <span class="article-meta">
+                      <%= article.formatted_date %> • 
+                      <span class="category-tag"><%= article.category_name || 'Uncategorized' %></span>
+                    </span>
+                  </div>
+                  <p class="article-excerpt"><%= article.excerpt %></p>
+                  <div class="article-actions">
+                    <a href="/api/articles/edit/<%= article.article_id %>" class="btn btn-edit">Edit</a>
+                    <button class="btn btn-delete" onclick="deleteArticle('<%= article.article_id %>')">Delete</button>
+                    <a href="/articles/<%= article.article_id %>" target="_blank" class="btn btn-view">View</a>
+                  </div>
+                </div>
+              <% }); %>
+            <% } else { %>
+              <p>No articles found. Create your first article using the 'Add Article' tab.</p>
+            <% } %>
+          </div>
+        </div>
+      </section>
+
+    <!-- Manage Categories Section -->
+<% if (user.role === 'admin') { %>
+<section id="categories" class="content-landing-tab">
+  <div class="creation-landing-form">
+    <h2>Manage Categories</h2>
+    <p>Toggle visibility of categories in navigation and footer.</p>
+    
+    <!-- Categories List -->
+    <div class="categories-section">
+      <h3>Existing Categories</h3>
+      <div id="categories-list">
+        <div class="loading-message">Loading categories...</div>
+      </div>
+      
+      <div class="form-actions" style="margin-top: 20px;">
+        <button type="button" class="btn btn-primary" id="save-categories">
+          Save Changes
+        </button>
+        <span id="save-status" style="margin-left: 10px;"></span>
+      </div>
+    </div>
+
+    <hr style="margin: 30px 0;">
+
+    <!-- Add New Category -->
+    <div class="add-category-section">
+      <h3>Add New Category</h3>
+      <form id="addCategoryForm">
+        <div class="form-landing-group">
+          <label for="categoryName">Category Name</label>
+          <input
+            type="text"
+            id="categoryName"
+            name="name"
+            placeholder="Enter category name"
+            required
+            style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;"
+          />
+        </div>
+
+        <div class="form-landing-group">
+          <label style="display: flex; align-items: center; gap: 8px;">
+            <input type="checkbox" id="categoryVisible" name="visible" checked />
+            Visible to users
+          </label>
+        </div>
+
+        <button type="submit" class="btn btn-primary" style="margin-top: 10px;">
+          Add Category
+        </button>
+        <div id="categoryMessage" style="margin-top: 10px;"></div>
+      </form>
+    </div>
+  </div>
+</section>
+<% } %>
+    </main>
+
+    <!-- Footer Section -->
+    <%- include('../partials/footer.ejs') %>
+
+    <!-- Edit Profile Modal -->
+    <div class="modal" id="edit-profile-modal" hidden>
+      <div class="modal-content">
+        <span class="close-modal">&times;</span>
+        <h2>Edit Profile</h2>
+        <form id="profile-edit-form">
+          <div class="form-group">
+            <label for="edit-username">Username</label>
+            <input
+              type="text"
+              id="edit-username"
+              name="username"
+              value="<%= user.username %>"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label for="edit-email">Email</label>
+            <input
+              type="email"
+              id="edit-email"
+              name="email"
+              value="<%= user.email %>"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label for="edit-bio">Bio</label>
+            <textarea id="edit-bio" name="bio" rows="3"></textarea>
+          </div>
+          <button type="submit" class="btn btn-primary">Save Changes</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Add User Modal -->
+    <% if (user.role === 'admin') { %>
+    <div class="modal" id="add-user-modal" hidden>
+      <div class="modal-content auth-card">
+        <span class="close-modal">&times;</span>
+        <div class="auth-header">
+          <h2>Create User</h2>
+          <p>Add a new account</p>
+        </div>
+        <form id="add-user-form" class="auth-form-content">
+          <div class="name-fields">
+            <div class="input-container">
+              <input type="text" id="first_name" name="first_name" placeholder=" " required />
+              <label for="first_name">First Name</label>
+            </div>
+            <div class="input-container">
+              <input type="text" id="last_name" name="last_name" placeholder=" " required />
+              <label for="last_name">Last Name</label>
+            </div>
+          </div>
+
+          <div class="input-container">
+            <input type="text" id="username" name="username" placeholder=" " required />
+            <label for="username">Username</label>
+          </div>
+
+          <div class="input-container">
+            <input type="email" id="email" name="email" placeholder=" " required />
+            <label for="email">Email</label>
+          </div>
+
+          <div class="input-container select-container">
+            <select id="role" name="role" required>
+              <option value="" disabled hidden>Select Role</option>
+              <option value="user">User</option>
+              <option value="admin">Admin</option>
+            </select>
+            <label for="role">Role</label>
+          </div>
+
+          <div class="input-container">
+            <input type="password" id="password" name="password" required />
+            <label for="password">Password</label>
+          </div>
+
+          <div class="input-container">
+            <input type="password" id="repeat_password" name="repeat_password" required />
+            <label for="repeat_password">Repeat Password</label>
+          </div>
+          <p id="password-match-error" class="requirement error hidden">Passwords do not match</p>
+
+          <div class="submit-container">
+            <input type="submit" value="Create User" class="auth-button" id="create-user-submit" disabled />
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Edit User Modal -->
+    <div class="modal" id="edit-user-modal" hidden>
+      <div class="modal-content auth-card">
+        <span class="close-modal">&times;</span>
+        <div class="auth-header">
+          <h2>Edit User</h2>
+        </div>
+        <form id="edit-user-form" class="auth-form-content">
+          <input type="hidden" id="edit_user_id" name="id" />
+          <div class="input-container">
+            <input type="text" id="edit_username" name="username" placeholder=" " required />
+            <label for="edit_username">Username</label>
+          </div>
+
+          <div class="input-container">
+            <input type="email" id="edit_email" name="email" placeholder=" " required />
+            <label for="edit_email">Email</label>
+          </div>
+
+          <div class="input-container select-container">
+            <select id="edit_role" name="role" required>
+              <option value="user">User</option>
+              <option value="admin">Admin</option>
+            </select>
+            <label for="edit_role">Role</label>
+          </div>
+
+          <div class="submit-container">
+            <input type="submit" value="Save Changes" class="auth-button" />
+          </div>
+        </form>
+      </div>
+    </div>
+    <% } %>
+
+ <script>
+// =========================
+// GLOBAL DATA FROM EJS
+// =========================
+const userRole = '<%= user.role %>';
+const currentUserId = '<%= user.id %>';
+
+// =========================
+// DOM READY
+// =========================
+document.addEventListener('DOMContentLoaded', () => {
+  console.log('=== DASHBOARD JS INITIALIZED ===');
+  console.log('User role:', userRole, 'Current user ID:', currentUserId);
+
+  initTabs();
+  initModals();
+  initCategoryAddForm();
+  initCategoryManagement();
+  initUserManagement();
+  initCustomEmailForm();
+  initPodcastManagement();
+  initDeleteFunctions();
+});
+
+// =========================
+// TAB HANDLING
+// =========================
+function initTabs() {
+  const tabButtons = document.querySelectorAll('.tab-landing-btn');
+  const tabs = document.querySelectorAll('.content-landing-tab');
+
+  if (!tabButtons.length) return;
+
+  tabButtons.forEach(btn => {
+    btn.style.cursor = 'pointer';
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
+      const tabId = btn.getAttribute('data-tab');
+      if (!tabId) return;
+
+      // Activate button
+      tabButtons.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+
+      // Show correct tab
+      tabs.forEach(tab => {
+        if (tab.id === tabId) {
+          tab.classList.add('active');
+          tab.style.display = 'block';
+        } else {
+          tab.classList.remove('active');
+          tab.style.display = 'none';
+        }
+      });
+
+      // Lazy-load data for specific tabs
+      if (tabId === 'categories' && userRole === 'admin') {
+        loadCategories();
+      }
+    });
+  });
+
+  // Ensure only the active tab is visible on load
+  let activeTab = document.querySelector('.content-landing-tab.active');
+  if (!activeTab) {
+    activeTab = document.getElementById('article');
+  }
+  tabs.forEach(tab => {
+    tab.style.display = (tab === activeTab) ? 'block' : 'none';
+  });
+}
+
+// =========================
+// MODALS (OPEN / CLOSE)
+// =========================
+function initModals() {
+  // Generic close buttons
+  document.querySelectorAll('.close-modal').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const modal = btn.closest('.modal');
+      if (modal) closeModal(modal.id);
+    });
+  });
+
+  // Click outside to close
+  window.addEventListener('click', (e) => {
+    if (e.target.classList.contains('modal')) {
+      closeModal(e.target.id);
+    }
+  });
+
+  // Edit Profile button
+  const editProfileBtn = document.getElementById('edit-profile-btn');
+  if (editProfileBtn) {
+    editProfileBtn.addEventListener('click', () => {
+      openModal('edit-profile-modal');
+    });
+  }
+}
+
+function openModal(id) {
+  const modal = document.getElementById(id);
+  if (!modal) return;
+  modal.removeAttribute('hidden');
+  modal.style.display = 'block';
+  document.body.style.overflow = 'hidden';
+}
+
+function closeModal(id) {
+  const modal = document.getElementById(id);
+  if (!modal) return;
+  modal.setAttribute('hidden', '');
+  modal.style.display = 'none';
+  document.body.style.overflow = 'auto';
+
+  // reset any form inside
+  const form = modal.querySelector('form');
+  if (form) form.reset();
+}
+
+// =========================
+// CATEGORY MANAGEMENT
+// =========================
+function initCategoryAddForm() {
+  const form = document.getElementById('addCategoryForm');
+  const message = document.getElementById('categoryMessage');
+  if (!form) return;
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const name = document.getElementById('categoryName').value.trim();
+    const visible = document.getElementById('categoryVisible').checked;
+
+    if (!name) {
+      showMessage(message, 'Please enter a category name.', 'error');
+      return;
+    }
+
+    try {
+      const res = await fetch('/api/categories', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({ name, visible })
+      });
+
+      const data = await res.json();
+
+      if (res.ok) {
+        showMessage(message, data.message || 'Category added successfully!', 'success');
+        form.reset();
+        loadCategories();
+      } else {
+        showMessage(message, data.error || 'Failed to add category', 'error');
+      }
+    } catch (err) {
+      console.error('Add category error:', err);
+      showMessage(message, 'Network error. Try again.', 'error');
+    }
+  });
+}
+
+function initCategoryManagement() {
+  const saveBtn = document.getElementById('save-categories');
+  if (saveBtn) {
+    saveBtn.addEventListener('click', saveCategoryVisibility);
+  }
+}
+
+async function loadCategories() {
+  const list = document.getElementById('categories-list');
+  if (!list) return;
+
+  list.innerHTML = '<div class="loading-message">Loading categories...</div>';
+
+  try {
+    const res = await fetch('/api/categories', {
+      method: 'GET',
+      credentials: 'include'
+    });
+    if (!res.ok) throw new Error('Failed to load categories');
+
+    const categories = await res.json();
+    if (!categories || categories.length === 0) {
+      list.innerHTML = '<p>No categories found</p>';
+      return;
+    }
+
+    list.innerHTML = categories.map(c => `
+      <div class="category-item" style="
+        display:flex;align-items:center;justify-content:space-between;
+        padding:1rem;border:1px solid #ddd;border-radius:6px;
+        margin-bottom:1rem;background:#f9f9f9;">
+        <div>
+          <strong>${c.name}</strong>
+          <p style="margin:0;color:#666;font-size:0.9rem;">
+            Category ID: ${c.category_id}
+          </p>
+        </div>
+        <label style="display:flex;align-items:center;gap:8px;cursor:pointer;">
+          <input 
+            type="checkbox"
+            data-category-id="${c.category_id}"
+            ${c.visible == 1 ? 'checked' : ''}
+            style="transform:scale(1.2);"
+          >
+          <span style="color:${c.visible == 1 ? '#28a745' : '#dc3545'};font-weight:600;">
+            ${c.visible == 1 ? 'Visible' : 'Hidden'}
+          </span>
+        </label>
+      </div>
+    `).join('');
+
+    // Update label text & color on change
+    list.querySelectorAll('input[type="checkbox"]').forEach(cb => {
+      cb.addEventListener('change', function () {
+        const labelSpan = this.nextElementSibling;
+        const visible = this.checked;
+        if (!labelSpan) return;
+        labelSpan.textContent = visible ? 'Visible' : 'Hidden';
+        labelSpan.style.color = visible ? '#28a745' : '#dc3545';
+      });
+    });
+
+  } catch (err) {
+    console.error('Error loading categories:', err);
+    list.innerHTML = `<p style="color:red;">Error loading categories: ${err.message}</p>`;
+  }
+}
+
+async function saveCategoryVisibility() {
+  const saveStatus = document.getElementById('save-status');
+  const checkboxes = document.querySelectorAll('#categories-list input[type="checkbox"]');
+  const updates = Array.from(checkboxes).map(cb => ({
+    category_id: cb.dataset.categoryId,
+    visible: cb.checked
+  }));
+
+  try {
+    showMessage(saveStatus, 'Saving changes...', 'info');
+    const res = await fetch('/api/categories/visibility', {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
+      body: JSON.stringify({ categories: updates })
+    });
+
+    if (!res.ok) {
+      const data = await res.json().catch(() => ({}));
+      throw new Error(data.error || 'Failed to update categories');
+    }
+
+    showMessage(saveStatus, 'Category visibility updated successfully!', 'success');
+    setTimeout(loadCategories, 800);
+  } catch (err) {
+    console.error('Error saving categories:', err);
+    showMessage(saveStatus, 'Error updating categories: ' + err.message, 'error');
+  }
+}
+
+// =========================
+// PODCAST MANAGEMENT - FIXED VERSION
+// =========================
+function initPodcastManagement() {
+  const form = document.getElementById('podcast-form');
+  const statusDiv = document.getElementById('podcast-form-status');
+  const submitBtn = document.getElementById('podcast-submit-btn');
+  const dateInput = document.getElementById('episode-date');
+
+  // Set today as default date
+  if (dateInput && !dateInput.value) {
+    const today = new Date().toISOString().split('T')[0];
+    dateInput.value = today;
+  }
+
+  // Submit podcast form - FIXED VERSION
+  if (form) {
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      if (statusDiv) {
+        statusDiv.style.display = 'block';
+        statusDiv.textContent = '';
+      }
+
+      // Get form values directly as object
+      const podcastData = {
+        title: document.getElementById('podcast-title').value.trim(),
+        description: document.getElementById('podcast-description').value.trim(),
+        episode_link: document.getElementById('episode-link').value.trim(),
+        episode_date: document.getElementById('episode-date').value,
+        episode_duration: document.getElementById('episode-duration').value.trim()
+      };
+
+      console.log('🎯 Submitting podcast data:', podcastData);
+
+      // Validate required fields
+      const required = ['title', 'description', 'episode_link', 'episode_date', 'episode_duration'];
+      const missingFields = required.filter(field => !podcastData[field]);
+      
+      if (missingFields.length > 0) {
+        showFormStatus(statusDiv, `Please fill in: ${missingFields.join(', ').replace(/_/g, ' ')}`, 'error');
+        return;
+      }
+
+      // Validate episode link is a proper URL
+    try {
+    const embedCode = podcastData.episode_link;
+
+    // Check if it contains a valid <iframe> tag with src
+    if (!/<iframe.*src=["'].*["'].*><\/iframe>/i.test(embedCode)) {
+        throw new Error('Invalid iframe');
+    }
+} catch {
+    showFormStatus(
+        statusDiv, 
+        'Please enter a valid YouTube iframe embed code.', 
+        'error'
+    );
+    return;
+}
+
+      // Validate date
+      if (!isValidDate(podcastData.episode_date)) {
+        showFormStatus(statusDiv, 'Please enter a valid date', 'error');
+        return;
+      }
+
+      toggleButton(submitBtn, true, 'Creating Podcast...');
+
+      try {
+        const res = await fetch('/api/podcasts/create', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          credentials: 'include',
+          body: JSON.stringify(podcastData)
+        });
+
+        console.log('📡 Response status:', res.status);
+        
+        const data = await res.json().catch(async () => {
+          // If JSON parsing fails, try to get text
+          const text = await res.text();
+          console.error('❌ Failed to parse JSON response:', text);
+          return { error: 'Invalid server response' };
+        });
+
+        if (!res.ok) {
+          console.error('❌ Server error response:', data);
+          throw new Error(data.error || data.message || `Server error: ${res.status}`);
+        }
+
+        console.log('✅ Podcast created successfully:', data);
+        showFormStatus(statusDiv, '✅ Podcast created successfully! 🎉', 'success');
+        
+        // Reset form
+        form.reset();
+        
+        // Reset date to today
+        if (dateInput) {
+          const today = new Date().toISOString().split('T')[0];
+          dateInput.value = today;
+        }
+
+        // Reload page after short delay to show new podcast
+        setTimeout(() => {
+          window.location.reload();
+        }, 1500);
+
+      } catch (err) {
+        console.error('❌ Podcast creation error:', err);
+        showFormStatus(statusDiv, `❌ Error: ${err.message}`, 'error');
+      } finally {
+        toggleButton(submitBtn, false, 'Submit Podcast');
+      }
+    });
+  }
+
+  // Search functionality
+  const searchInput = document.getElementById('podcast-search');
+  if (searchInput) {
+    searchInput.addEventListener('input', handlePodcastSearch);
+  }
+
+  // Sort functionality
+  const sortSelect = document.getElementById('podcast-sort');
+  if (sortSelect) {
+    sortSelect.addEventListener('change', handlePodcastSort);
+  }
+}
+
+// Helper function to validate date
+function isValidDate(dateString) {
+  const regex = /^\d{4}-\d{2}-\d{2}$/;
+  if (!dateString.match(regex)) return false;
+  
+  const date = new Date(dateString);
+  const timestamp = date.getTime();
+  
+  if (typeof timestamp !== 'number' || Number.isNaN(timestamp)) {
+    return false;
+  }
+  
+  return date.toISOString().startsWith(dateString);
+}
+
+// Improved toggleButton function
+function toggleButton(button, isLoading, loadingText = 'Processing...') {
+  if (!button) return;
+  if (isLoading) {
+    button.disabled = true;
+    button.dataset.originalText = button.textContent;
+    button.textContent = loadingText;
+    button.style.opacity = '0.7';
+    button.style.cursor = 'not-allowed';
+  } else {
+    button.disabled = false;
+    if (button.dataset.originalText) {
+      button.textContent = button.dataset.originalText;
+    }
+    button.style.opacity = '1';
+    button.style.cursor = 'pointer';
+  }
+}
+
+// Rest of your podcast functions remain the same but I'll include them for completeness:
+function handlePodcastSearch(e) {
+  const searchTerm = e.target.value.toLowerCase().trim();
+  const podcastItems = document.querySelectorAll('.podcast-item');
+  const emptyState = document.getElementById('podcasts-empty');
+  let visibleCount = 0;
+
+  podcastItems.forEach(item => {
+    const title = item.querySelector('.title-cell strong').textContent.toLowerCase();
+    const description = item.querySelector('.description-cell').textContent.toLowerCase();
+
+    if (title.includes(searchTerm) || description.includes(searchTerm)) {
+      item.style.display = '';
+      visibleCount++;
+    } else {
+      item.style.display = 'none';
+    }
+  });
+
+  if (emptyState) {
+    if (visibleCount === 0 && searchTerm) {
+      emptyState.style.display = 'block';
+      emptyState.innerHTML = `<p>No podcasts found matching "${searchTerm}"</p>`;
+    } else {
+      emptyState.style.display = 'none';
+    }
+  }
+}
+
+function handlePodcastSort(e) {
+  const sortBy = e.target.value;
+  const container = document.getElementById('podcasts-list-container');
+  if (!container) return;
+
+  const podcastItems = Array.from(container.querySelectorAll('.podcast-item'));
+  const tbody = container.querySelector('tbody');
+  if (!tbody) return;
+
+  podcastItems.sort((a, b) => {
+    const dateA = new Date(a.querySelector('.date-cell').textContent);
+    const dateB = new Date(b.querySelector('.date-cell').textContent);
+    const titleA = a.querySelector('.title-cell strong').textContent.toLowerCase();
+    const titleB = b.querySelector('.title-cell strong').textContent.toLowerCase();
+
+    switch (sortBy) {
+      case 'newest': return dateB - dateA;
+      case 'oldest': return dateA - dateB;
+      case 'title':  return titleA.localeCompare(titleB);
+      default:       return 0;
+    }
+  });
+
+  podcastItems.forEach(item => tbody.appendChild(item));
+}
+
+// Global delete podcast function
+window.deletePodcast = async function (podcastId, podcastTitle = 'this podcast') {
+  if (!confirm(`Are you sure you want to delete "${podcastTitle}"? This action cannot be undone.`)) {
+    return;
+  }
+
+  try {
+    const res = await fetch(`/api/podcasts/${podcastId}`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Requested-With': 'XMLHttpRequest'
+      },
+      credentials: 'include'
+    });
+    
+    const data = await res.json();
+
+    if (!res.ok) {
+      throw new Error(data.error || data.message || 'Failed to delete podcast');
+    }
+
+    showNotification(`Podcast "${podcastTitle}" deleted successfully`, 'success');
+
+    const row = document.querySelector(`.podcast-item[data-id="${podcastId}"]`);
+    if (row) {
+      row.style.opacity = '0';
+      setTimeout(() => {
+        row.remove();
+        if (!document.querySelector('.podcast-item')) {
+          window.location.reload();
+        }
+      }, 300);
+    } else {
+      window.location.reload();
+    }
+  } catch (err) {
+    console.error('Delete podcast error:', err);
+    showNotification('Error deleting podcast: ' + err.message, 'error');
+  }
+};
+
+// =========================
+// DELETE ARTICLE & USER
+// =========================
+function initDeleteFunctions() {
+  // deleteArticle is called from HTML onclick
+  window.deleteArticle = async function (articleId) {
+    if (!confirm('Are you sure you want to delete this article? This action cannot be undone.')) return;
+
+    try {
+      const res = await fetch(`/api/articles/${articleId}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Requested-With': 'XMLHttpRequest'
+        },
+        credentials: 'include'
+      });
+
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        throw new Error(data.error || data.message || 'Failed to delete article');
+      }
+
+      alert('Article deleted successfully');
+      window.location.reload();
+    } catch (err) {
+      console.error('Error deleting article:', err);
+      alert('Error deleting article: ' + err.message);
+    }
+  };
+
+  // deleteUser is called from HTML onclick
+  window.deleteUser = async function (id) {
+    if (userRole !== 'admin') {
+      alert('Access denied. Admin privileges required.');
+      return;
+    }
+
+    if (String(id) === String(currentUserId)) {
+      alert('You cannot delete your own account.');
+      return;
+    }
+
+    if (!confirm('Are you sure you want to delete this user? This action cannot be undone.')) return;
+
+    try {
+      const res = await fetch(`/api/users/${id}`, {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include'
+      });
+      const data = await res.json().catch(() => ({}));
+
+      if (!res.ok) {
+        throw new Error(data.error || data.message || 'Failed to delete user');
+      }
+
+      alert('User deleted successfully!');
+      window.location.reload();
+    } catch (err) {
+      console.error('Delete user error:', err);
+      alert('Network error while deleting user: ' + err.message);
+    }
+  };
+}
+
+// =========================
+// USER MANAGEMENT
+// =========================
+function initUserManagement() {
+  if (userRole !== 'admin') return;
+
+  // Open Add User Modal
+  const addUserBtn = document.getElementById('add-user-btn');
+  if (addUserBtn) {
+    addUserBtn.addEventListener('click', () => openModal('add-user-modal'));
+  }
+
+  // Expose openEditUser globally (used in HTML onclick)
+  window.openEditUser = function (id, username, email, role) {
+    const modal = document.getElementById('edit-user-modal');
+    if (!modal) return;
+
+    document.getElementById('edit_user_id').value = id;
+    document.getElementById('edit_username').value = username;
+    document.getElementById('edit_email').value = email;
+    document.getElementById('edit_role').value = role;
+
+    openModal('edit-user-modal');
+  };
+
+  // Password check for Add User
+  const repeatPassword = document.getElementById('repeat_password');
+  if (repeatPassword) {
+    repeatPassword.addEventListener('input', () => {
+      const password = document.getElementById('password').value || '';
+      const repeat = repeatPassword.value || '';
+      const errorMsg = document.getElementById('password-match-error');
+      const submitBtn = document.getElementById('create-user-submit');
+
+      if (password !== repeat) {
+        errorMsg?.classList.remove('hidden');
+        if (submitBtn) submitBtn.disabled = true;
+      } else {
+        errorMsg?.classList.add('hidden');
+        if (submitBtn) submitBtn.disabled = false;
+      }
+    });
+  }
+
+  // Add User form
+  const addUserForm = document.getElementById('add-user-form');
+  if (addUserForm) {
+    addUserForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const formData = new FormData(addUserForm);
+
+      const userData = {
+        first_name: formData.get('first_name'),
+        last_name: formData.get('last_name'),
+        username: formData.get('username'),
+        email: formData.get('email'),
+        role: formData.get('role'),
+        password: formData.get('password')
+      };
+
+      if (userData.password !== formData.get('repeat_password')) {
+        alert('Passwords do not match');
+        return;
+      }
+
+      try {
+        const res = await fetch('/api/users', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'include',
+          body: JSON.stringify(userData)
+        });
+
+        const data = await res.json().catch(() => ({}));
+
+        if (!res.ok) {
+          throw new Error(data.error || data.message || 'Failed to create user');
+        }
+
+        alert('User created successfully!');
+        closeModal('add-user-modal');
+        window.location.reload();
+      } catch (err) {
+        console.error('Error creating user:', err);
+        alert('Network error while creating user: ' + err.message);
+      }
+    });
+  }
+
+  // Edit User form
+  const editUserForm = document.getElementById('edit-user-form');
+  if (editUserForm) {
+    editUserForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const id = document.getElementById('edit_user_id').value;
+      const username = document.getElementById('edit_username').value;
+      const email = document.getElementById('edit_email').value;
+      const role = document.getElementById('edit_role').value;
+
+      try {
+        const res = await fetch(`/api/users/${id}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'include',
+          body: JSON.stringify({ username, email, role })
+        });
+
+        const data = await res.json().catch(() => ({}));
+
+        if (!res.ok) {
+          throw new Error(data.error || data.message || 'Failed to update user');
+        }
+
+        alert('User updated successfully!');
+        closeModal('edit-user-modal');
+        window.location.reload();
+      } catch (err) {
+        console.error('Error updating user:', err);
+        alert('Network error while updating user: ' + err.message);
+      }
+    });
+  }
+}
+
+// =========================
+// CUSTOM EMAIL FORM
+// =========================
+function initCustomEmailForm() {
+  const form = document.getElementById('custom-email-form');
+  const statusMsg = document.getElementById('custom-email-status');
+  if (!form) return;
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const subject = document.getElementById('custom-subject').value.trim();
+    const message = document.getElementById('custom-message').value.trim();
+
+    if (!subject || !message) {
+      showMessage(statusMsg, '⚠️ Subject and message are required.', 'error');
+      return;
+    }
+
+    try {
+      showMessage(statusMsg, 'Sending emails...', 'info');
+
+      const res = await fetch('/send-custom-email', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({ subject, message })
+      });
+
+      const data = await res.json().catch(() => ({}));
+
+      if (!res.ok) {
+        throw new Error(data.message || 'Failed to send emails');
+      }
+
+      showMessage(statusMsg, data.message || '✅ Emails sent successfully!', 'success');
+      form.reset();
+    } catch (err) {
+      console.error('Email error:', err);
+      showMessage(statusMsg, '❌ ' + err.message, 'error');
+    }
+  });
+}
+
+// =========================
+// SHARED UTILITIES
+// =========================
+function showMessage(element, message, type) {
+  if (!element) return;
+  element.textContent = message;
+  element.style.color =
+    type === 'success' ? 'green' :
+    type === 'error' ? 'red' :
+    type === 'info' ? 'blue' : 'black';
+}
+
+function showFormStatus(element, message, type) {
+  if (!element) return;
+  showMessage(element, message, type);
+  element.style.display = 'block';
+}
+
+function toggleButton(button, isLoading) {
+  if (!button) return;
+  if (isLoading) {
+    button.disabled = true;
+    button.dataset.originalText = button.textContent;
+    button.textContent = 'Processing...';
+    button.style.opacity = '0.7';
+  } else {
+    button.disabled = false;
+    if (button.dataset.originalText) {
+      button.textContent = button.dataset.originalText;
+    }
+    button.style.opacity = '1';
+  }
+}
+
+function showNotification(message, type = 'info') {
+  const notification = document.createElement('div');
+  notification.style.cssText = `
+    position:fixed;top:20px;right:20px;padding:12px 18px;
+    border-radius:6px;color:#fff;z-index:9999;
+    box-shadow:0 4px 12px rgba(0,0,0,0.15);
+    font-size:0.9rem;
+  `;
+  notification.style.backgroundColor =
+    type === 'success' ? '#28a745' :
+    type === 'error' ? '#dc3545' :
+    '#17a2b8';
+
+  notification.textContent = message;
+  document.body.appendChild(notification);
+
+  setTimeout(() => {
+    if (notification.parentElement) {
+      notification.remove();
+    }
+  }, 4000);
+}
+</script>
+
+  </body>
+</html>

@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+  <%- include('../partials/head.ejs') %>
+  <body class="article-page">
+    <!-- Header Section -->
+    <%- include('../partials/header.ejs') %>
+    <%- include('../partials/nav.ejs') %>
+
+      <%- include('../partials/BreakingNews.ejs') %>
+    <!-- Main Section -->
+    <main class="article-main">
+      <!-- Featured Article Slider -->
+      <section class="featured-articles">
+        <div class="slideshow-container">
+          <div class="mySlides fade active">
+            <div class="slide-content">
+              <a href="/articles/hope-revolution" class="article-img">
+                <img src="/assets/articles/hope-revolution.jpg" alt="Hope Revolution Article cover">
+                <div class="read-overlay">
+                  <i class="fas fa-book-open"></i>
+                </div>
+              </a>
+              <div class="article-info">
+                <span class="featured-badge">Featured</span>
+                <h3 class="article-title">HOPE REVOLUTION: A Mother's Story</h3>
+                <div class="article-meta">
+                  <span><i class="fas fa-user"></i> By Sarah Johnson</span>
+                  <span><i class="fas fa-calendar-alt"></i> June 15, 2024</span>
+                  <span><i class="fas fa-clock"></i> 8 min read</span>
+                </div>
+                <a href="/articles/hope-revolution" class="read-button">
+                  <i class="fas fa-book-open"></i> Read Now
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <div class="mySlides fade">
+            <div class="slide-content">
+              <a href="/articles/ndlozi-interview" class="article-img">
+                <img src="/assets/articles/ndlozi-interview.jpg" alt="MBUYISENI NDLOZI interview cover">
+                <div class="read-overlay">
+                  <i class="fas fa-book-open"></i>
+                </div>
+              </a>
+              <div class="article-info">
+                <span class="featured-badge">Featured</span>
+                <h3 class="article-title">MBUYISENI NDLOZI on EFF, GNU, VBS BANK</h3>
+                <div class="article-meta">
+                  <span><i class="fas fa-user"></i> By David Mbele</span>
+                  <span><i class="fas fa-calendar-alt"></i> June 8, 2024</span>
+                  <span><i class="fas fa-clock"></i> 10 min read</span>
+                </div>
+                <a href="/articles/ndlozi-interview" class="read-button">
+                  <i class="fas fa-book-open"></i> Read Now
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <div class="mySlides fade">
+            <div class="slide-content">
+              <a href="/articles/konvo-show" class="article-img">
+                <img src="/assets/articles/konvo-show.jpg" alt="The Konvo Show article cover">
+                <div class="read-overlay">
+                  <i class="fas fa-book-open"></i>
+                </div>
+              </a>
+              <div class="article-info">
+                <span class="featured-badge">Featured</span>
+                <h3 class="article-title">The Konvo Show: Penuel In Conversation</h3>
+                <div class="article-meta">
+                  <span><i class="fas fa-user"></i> By Penuel The Black Pen</span>
+                  <span><i class="fas fa-calendar-alt"></i> May 28, 2024</span>
+                  <span><i class="fas fa-clock"></i> 7 min read</span>
+                </div>
+                <a href="/articles/konvo-show" class="read-button">
+                  <i class="fas fa-book-open"></i> Read Now
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <a class="prev" onclick="plusSlides(-1)">❮</a>
+          <a class="next" onclick="plusSlides(1)">❯</a>
+        </div>
+        
+        <div class="dots-container">
+          <span class="dot active" onclick="currentSlide(1)"></span>
+          <span class="dot" onclick="currentSlide(2)"></span>
+          <span class="dot" onclick="currentSlide(3)"></span>
+        </div>
+      </section>
+
+      <!-- Article Content -->
+      <div class="article-content">
+        <!-- Search Results Container -->
+        <div id="posts" class="search-results"></div>
+        
+        <!-- Main Article List -->
+        <div class="article-list">
+          <div class="section-article-header">
+            <h2 class="section-article-title">Latest Articles</h2>
+            <div class="view-options">
+              <span class="view-label">View:</span>
+              <button class="view-option active" onclick="changeView('list')"><i class="fas fa-list"></i></button>
+              <button class="view-option" onclick="changeView('grid')"><i class="fas fa-th-large"></i></button>
+            </div>
+          </div>
+          
+          <div class="articles-container list-view" id="articles-container">
+            <% if (articles && articles.length > 0) { %>
+              <% articles.forEach(article => { %>
+                <div class="article-item">
+                  <div class="article-image">
+                    <img src="<%= article.featured_img ? article.featured_img : '/assets/articles/default.jpg' %>" alt="<%= article.title %> cover">
+                    <div class="read-overlay">
+                      <i class="fas fa-book-open"></i>
+                    </div>
+                  </div>
+                  <div class="article-details">
+                    <div class="article-header">
+                      <h3 class="item-title">
+                        <a href="/articles/<%= article.article_id %>"><%= article.title %></a>
+                      </h3>
+                      <div class="item-meta">
+                        <span><i class="fas fa-user"></i> By <%= article.author || 'Unknown' %></span>
+                        <span><i class="fas fa-calendar-alt"></i> <%= article.created_at ? new Date(article.created_at).toLocaleDateString() : '' %></span>
+                        <span><i class="fas fa-tag"></i> <%= article.category_name || 'General' %></span>
+                      </div>
+                    </div>
+                    <p class="item-excerpt">
+                      <%= article.content ? article.content.substring(0, 180) : '' %>...
+                    </p>
+                    <div class="item-actions">
+                      <a href="/articles/<%= article.article_id %>" class="read-button">
+                        <i class="fas fa-book-open"></i> Read More
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              <% }) %>
+            <% } else { %>
+              <p>No articles found.</p>
+            <% } %>
+          </div>
+        </div>
+
+        <!-- Sidebar -->
+        <aside class="article-sidebar">
+          <div class="sidebar-section">
+            <h3 class="sidebar-title">Categories</h3>
+            <ul class="category-list">
+              <li><a href="#"><i class="fas fa-newspaper"></i> All Articles</a></li>
+              <li><a href="#"><i class="fas fa-child"></i> Parenting</a></li>
+              <li><a href="#"><i class="fas fa-chart-line"></i> Business</a></li>
+              <li><a href="#"><i class="fas fa-heartbeat"></i> Health</a></li>
+              <li><a href="#"><i class="fas fa-graduation-cap"></i> Education</a></li>
+              <li><a href="#"><i class="fas fa-music"></i> Music</a></li>
+            </ul>
+          </div>
+
+          <div class="sidebar-section">
+            <h3 class="sidebar-title">Subscribe</h3>
+            <p>Get new articles delivered to your inbox</p>
+            <form class="subscribe-form">
+              <input type="email" placeholder="Your email address" required>
+              <button type="submit">
+                <i class="fas fa-paper-plane"></i> Subscribe
+              </button>
+            </form>
+            <div class="subscribe-options">
+              <p>Or subscribe via:</p>
+              <div class="article-platforms">
+                <a href="#" class="platform-button rss">
+                  <i class="fas fa-rss"></i> RSS Feed
+                </a>
+                <a href="#" class="platform-button email">
+                  <i class="fas fa-envelope"></i> Email Newsletter
+                </a>
+                <a href="#" class="platform-button twitter">
+                  <i class="fab fa-twitter"></i> Twitter Updates
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <div class="sidebar-section">
+            <h3 class="sidebar-title">Most Popular</h3>
+            <div class="popular-articles">
+              <div class="popular-article">
+                <div class="popular-image">
+                  <img src="/assets/articles/hope-revolution.jpg" alt="Popular article">
+                </div>
+                <div class="popular-details">
+                  <h4><a href="#">Hope Revolution: A Mother's Story</a></h4>
+                  <span class="popular-views">
+                    <i class="fas fa-eye"></i> 15.2K reads
+                  </span>
+                </div>
+              </div>
+              <div class="popular-article">
+                <div class="popular-image">
+                  <img src="/assets/articles/ndlozi-interview.jpg" alt="Popular article">
+                </div>
+                <div class="popular-details">
+                  <h4><a href="#">MBUYISENI NDLOZI Interview</a></h4>
+                  <span class="popular-views">
+                    <i class="fas fa-eye"></i> 12.8K reads
+                  </span>
+                </div>
+              </div>
+              <div class="popular-article">
+                <div class="popular-image">
+                  <img src="/assets/articles/konvo-show.jpg" alt="Popular article">
+                </div>
+                <div class="popular-details">
+                  <h4><a href="#">The Konvo Show</a></h4>
+                  <span class="popular-views">
+                    <i class="fas fa-eye"></i> 10.5K reads
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </aside>
+      </div>
+           <!-- Newsletter Section -->
+
+<section class="newsletter-section">
+  <div class="newsletter-container">
+    <div class="newsletter-content">
+      <h2>Stay Updated</h2>
+      <p>Subscribe to our newsletter for daily news updates</p>
+      <form class="newsletter-form" id="newsletterForm">
+        <input type="email" name="email" placeholder="Your email address" required>
+        <button type="submit">Subscribe</button>
+      </form>
+      <p id="responseMessage"></p>
+    </div>
+  </div>
+</section>
+    </main>
+
+    <!-- Footer Section -->
+    <%- include('../partials/footer.ejs') %>
+
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    <script>
+            document.getElementById('newsletterForm').addEventListener('submit', async function(e) {
+  e.preventDefault();
+  const email = this.email.value;
+  const responseMessage = document.getElementById('responseMessage');
+  
+  try {
+    const res = await fetch('/subscribe', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email })
+    });
+
+    const data = await res.json();
+    responseMessage.textContent = data.message;
+    responseMessage.style.color = res.ok ? 'green' : 'red';
+    if (res.ok) this.reset();
+  } catch (error) {
+    responseMessage.textContent = 'Network error, please try again.';
+    responseMessage.style.color = 'red';
+  }
+});
+      // Article Slider Functionality
+      let slideIndex = 1;
+      showSlides(slideIndex);
+
+      function plusSlides(n) {
+        showSlides(slideIndex += n);
+      }
+
+      function currentSlide(n) {
+        showSlides(slideIndex = n);
+      }
+
+      function showSlides(n) {
+        let i;
+        let slides = document.getElementsByClassName("mySlides");
+        let dots = document.getElementsByClassName("dot");
+        
+        if (n > slides.length) { slideIndex = 1 }
+        if (n < 1) { slideIndex = slides.length }
+        
+        for (i = 0; i < slides.length; i++) {
+          slides[i].classList.remove("active");
+        }
+        
+        for (i = 0; i < dots.length; i++) {
+          dots[i].classList.remove("active");
+        }
+        
+        slides[slideIndex-1].classList.add("active");
+        dots[slideIndex-1].classList.add("active");
+      }
+
+      // Auto-advance slides every 5 seconds
+      setInterval(() => {
+        plusSlides(1);
+      }, 5000);
+
+      // View toggle functionality
+      function changeView(viewType) {
+        const articlesContainer = document.querySelector('.articles-container');
+        const viewButtons = document.querySelectorAll('.view-option');
+        
+        viewButtons.forEach(btn => btn.classList.remove('active'));
+        document.querySelector(`.view-option[onclick="changeView('${viewType}')"]`).classList.add('active');
+        
+        articlesContainer.className = 'articles-container ' + viewType + '-view';
+      }
+
+      // Add active class to current page in navigation
+      document.addEventListener('DOMContentLoaded', function() {
+        const currentPage = window.location.pathname.split('/').pop() || 'index.html';
+        const navLinks = document.querySelectorAll('nav a');
+        
+        navLinks.forEach(link => {
+          if (link.getAttribute('href') === currentPage) {
+            link.classList.add('active');
+          }
+        });
+      });
+    </script>
+    
+    <!-- Search Functionality -->
+    <script src="/scripts/script.js"></script>
+  </body>
+</html>
