@@ -66,7 +66,10 @@
       // Extract the src URL from the iframe for the "Watch on YouTube" button
       let youtubeUrl = "";
       const match = featured.episode_link.match(/src=["'](.*?)["']/);
-      if (match && match[1]) youtubeUrl = match[1];
+      if (match && match[1]) {
+        // Convert embed URL to watch URL
+        youtubeUrl = match[1].replace('youtube.com/embed/', 'youtube.com/watch?v=');
+      }
     %>
     <% if (youtubeUrl) { %>
       <a href="<%= youtubeUrl %>" target="_blank" rel="noopener" class="btn-primary">
@@ -169,7 +172,10 @@
                 // Extract the src from the first iframe for the "Watch on YouTube" button
                 let youtubeUrl = "";
                 const match = iframes[0]?.match(/src=["'](.*?)["']/);
-                if (match && match[1]) youtubeUrl = match[1];
+                if (match && match[1]) {
+                  // Convert embed URL to watch URL
+                  youtubeUrl = match[1].replace('youtube.com/embed/', 'youtube.com/watch?v=');
+                }
               %>
               <% if (youtubeUrl) { %>
                 <a href="<%= youtubeUrl %>" target="_blank" rel="noopener" class="btn-secondary">
