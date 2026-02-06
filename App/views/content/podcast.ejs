@@ -28,59 +28,54 @@
           %>
 
           <% if (featured && featured.episode_link) { %>
-         <div class="featured-content">
-  <div class="featured-video-container">
-  <%- featured.episode_link %>
-</div>
+            <div class="featured-content">
+              <div class="featured-video-container">
+                <%- featured.episode_link %>
+              </div>
 
-  </div>
-</div>
+              <div class="featured-info">
+                <div class="episode-badge">Featured</div>
+                <h3 class="episode-title"><%= featured.title %></h3>
 
+                <div class="episode-meta">
+                  <span>
+                    <i class="fas fa-calendar-alt"></i>
+                    <%= new Date(featured.created_at)
+                         .toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }) %>
+                  </span>
 
-          <div class="featured-info">
-  <div class="episode-badge">Featured</div>
-  <h3 class="featured-episode-title"><%= featured.title %></h3>
+                  <% if (featured.episode_duration) { %>
+                    <span>
+                      <i class="fas fa-clock"></i> <%= featured.episode_duration %>
+                    </span>
+                  <% } %>
+                </div>
 
-  <div class="episode-meta">
-    <span>
-      <i class="fas fa-calendar-alt"></i>
-      <%= new Date(featured.created_at)
-           .toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }) %>
-    </span>
+                <p class="featured-description">
+                  <%= featured.description
+                        ? featured.description.substring(0, 250)
+                        : "No description available for this episode." %>…
+                </p>
 
-    <% if (featured.episode_duration) { %>
-      <span>
-        <i class="fas fa-clock"></i> <%= featured.episode_duration %>
-      </span>
-    <% } %>
-  </div>
-
-  <p class="featured-description">
-    <%= featured.description
-          ? featured.description.substring(0, 250)
-          : "No description available for this episode." %>…
-  </p>
-
-  <div class="featured-actions">
-    <% 
-      // Extract the src URL from the iframe for the "Watch on YouTube" button
-      let youtubeUrl = "";
-      const match = featured.episode_link.match(/src=["'](.*?)["']/);
-      if (match && match[1]) {
-        // Convert embed URL to watch URL
-        youtubeUrl = match[1].replace('youtube.com/embed/', 'youtube.com/watch?v=');
-      }
-    %>
-    <% if (youtubeUrl) { %>
-      <a href="<%= youtubeUrl %>" target="_blank" rel="noopener" class="btn-primary">
-        <i class="fas fa-play-circle"></i>
-        Watch on YouTube
-      </a>
-    <% } %>
-  </div>
-</div>
-
-          </div>
+                <div class="featured-actions">
+                  <% 
+                    // Extract the src URL from the iframe for the "Watch on YouTube" button
+                    let youtubeUrl = "";
+                    const match = featured.episode_link.match(/src=["'](.*?)["']/);
+                    if (match && match[1]) {
+                      // Convert embed URL to watch URL
+                      youtubeUrl = match[1].replace('youtube.com/embed/', 'youtube.com/watch?v=');
+                    }
+                  %>
+                  <% if (youtubeUrl) { %>
+                    <a href="<%= youtubeUrl %>" target="_blank" rel="noopener" class="btn-primary">
+                      <i class="fas fa-play-circle"></i>
+                      Watch on YouTube
+                    </a>
+                  <% } %>
+                </div>
+              </div>
+            </div>
           <% } else { %>
             <p class="no-featured-message">
               No featured episode available yet. Check out the latest episodes below.
