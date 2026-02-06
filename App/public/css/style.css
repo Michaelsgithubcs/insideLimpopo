@@ -4631,3 +4631,31 @@ footer p {
     padding-right: 1rem;
   }
 }
+
+/* Reorder nav and header on mobile only */
+@media (max-width: 991px) {
+  .news-homepage {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .news-homepage header {
+    order: 2;
+  }
+  
+  .news-homepage nav {
+    order: 1;
+  }
+  
+  .news-homepage .breaking-news-ticker {
+    order: 3;
+  }
+  
+  .news-homepage main {
+    order: 4;
+  }
+  
+  .news-homepage footer {
+    order: 5;
+  }
+}
