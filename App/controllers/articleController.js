@@ -16,7 +16,8 @@ exports.createArticle = async (req, res) => {
       facebook_link, 
       twitter_link, 
       instagram_link, 
-      linkedin_link 
+      linkedin_link,
+      location 
     } = req.body;
 
     // Ensure category_id is integer
@@ -52,7 +53,8 @@ exports.createArticle = async (req, res) => {
       author_id,
       category_id,
       featured_img,
-      social_links
+      social_links,
+      location
     });
 
     res.status(201).json({
