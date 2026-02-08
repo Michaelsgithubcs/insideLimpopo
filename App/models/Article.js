@@ -3,20 +3,19 @@ const getPool = require('../config/db');
 
 class Article {
   // CREATE
-  static async create({ title, content, author_id, category_id, featured_img = null, social_links = null, location = null }) {
+  static async create({ title, content, author_id, category_id, featured_img = null, social_links = null }) {
     const pool = await getPool();
     const [result] = await pool.query(
       `INSERT INTO articles 
-         (title, content, author_id, category_id, featured_img, social_links, location, created_at) 
-       VALUES (?, ?, ?, ?, ?, ?, ?, NOW())`,
+         (title, content, author_id, category_id, featured_img, social_links, created_at) 
+       VALUES (?, ?, ?, ?, ?, ?, NOW())`,
       [
         title,
         content,
         author_id,
         category_id,
         featured_img,
-        social_links ? JSON.stringify(social_links) : null,
-        location
+        social_links ? JSON.stringify(social_links) : null
       ]
     );
     return result.insertId;

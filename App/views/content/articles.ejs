@@ -126,9 +126,6 @@
                       <div class="item-meta">
                         <span><i class="fas fa-user"></i> By <%= article.author || 'Unknown' %></span>
                         <span><i class="fas fa-calendar-alt"></i> <%= article.created_at ? new Date(article.created_at).toLocaleDateString() : '' %></span>
-                        <% if (article.location) { %>
-                          <span><i class="fas fa-map-marker-alt"></i> <%= article.location %></span>
-                        <% } %>
                         <span><i class="fas fa-tag"></i> <%= article.category_name || 'General' %></span>
                       </div>
                     </div>
